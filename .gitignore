@@ -1,1 +1,4 @@
 node_modules
+mongo_db
+.env
+undosxtodo_server_test.pem
