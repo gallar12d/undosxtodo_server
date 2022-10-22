@@ -87,15 +87,91 @@ var OrderService = /** @class */ (function () {
             });
         });
     };
+    OrderService.prototype.updateOrder = function (id, _a) {
+        var winery_name = _a.winery_name, guide = _a.guide, guide_status = _a.guide_status, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
+        return __awaiter(this, void 0, void 0, function () {
+            var old_order, orderValue, orderUpdated, order_response;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.findOrder(id)];
+                    case 1:
+                        old_order = _b.sent();
+                        console.log(id);
+                        if (!old_order)
+                            throw new Error("Order not found");
+                        orderValue = new order_value_1.OrderValue({
+                            winery_name: winery_name,
+                            guide: old_order.guide,
+                            guide_status: guide_status,
+                            seller_address: seller_address,
+                            seller_city: seller_city,
+                            seller_state: seller_state,
+                            seller_telephone: seller_telephone,
+                            seller_nit: seller_nit,
+                            seller_postal_code: seller_postal_code,
+                            seller_country: seller_country,
+                            seller_email: seller_email,
+                            client_name: client_name,
+                            client_surname: client_surname,
+                            client_address: client_address,
+                            client_city: client_city,
+                            client_state: client_state,
+                            client_telephone: client_telephone,
+                            products: products,
+                            client_country: client_country,
+                            value_to_collect: value_to_collect,
+                        });
+                        // const exist = await this.orderExist(guide);
+                        // if (exist) throw new Error("Order guide already exist");
+                        orderValue.id = id;
+                        return [4 /*yield*/, this.orderRepository.updateOrder(id, orderValue)];
+                    case 2:
+                        orderUpdated = _b.sent();
+                        order_response = {
+                            id: orderUpdated.id,
+                        };
+                        return [2 /*return*/, order_response];
+                }
+            });
+        });
+    };
     OrderService.prototype.findOrder = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var order;
+            var order, order_filtered;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.orderRepository.findOrder(id)];
                     case 1:
                         order = _a.sent();
-                        return [2 /*return*/, order];
+                        console.log(order);
+                        if (!order)
+                            throw new Error("Order not found");
+                        order = order[0];
+                        order_filtered = {
+                            id: order.id,
+                            winery_name: order.winery_name,
+                            guide: order.guide,
+                            guide_status: order.guide_status,
+                            seller_address: order.seller_address,
+                            seller_city: order.seller_city,
+                            seller_state: order.seller_state,
+                            seller_telephone: order.seller_telephone,
+                            seller_nit: order.seller_nit,
+                            seller_postal_code: order.seller_postal_code,
+                            seller_country: order.seller_country,
+                            seller_email: order.seller_email,
+                            client_name: order.client_name,
+                            client_surname: order.client_surname,
+                            client_address: order.client_address,
+                            client_city: order.client_city,
+                            client_state: order.client_state,
+                            client_telephone: order.client_telephone,
+                            products: order.products,
+                            client_country: order.client_country,
+                            value_to_collect: order.value_to_collect,
+                        };
+                        console.log(order_filtered);
+                        return [2 /*return*/, order_filtered];
                 }
             });
         });
@@ -120,13 +196,43 @@ var OrderService = /** @class */ (function () {
     };
     OrderService.prototype.allOrder = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var orders;
+            var orders, orders_filtered;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.orderRepository.allOrder()];
                     case 1:
                         orders = _a.sent();
-                        return [2 /*return*/, orders];
+                        orders_filtered = {
+                            size: 0,
+                            orders: [],
+                        };
+                        orders_filtered.orders = orders.map(function (order) {
+                            return {
+                                id: order.id,
+                                winery_name: order.winery_name,
+                                guide: order.guide,
+                                guide_status: order.guide_status,
+                                seller_address: order.seller_address,
+                                seller_city: order.seller_city,
+                                seller_state: order.seller_state,
+                                seller_telephone: order.seller_telephone,
+                                seller_nit: order.seller_nit,
+                                seller_postal_code: order.seller_postal_code,
+                                seller_country: order.seller_country,
+                                seller_email: order.seller_email,
+                                client_name: order.client_name,
+                                client_surname: order.client_surname,
+                                client_address: order.client_address,
+                                client_city: order.client_city,
+                                client_state: order.client_state,
+                                client_telephone: order.client_telephone,
+                                products: order.products,
+                                client_country: order.client_country,
+                                value_to_collect: order.value_to_collect,
+                            };
+                        });
+                        orders_filtered.size = orders_filtered.orders.length;
+                        return [2 /*return*/, orders_filtered];
                 }
             });
         });

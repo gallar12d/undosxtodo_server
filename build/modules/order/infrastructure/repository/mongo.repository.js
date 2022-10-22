@@ -49,7 +49,7 @@ var MongoRepository = /** @class */ (function () {
             var user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, order_schema_1.default.findById(id)];
+                    case 0: return [4 /*yield*/, order_schema_1.default.find({ id: id })];
                     case 1:
                         user = _a.sent();
                         return [2 /*return*/, user];
@@ -66,6 +66,21 @@ var MongoRepository = /** @class */ (function () {
                     case 1:
                         orderCreated = _a.sent();
                         return [2 /*return*/, orderCreated];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.updateOrder = function (id, order) {
+        return __awaiter(this, void 0, void 0, function () {
+            var orderUpdated;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, order_schema_1.default.findOneAndUpdate({ id: id }, order, {
+                            new: true,
+                        })];
+                    case 1:
+                        orderUpdated = _a.sent();
+                        return [2 /*return*/, orderUpdated];
                 }
             });
         });

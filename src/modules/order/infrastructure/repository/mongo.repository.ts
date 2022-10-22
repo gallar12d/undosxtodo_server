@@ -4,12 +4,19 @@ import OrderModel from "../model/order.schema";
 
 export class MongoRepository implements OrderRepository {
   public async findOrder(id: string): Promise<any | null> {
-    const user = await OrderModel.findById(id);
+    const user = await OrderModel.find({ id });
     return user;
   }
   public async registerOrder(order: OrderEntity): Promise<any | null> {
     const orderCreated = await OrderModel.create(order);
     return orderCreated;
+  }
+
+  public async updateOrder(id: string, order: OrderEntity): Promise<any | null> {
+    const orderUpdated = await OrderModel.findOneAndUpdate({ id }, order, {
+      new: true,
+    });
+    return orderUpdated;
   }
 
   public async allOrder(): Promise<any[] | null> {

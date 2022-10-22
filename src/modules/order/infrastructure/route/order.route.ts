@@ -8,12 +8,12 @@ const router = Router();
 
 const mongoRepository = new MongoRepository();
 const orderService = new OrderService(mongoRepository);
-const userCtrl = new OrderController(orderService);
+const orderCtrl = new OrderController(orderService);
 
-router.get(`/order/:id`, authMiddleware, userCtrl.findOrder);
-router.get(`/order`, authMiddleware, userCtrl.allOrder);
-// router.get(`/order`, authMiddleware, userCtrl.allOrder);
+router.get(`/order/:id`, authMiddleware, orderCtrl.findOrder);
+router.get(`/order`, authMiddleware, orderCtrl.allOrder);
+router.post(`/order`, authMiddleware, orderCtrl.registerOrder);
+router.put(`/order/:id`, authMiddleware, orderCtrl.updateOrder);
 
-router.post(`/order`, authMiddleware, userCtrl.registerOrder);
 
 export { router };
