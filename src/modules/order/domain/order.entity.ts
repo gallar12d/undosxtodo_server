@@ -1,13 +1,14 @@
 
 export interface OrderEntity {
   id: string; 
-  winery_name?: string;
+  depot_name?: string;
+  depot_id?: string;
   guide: number;
   guide_status?: string;
   seller_address?: string;
   seller_city?: string;
   seller_state?: string;
-  seller_telephone?: number;
+  seller_telephone?: string;
   seller_nit?: string;
   seller_postal_code?: string;
   seller_country?: string;
@@ -18,7 +19,7 @@ export interface OrderEntity {
   client_address?: string;
   client_city?: string;
   client_state?: string;
-  client_telephone?: number;
+  client_telephone?: string;
   products?: object[];
   client_country?: string;
   value_to_collect?: number

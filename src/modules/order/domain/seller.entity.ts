@@ -1,6 +1,7 @@
 export interface SellerEntity {
   id: string;
-  winery_name: string;
+  depot_name: string;
+  depot_id: string;
   guide: number;
   guide_status: string;
   address: string;

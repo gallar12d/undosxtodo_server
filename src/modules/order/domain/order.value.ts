@@ -3,13 +3,14 @@ import { OrderEntity } from "./order.entity";
 
 export class OrderValue implements OrderEntity {
   id: string;
-  winery_name: string;
+  depot_id: string;
+  depot_name: string;
   guide: number;
   guide_status: string;
   seller_address: string;
   seller_city: string;
   seller_state: string;
-  seller_telephone: number;
+  seller_telephone: string;
   seller_nit: string;
   seller_postal_code: string;
   seller_country: string;
@@ -20,13 +21,14 @@ export class OrderValue implements OrderEntity {
   client_address: string;
   client_city: string;
   client_state: string;
-  client_telephone: number;
+  client_telephone: string;
   products: object[];
   client_country: string;
   value_to_collect: number;
 
   constructor({
-    winery_name,
+    depot_name,
+    depot_id,
     guide,
     guide_status,
     seller_address,
@@ -47,13 +49,14 @@ export class OrderValue implements OrderEntity {
     client_country,
     value_to_collect,
   }: {
-    winery_name: string;
+    depot_name: string;
+    depot_id: string;
     guide: number;
     guide_status: string;
     seller_address: string;
     seller_city: string;
     seller_state: string;
-    seller_telephone: number;
+    seller_telephone: string;
     seller_nit: string;
     seller_postal_code: string;
     seller_country: string;
@@ -64,13 +67,14 @@ export class OrderValue implements OrderEntity {
     client_address: string;
     client_city: string;
     client_state: string;
-    client_telephone: number;
+    client_telephone: string;
     products: object[];
     client_country: string;
     value_to_collect: number;
   }) {
     this.id = uuid();
-    this.winery_name = winery_name;
+    this.depot_id = depot_id;
+    this.depot_name = depot_name;
     this.guide = guide;
     this.guide_status = guide_status;
     this.seller_address = seller_address;

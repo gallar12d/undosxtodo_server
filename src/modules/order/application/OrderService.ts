@@ -2,10 +2,11 @@ import { OrderRepository } from "../domain/order.respository";
 import { OrderValue } from "../domain/order.value";
 
 export class OrderService {
-  constructor(private readonly orderRepository: OrderRepository) {}
+  constructor(private readonly orderRepository: OrderRepository) { }
 
   public async registerOrder({
-    winery_name,
+    depot_name,
+    depot_id,
     guide,
     guide_status,
     seller_address,
@@ -28,7 +29,8 @@ export class OrderService {
     value_to_collect,
   }) {
     const orderValue = new OrderValue({
-      winery_name,
+      depot_name,
+      depot_id,
       guide,
       guide_status,
       seller_address,
@@ -61,7 +63,8 @@ export class OrderService {
   }
 
   public async updateOrder(id: string, {
-    winery_name,
+    depot_name,
+    depot_id,
     guide,
     guide_status,
     seller_address,
@@ -83,11 +86,11 @@ export class OrderService {
     value_to_collect,
   }) {
     const old_order = await this.orderRepository.findOrder(id);
-    console.log(id)
     if (!old_order) throw new Error("Order not found");
 
     const orderValue = new OrderValue({
-      winery_name,
+      depot_name,
+      depot_id,
       guide: old_order.guide,
       guide_status,
       seller_address,
@@ -119,14 +122,11 @@ export class OrderService {
     return order_response;
   }
 
-  public async findOrder(id: string) {
-    let order = await this.orderRepository.findOrder(id);
-    console.log(order);
-    if (!order) throw new Error("Order not found");
-    order = order[0];
+  public filterOrder = (order: any) => {
     const order_filtered = {
       id: order.id,
-      winery_name: order.winery_name,
+      depot_name: order.depot_name,
+      depot_id: order.depot_id,
       guide: order.guide,
       guide_status: order.guide_status,
       seller_address: order.seller_address,
@@ -147,9 +147,24 @@ export class OrderService {
       client_country: order.client_country,
       value_to_collect: order.value_to_collect,
     };
-    console.log(order_filtered);
 
     return order_filtered;
+
+  }
+
+  public async findOrder(id: string) {
+    let order = await this.orderRepository.findOrder(id);
+    if (!order) throw new Error("Order not found");
+    order = order[0];
+    return this.filterOrder(order);
+
+  }
+
+  public async findOrderByGuide(guide: string) {
+    let order = await this.orderRepository.findOrderByGuide(guide);
+    if (!order) throw new Error("Order not found");
+    // order = order[0];
+    return this.filterOrder(order);
   }
 
   public async orderExist(guide: string) {
@@ -170,7 +185,8 @@ export class OrderService {
     orders_filtered.orders = orders.map((order) => {
       return {
         id: order.id,
-        winery_name: order.winery_name,
+        depot_name: order.depot_name,
+        depot_id: order.depot_id,
         guide: order.guide,
         guide_status: order.guide_status,
         seller_address: order.seller_address,

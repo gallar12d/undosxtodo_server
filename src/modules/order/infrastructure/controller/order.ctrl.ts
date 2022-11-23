@@ -7,7 +7,7 @@ export class OrderController {
 
   public findOrder = async (req : Request, res : Response) => {
     try {
-      const order = await this.orderService.findOrder(req.params.id);
+      const order = await this.orderService.findOrderByGuide(req.params.id);
       res.status(200).send(order);
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
@@ -15,6 +15,15 @@ export class OrderController {
   };
 
   public allOrder = async (req, res) => {
+    if(req.query.guide) {
+      console.log(req.query.guide);
+      try {
+        const order = await this.orderService.findOrderByGuide(req.query.guide);
+        res.status(200).send(order);
+      } catch (err) {
+        res.status(400).send(getErrorMessage(err));
+      }
+    }
     try {
       const orders = await this.orderService.allOrder();
       res.send(orders);
