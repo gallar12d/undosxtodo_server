@@ -3,9 +3,9 @@ import getErrorMessage from "../../../../infrastructure/utils/handleErrors";
 import { OrderService } from "../../application/OrderService";
 
 export class OrderController {
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService) { }
 
-  public findOrder = async (req : Request, res : Response) => {
+  public findOrder = async (req: Request, res: Response) => {
     try {
       const order = await this.orderService.findOrderByGuide(req.params.id);
       res.status(200).send(order);
@@ -15,7 +15,7 @@ export class OrderController {
   };
 
   public allOrder = async (req, res) => {
-    if(req.query.guide) {
+    if (req.query.guide) {
       console.log(req.query.guide);
       try {
         const order = await this.orderService.findOrderByGuide(req.query.guide);
@@ -24,12 +24,16 @@ export class OrderController {
         res.status(400).send(getErrorMessage(err));
       }
     }
-    try {
-      const orders = await this.orderService.allOrder();
-      res.send(orders);
-    } catch (error) {
-      res.status(401).send(getErrorMessage(error));
+    else {
+      try {
+        const orders = await this.orderService.allOrder();
+        res.send(orders);
+      } catch (error) {
+        res.status(401).send(getErrorMessage(error));
+      }
+
     }
+
   };
 
   public registerOrder = async (req, res) => {
@@ -43,7 +47,7 @@ export class OrderController {
 
   public updateOrder = async (req, res) => {
     try {
-      
+
       const order = await this.orderService.updateOrder(req.params.id, req.body);
       res.send(order);
     } catch (err) {

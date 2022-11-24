@@ -20,6 +20,9 @@ services:
       PORT: 3000
     depends_on:
       - mongo_db
+    #volumes:
+    #  - .:/usr/src/app
+      
   nginx:
     image: nginx:latest
     volumes:

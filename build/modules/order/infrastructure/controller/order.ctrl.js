@@ -51,7 +51,7 @@ var OrderController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.orderService.findOrder(req.params.id)];
+                        return [4 /*yield*/, this.orderService.findOrderByGuide(req.params.id)];
                     case 1:
                         order = _a.sent();
                         res.status(200).send(order);
@@ -65,26 +65,42 @@ var OrderController = /** @class */ (function () {
             });
         }); };
         this.allOrder = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var orders, error_1;
+            var order, err_2, orders, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.orderService.allOrder()];
+                        if (!req.query.guide) return [3 /*break*/, 5];
+                        console.log(req.query.guide);
+                        _a.label = 1;
                     case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.orderService.findOrderByGuide(req.query.guide)];
+                    case 2:
+                        order = _a.sent();
+                        res.status(200).send(order);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_2 = _a.sent();
+                        res.status(400).send((0, handleErrors_1.default)(err_2));
+                        return [3 /*break*/, 4];
+                    case 4: return [3 /*break*/, 8];
+                    case 5:
+                        _a.trys.push([5, 7, , 8]);
+                        return [4 /*yield*/, this.orderService.allOrder()];
+                    case 6:
                         orders = _a.sent();
                         res.send(orders);
-                        return [3 /*break*/, 3];
-                    case 2:
+                        return [3 /*break*/, 8];
+                    case 7:
                         error_1 = _a.sent();
                         res.status(401).send((0, handleErrors_1.default)(error_1));
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 8];
+                    case 8: return [2 /*return*/];
                 }
             });
         }); };
         this.registerOrder = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var order, err_2;
+            var order, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -95,15 +111,15 @@ var OrderController = /** @class */ (function () {
                         res.send(order);
                         return [3 /*break*/, 3];
                     case 2:
-                        err_2 = _a.sent();
-                        res.status(400).send((0, handleErrors_1.default)(err_2));
+                        err_3 = _a.sent();
+                        res.status(400).send((0, handleErrors_1.default)(err_3));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });
         }); };
         this.updateOrder = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var order, err_3;
+            var order, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -114,8 +130,8 @@ var OrderController = /** @class */ (function () {
                         res.send(order);
                         return [3 /*break*/, 3];
                     case 2:
-                        err_3 = _a.sent();
-                        res.status(400).send((0, handleErrors_1.default)(err_3));
+                        err_4 = _a.sent();
+                        res.status(400).send((0, handleErrors_1.default)(err_4));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

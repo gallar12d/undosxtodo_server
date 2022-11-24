@@ -41,16 +41,44 @@ var order_value_1 = require("../domain/order.value");
 var OrderService = /** @class */ (function () {
     function OrderService(orderRepository) {
         this.orderRepository = orderRepository;
+        this.filterOrder = function (order) {
+            var order_filtered = {
+                id: order.id,
+                depot_name: order.depot_name,
+                depot_id: order.depot_id,
+                guide: order.guide,
+                guide_status: order.guide_status,
+                seller_address: order.seller_address,
+                seller_city: order.seller_city,
+                seller_state: order.seller_state,
+                seller_telephone: order.seller_telephone,
+                seller_nit: order.seller_nit,
+                seller_postal_code: order.seller_postal_code,
+                seller_country: order.seller_country,
+                seller_email: order.seller_email,
+                client_name: order.client_name,
+                client_surname: order.client_surname,
+                client_address: order.client_address,
+                client_city: order.client_city,
+                client_state: order.client_state,
+                client_telephone: order.client_telephone,
+                products: order.products,
+                client_country: order.client_country,
+                value_to_collect: order.value_to_collect,
+            };
+            return order_filtered;
+        };
     }
     OrderService.prototype.registerOrder = function (_a) {
-        var winery_name = _a.winery_name, guide = _a.guide, guide_status = _a.guide_status, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
+        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
         return __awaiter(this, void 0, void 0, function () {
             var orderValue, exist, orderCreated, order_response;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         orderValue = new order_value_1.OrderValue({
-                            winery_name: winery_name,
+                            depot_name: depot_name,
+                            depot_id: depot_id,
                             guide: guide,
                             guide_status: guide_status,
                             seller_address: seller_address,
@@ -88,7 +116,7 @@ var OrderService = /** @class */ (function () {
         });
     };
     OrderService.prototype.updateOrder = function (id, _a) {
-        var winery_name = _a.winery_name, guide = _a.guide, guide_status = _a.guide_status, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
+        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
         return __awaiter(this, void 0, void 0, function () {
             var old_order, orderValue, orderUpdated, order_response;
             return __generator(this, function (_b) {
@@ -96,11 +124,11 @@ var OrderService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.orderRepository.findOrder(id)];
                     case 1:
                         old_order = _b.sent();
-                        console.log(id);
                         if (!old_order)
                             throw new Error("Order not found");
                         orderValue = new order_value_1.OrderValue({
-                            winery_name: winery_name,
+                            depot_name: depot_name,
+                            depot_id: depot_id,
                             guide: old_order.guide,
                             guide_status: guide_status,
                             seller_address: seller_address,
@@ -137,41 +165,32 @@ var OrderService = /** @class */ (function () {
     };
     OrderService.prototype.findOrder = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var order, order_filtered;
+            var order;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.orderRepository.findOrder(id)];
                     case 1:
                         order = _a.sent();
-                        console.log(order);
                         if (!order)
                             throw new Error("Order not found");
                         order = order[0];
-                        order_filtered = {
-                            id: order.id,
-                            winery_name: order.winery_name,
-                            guide: order.guide,
-                            guide_status: order.guide_status,
-                            seller_address: order.seller_address,
-                            seller_city: order.seller_city,
-                            seller_state: order.seller_state,
-                            seller_telephone: order.seller_telephone,
-                            seller_nit: order.seller_nit,
-                            seller_postal_code: order.seller_postal_code,
-                            seller_country: order.seller_country,
-                            seller_email: order.seller_email,
-                            client_name: order.client_name,
-                            client_surname: order.client_surname,
-                            client_address: order.client_address,
-                            client_city: order.client_city,
-                            client_state: order.client_state,
-                            client_telephone: order.client_telephone,
-                            products: order.products,
-                            client_country: order.client_country,
-                            value_to_collect: order.value_to_collect,
-                        };
-                        console.log(order_filtered);
-                        return [2 /*return*/, order_filtered];
+                        return [2 /*return*/, this.filterOrder(order)];
+                }
+            });
+        });
+    };
+    OrderService.prototype.findOrderByGuide = function (guide) {
+        return __awaiter(this, void 0, void 0, function () {
+            var order;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.findOrderByGuide(guide)];
+                    case 1:
+                        order = _a.sent();
+                        if (!order)
+                            throw new Error("Order not found");
+                        // order = order[0];
+                        return [2 /*return*/, this.filterOrder(order)];
                 }
             });
         });
@@ -209,7 +228,8 @@ var OrderService = /** @class */ (function () {
                         orders_filtered.orders = orders.map(function (order) {
                             return {
                                 id: order.id,
-                                winery_name: order.winery_name,
+                                depot_name: order.depot_name,
+                                depot_id: order.depot_id,
                                 guide: order.guide,
                                 guide_status: order.guide_status,
                                 seller_address: order.seller_address,
