@@ -14,6 +14,7 @@ router.get(`/order/:id`, authMiddleware, orderCtrl.findOrder);
 router.get(`/order`, authMiddleware, orderCtrl.allOrder);
 router.post(`/order`, authMiddleware, orderCtrl.registerOrder);
 router.put(`/order/:id`, authMiddleware, orderCtrl.updateOrder);
-
+router.post(`/status`, authMiddleware, orderCtrl.insertStatus);
+router.put(`/status`, authMiddleware, orderCtrl.updateStatus);
 
 export { router };

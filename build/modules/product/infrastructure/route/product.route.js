@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+var express_1 = require("express");
+var ProductService_1 = require("../../application/ProductService");
+var product_ctrl_1 = require("../controller/product.ctrl");
+var mongo_repository_1 = require("../repository/mongo.repository");
+// import { authMiddleware } from "../../../../infrastructure/middleware/auth.middleware";
+// const { body, check } = require("express-validator");
+var router = (0, express_1.Router)();
+exports.router = router;
+var mongoRepository = new mongo_repository_1.MongoRepository();
+var productService = new ProductService_1.ProductService(mongoRepository);
+var productCtrl = new product_ctrl_1.ProductController(productService);
+router.post("/product", productCtrl.insertProduct);
+router.post("/products", productCtrl.getProducts);
+router.put("/product", productCtrl.updateProduct);
+router.delete("/product/:_id", productCtrl.deleteProduct);

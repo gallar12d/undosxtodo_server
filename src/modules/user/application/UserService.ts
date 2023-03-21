@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { UserRepository } from "../domain/user.respository";
 import { UserValue } from "../domain/user.value";
 
@@ -5,15 +6,19 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   public async registerUser({
+    seller_id,
     name,
     email,
     password,
+    rol
   }: {
+    seller_id: ObjectId
     name: string;
     email: string;
     password: string;
+    rol: string;
   }) {
-    const userValue = new UserValue({ name, email, password });
+    const userValue = new UserValue({ seller_id, name, email, password, rol });
     const encripted_password = await this.userRepository.encriptPassword(
       userValue.password
     );
@@ -25,7 +30,7 @@ export class UserService {
       id: userCreated.id,
       name: userCreated.name,
       email: userCreated.email,
-      token: this.createToken(userCreated.id),
+      token: this.createToken(userCreated.id)
     };
     return user_response;
   }
@@ -58,8 +63,14 @@ export class UserService {
       id: user.id,
       name: user.name,
       email: user.email,
-      token: this.createToken(user.id),
+      token: this.createToken(user.id)
     };
     return user_response;
   }
+
+  public async updateUser(id:string, email:string) {
+    const userUpdated = await this.userRepository.updateUser(id,email);
+    return userUpdated;
+  }
+
 }

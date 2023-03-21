@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -80,6 +80,30 @@ var UserController = /** @class */ (function () {
                         res.send(user);
                         return [2 /*return*/];
                 }
+            });
+        }); };
+        this.updateUser = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var id, email, userUpdated;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            id = body.id;
+                            email = body.email;
+                            return [4 /*yield*/, this.userService.updateUser(id, email)];
+                        case 1:
+                            userUpdated = _b.sent();
+                            res.send(userUpdated);
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.returnToken = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                res.status(200).send(req.token);
+                return [2 /*return*/];
             });
         }); };
     }

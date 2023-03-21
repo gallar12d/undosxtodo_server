@@ -8,4 +8,5 @@ export interface UserRepository {
   createToken(id: string): string;
   encriptPassword(password: string): Promise<string>;
   findUserByEmail(email: string): Promise<UserEntity | null>;
+  updateUser(id:string, email:string): Promise<string>;
 }

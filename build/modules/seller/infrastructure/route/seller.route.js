@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+var express_1 = require("express");
+var SellerService_1 = require("../../application/SellerService");
+var seller_ctrl_1 = require("../controller/seller.ctrl");
+var mongo_repository_1 = require("../repository/mongo.repository");
+var auth_middleware_1 = require("../../../../infrastructure/middleware/auth.middleware");
+// import { authMiddleware } from "../../../../infrastructure/middleware/auth.middleware";
+var _a = require("express-validator"), body = _a.body, check = _a.check;
+var router = (0, express_1.Router)();
+exports.router = router;
+var mongoRepository = new mongo_repository_1.MongoRepository();
+var sellerService = new SellerService_1.SellerService(mongoRepository);
+var sellerCtrl = new seller_ctrl_1.SellerController(sellerService);
+router.post("/seller", sellerCtrl.createSeller);
+router.get("/seller", auth_middleware_1.authMiddleware, sellerCtrl.getSeller);
+router.put("/seller", body("email").isEmail(), sellerCtrl.updateSeller);

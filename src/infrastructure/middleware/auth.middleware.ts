@@ -1,6 +1,7 @@
 import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 const SECRET_KEY = `${process.env.SECRET_KEY}`;
+// const SECRET_KEY = `secret@123`;
 import getErrorMessage from "../utils/handleErrors";
 
 export interface CustomRequest extends Request {

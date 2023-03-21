@@ -26,7 +26,7 @@ export class OrderController {
     }
     else {
       try {
-        const orders = await this.orderService.allOrder();
+        const orders = await this.orderService.allOrder(req.query.seller_id);
         res.send(orders);
       } catch (error) {
         res.status(401).send(getErrorMessage(error));
@@ -50,6 +50,26 @@ export class OrderController {
 
       const order = await this.orderService.updateOrder(req.params.id, req.body);
       res.send(order);
+    } catch (err) {
+      res.status(400).send(getErrorMessage(err));
+    }
+  };
+  
+  public insertStatus = async (req, res) => {
+    try {
+
+      const newStatus = await this.orderService.insertStatus();
+      res.send(newStatus);
+    } catch (err) {
+      res.status(400).send(getErrorMessage(err));
+    }
+  };
+
+  public updateStatus = async ({body}, res) => {
+    try {
+      const {id, guide_status}= body;
+      const updatedStatus = await this.orderService.updateStatus(id, guide_status);
+      res.status(200).send(updatedStatus);
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }

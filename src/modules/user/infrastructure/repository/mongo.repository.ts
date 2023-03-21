@@ -20,7 +20,8 @@ export class MongoRepository implements UserRepository {
   }
 
   public createToken(id: string): string {
-    const token = jwt.sign({ id }, process.env.SECRET_KEY || "secretkey", {
+    const token = jwt.sign({ id }, process.env.SECRET_KEY || "secret@123", {
+    // const token = jwt.sign({ id }, "secret@123", {
       expiresIn: "30m",
     });
     return token;
@@ -36,10 +37,15 @@ export class MongoRepository implements UserRepository {
     return user;
   }
   public async loginUser(email: string, password: string): Promise<any | null> {
-    const user = await UserModel.findOne({ email });
+    const user: UserEntity = await UserModel.findOne({ email });
     if (!user) return null;
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return null;
     return user;
+  }
+
+  public async updateUser(id:string, email: string): Promise<any | null> {
+    const userUpdated = await UserModel.updateOne({ "id": `${id}` }, { $set: { "email": `${email}` } });
+    return userUpdated;
   }
 }

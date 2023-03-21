@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -48,13 +48,13 @@ var UserService = /** @class */ (function () {
         };
     }
     UserService.prototype.registerUser = function (_a) {
-        var name = _a.name, email = _a.email, password = _a.password;
+        var seller_id = _a.seller_id, name = _a.name, email = _a.email, password = _a.password, rol = _a.rol;
         return __awaiter(this, void 0, void 0, function () {
             var userValue, encripted_password, userCreated, user_response;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        userValue = new user_value_1.UserValue({ name: name, email: email, password: password });
+                        userValue = new user_value_1.UserValue({ seller_id: seller_id, name: name, email: email, password: password, rol: rol });
                         return [4 /*yield*/, this.userRepository.encriptPassword(userValue.password)];
                     case 1:
                         encripted_password = _b.sent();
@@ -66,7 +66,7 @@ var UserService = /** @class */ (function () {
                             id: userCreated.id,
                             name: userCreated.name,
                             email: userCreated.email,
-                            token: this.createToken(userCreated.id),
+                            token: this.createToken(userCreated.id)
                         };
                         return [2 /*return*/, user_response];
                 }
@@ -128,9 +128,22 @@ var UserService = /** @class */ (function () {
                             id: user.id,
                             name: user.name,
                             email: user.email,
-                            token: this.createToken(user.id),
+                            token: this.createToken(user.id)
                         };
                         return [2 /*return*/, user_response];
+                }
+            });
+        });
+    };
+    UserService.prototype.updateUser = function (id, email) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userUpdated;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.userRepository.updateUser(id, email)];
+                    case 1:
+                        userUpdated = _a.sent();
+                        return [2 /*return*/, userUpdated];
                 }
             });
         });

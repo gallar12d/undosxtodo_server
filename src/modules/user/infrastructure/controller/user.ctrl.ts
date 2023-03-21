@@ -1,4 +1,5 @@
 import { request, response } from "express";
+import { decode } from "querystring";
 import { UserService } from "../../application/UserService";
 
 export class UserController {
@@ -20,4 +21,15 @@ export class UserController {
     const user = await this.userService.registerUser(req.body);
     res.send(user);
   };
+
+  public updateUser= async ({body},res) =>{
+    const {id}= body;
+    const {email}= body;
+    const userUpdated= await this.userService.updateUser(id, email);
+    res.send(userUpdated);
+  }
+
+  public returnToken= async( req, res, next )=>{
+    res.status(200).send(req.token);
+  }
 }

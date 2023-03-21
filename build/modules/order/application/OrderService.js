@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -59,29 +59,32 @@ var OrderService = /** @class */ (function () {
                 client_name: order.client_name,
                 client_surname: order.client_surname,
                 client_address: order.client_address,
+                client_address_detail: order.client_address_detail,
                 client_city: order.client_city,
                 client_state: order.client_state,
                 client_telephone: order.client_telephone,
                 products: order.products,
                 client_country: order.client_country,
-                value_to_collect: order.value_to_collect,
+                value_to_collect: order.value_to_collect
             };
             return order_filtered;
         };
     }
     OrderService.prototype.registerOrder = function (_a) {
-        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
+        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_id = _a.seller_id, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_address_detail = _a.client_address_detail, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
         return __awaiter(this, void 0, void 0, function () {
             var orderValue, exist, orderCreated, order_response;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
+                        products = JSON.parse(products);
                         orderValue = new order_value_1.OrderValue({
                             depot_name: depot_name,
                             depot_id: depot_id,
                             guide: guide,
                             guide_status: guide_status,
                             seller_address: seller_address,
+                            seller_id: seller_id,
                             seller_city: seller_city,
                             seller_state: seller_state,
                             seller_telephone: seller_telephone,
@@ -92,12 +95,13 @@ var OrderService = /** @class */ (function () {
                             client_name: client_name,
                             client_surname: client_surname,
                             client_address: client_address,
+                            client_address_detail: client_address_detail,
                             client_city: client_city,
                             client_state: client_state,
                             client_telephone: client_telephone,
                             products: products,
                             client_country: client_country,
-                            value_to_collect: value_to_collect,
+                            value_to_collect: value_to_collect
                         });
                         return [4 /*yield*/, this.orderExist(guide)];
                     case 1:
@@ -116,7 +120,7 @@ var OrderService = /** @class */ (function () {
         });
     };
     OrderService.prototype.updateOrder = function (id, _a) {
-        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
+        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_id = _a.seller_id, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_address_detail = _a.client_address_detail, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
         return __awaiter(this, void 0, void 0, function () {
             var old_order, orderValue, orderUpdated, order_response;
             return __generator(this, function (_b) {
@@ -131,6 +135,7 @@ var OrderService = /** @class */ (function () {
                             depot_id: depot_id,
                             guide: old_order.guide,
                             guide_status: guide_status,
+                            seller_id: seller_id,
                             seller_address: seller_address,
                             seller_city: seller_city,
                             seller_state: seller_state,
@@ -142,6 +147,7 @@ var OrderService = /** @class */ (function () {
                             client_name: client_name,
                             client_surname: client_surname,
                             client_address: client_address,
+                            client_address_detail: client_address_detail,
                             client_city: client_city,
                             client_state: client_state,
                             client_telephone: client_telephone,
@@ -213,12 +219,12 @@ var OrderService = /** @class */ (function () {
             });
         });
     };
-    OrderService.prototype.allOrder = function () {
+    OrderService.prototype.allOrder = function (seller_id) {
         return __awaiter(this, void 0, void 0, function () {
             var orders, orders_filtered;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.orderRepository.allOrder()];
+                    case 0: return [4 /*yield*/, this.orderRepository.allOrder(seller_id)];
                     case 1:
                         orders = _a.sent();
                         orders_filtered = {
@@ -232,6 +238,7 @@ var OrderService = /** @class */ (function () {
                                 depot_id: order.depot_id,
                                 guide: order.guide,
                                 guide_status: order.guide_status,
+                                seller_id: order.seller_id,
                                 seller_address: order.seller_address,
                                 seller_city: order.seller_city,
                                 seller_state: order.seller_state,
@@ -243,16 +250,31 @@ var OrderService = /** @class */ (function () {
                                 client_name: order.client_name,
                                 client_surname: order.client_surname,
                                 client_address: order.client_address,
+                                client_address_detail: order.client_address_detail,
                                 client_city: order.client_city,
                                 client_state: order.client_state,
                                 client_telephone: order.client_telephone,
                                 products: order.products,
                                 client_country: order.client_country,
                                 value_to_collect: order.value_to_collect,
+                                createdAt: order.createdAt
                             };
                         });
                         orders_filtered.size = orders_filtered.orders.length;
                         return [2 /*return*/, orders_filtered];
+                }
+            });
+        });
+    };
+    OrderService.prototype.insertStatus = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var insertedStatus;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.insertStatus()];
+                    case 1:
+                        insertedStatus = _a.sent();
+                        return [2 /*return*/, insertedStatus];
                 }
             });
         });

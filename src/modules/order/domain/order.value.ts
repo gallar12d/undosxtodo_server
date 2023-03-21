@@ -7,6 +7,7 @@ export class OrderValue implements OrderEntity {
   depot_name: string;
   guide: number;
   guide_status: string;
+  seller_id: string;
   seller_address: string;
   seller_city: string;
   seller_state: string;
@@ -19,6 +20,7 @@ export class OrderValue implements OrderEntity {
   client_name: string;
   client_surname: string;
   client_address: string;
+  client_address_detail:string;
   client_city: string;
   client_state: string;
   client_telephone: string;
@@ -31,6 +33,7 @@ export class OrderValue implements OrderEntity {
     depot_id,
     guide,
     guide_status,
+    seller_id,
     seller_address,
     seller_city,
     seller_state,
@@ -42,6 +45,7 @@ export class OrderValue implements OrderEntity {
     client_name,
     client_surname,
     client_address,
+    client_address_detail,
     client_city,
     client_state,
     client_telephone,
@@ -53,6 +57,7 @@ export class OrderValue implements OrderEntity {
     depot_id: string;
     guide: number;
     guide_status: string;
+    seller_id: string;
     seller_address: string;
     seller_city: string;
     seller_state: string;
@@ -65,6 +70,7 @@ export class OrderValue implements OrderEntity {
     client_name: string;
     client_surname: string;
     client_address: string;
+    client_address_detail: string;
     client_city: string;
     client_state: string;
     client_telephone: string;
@@ -77,6 +83,7 @@ export class OrderValue implements OrderEntity {
     this.depot_name = depot_name;
     this.guide = guide;
     this.guide_status = guide_status;
+    this.seller_id= seller_id;
     this.seller_address = seller_address;
     this.seller_city = seller_city;
     this.seller_state = seller_state;
@@ -88,6 +95,7 @@ export class OrderValue implements OrderEntity {
     this.client_name = client_name;
     this.client_surname = client_surname;
     this.client_address = client_address;
+    this.client_address_detail = client_address_detail;
     this.client_city = client_city;
     this.client_state = client_state;
     this.client_telephone = client_telephone;

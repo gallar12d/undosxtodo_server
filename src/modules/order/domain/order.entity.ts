@@ -5,6 +5,7 @@ export interface OrderEntity {
   depot_id?: string;
   guide: number;
   guide_status?: string;
+  seller_id: string;
   seller_address?: string;
   seller_city?: string;
   seller_state?: string;
@@ -17,6 +18,7 @@ export interface OrderEntity {
   client_name?: string;
   client_surname?: string;
   client_address?: string;
+  client_address_detail?:string;
   client_city?: string;
   client_state?: string;
   client_telephone?: string;

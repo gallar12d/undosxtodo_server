@@ -1,4 +1,5 @@
 import { request, response } from "express";
+import mongoose from "mongoose";
 import { UserService } from "../../../user/application/UserService";
 const { body, validationResult } = require("express-validator");
 
@@ -23,6 +24,7 @@ export class AuthController {
 
     const exist = await this.userService.userExist(req.body.email);
     if (exist) return res.status(400).send("User already exist");
+    req.body.seller_id= new mongoose.Types.ObjectId(req.body.seller_id);
     const user = await this.userService.registerUser(req.body);
     res.send(user);
   };

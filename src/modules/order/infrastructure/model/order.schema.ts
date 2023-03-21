@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 
 const OrderSchema = new Schema(
   {
@@ -7,6 +7,7 @@ const OrderSchema = new Schema(
     depot_id: { type: String, required: false },
     guide: { type: Number, required: true },
     guide_status: { type: String, required: false },
+    seller_id:{ type: Types.ObjectId },
     seller_address: { type: String, required: false },
     seller_city: { type: String, required: false },
     seller_state: { type: String, required: false },
@@ -20,6 +21,7 @@ const OrderSchema = new Schema(
     client_name: { type: String, required: false },
     client_surname: { type: String, required: false },
     client_address: { type: String, required: false },
+    client_address_detail: { type: String, required: false },
     client_city: { type: String, required: false },
     client_state: { type: String, required: false },
     client_telephone: { type: String, required: false },

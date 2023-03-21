@@ -9,6 +9,7 @@ export class OrderService {
     depot_id,
     guide,
     guide_status,
+    seller_id,
     seller_address,
     seller_city,
     seller_state,
@@ -21,19 +22,22 @@ export class OrderService {
     client_name,
     client_surname,
     client_address,
+    client_address_detail,
     client_city,
     client_state,
     client_telephone,
     products,
     client_country,
-    value_to_collect,
+    value_to_collect
   }) {
+    products= JSON.parse(products);
     const orderValue = new OrderValue({
       depot_name,
       depot_id,
       guide,
       guide_status,
       seller_address,
+      seller_id,
       seller_city,
       seller_state,
       seller_telephone,
@@ -44,12 +48,13 @@ export class OrderService {
       client_name,
       client_surname,
       client_address,
+      client_address_detail,
       client_city,
       client_state,
       client_telephone,
       products,
       client_country,
-      value_to_collect,
+      value_to_collect
     });
 
     const exist = await this.orderExist(guide);
@@ -67,6 +72,7 @@ export class OrderService {
     depot_id,
     guide,
     guide_status,
+    seller_id,
     seller_address,
     seller_city,
     seller_state,
@@ -78,13 +84,15 @@ export class OrderService {
     client_name,
     client_surname,
     client_address,
+    client_address_detail,
     client_city,
     client_state,
     client_telephone,
     products,
     client_country,
-    value_to_collect,
+    value_to_collect
   }) {
+    products= JSON.parse(products);
     const old_order = await this.orderRepository.findOrder(id);
     if (!old_order) throw new Error("Order not found");
 
@@ -93,6 +101,7 @@ export class OrderService {
       depot_id,
       guide: old_order.guide,
       guide_status,
+      seller_id,
       seller_address,
       seller_city,
       seller_state,
@@ -104,6 +113,7 @@ export class OrderService {
       client_name,
       client_surname,
       client_address,
+      client_address_detail,
       client_city,
       client_state,
       client_telephone,
@@ -140,12 +150,13 @@ export class OrderService {
       client_name: order.client_name,
       client_surname: order.client_surname,
       client_address: order.client_address,
+      client_address_detail: order.client_address_detail,
       client_city: order.client_city,
       client_state: order.client_state,
       client_telephone: order.client_telephone,
       products: order.products,
       client_country: order.client_country,
-      value_to_collect: order.value_to_collect,
+      value_to_collect: order.value_to_collect
     };
 
     return order_filtered;
@@ -176,8 +187,8 @@ export class OrderService {
     return false;
   }
 
-  public async allOrder() {
-    const orders = await this.orderRepository.allOrder();
+  public async allOrder(seller_id) {
+    const orders:any = await this.orderRepository.allOrder(seller_id);
     let orders_filtered = {
       size: 0,
       orders: [],
@@ -189,6 +200,7 @@ export class OrderService {
         depot_id: order.depot_id,
         guide: order.guide,
         guide_status: order.guide_status,
+        seller_id: order.seller_id,
         seller_address: order.seller_address,
         seller_city: order.seller_city,
         seller_state: order.seller_state,
@@ -200,17 +212,29 @@ export class OrderService {
         client_name: order.client_name,
         client_surname: order.client_surname,
         client_address: order.client_address,
+        client_address_detail: order.client_address_detail,
         client_city: order.client_city,
         client_state: order.client_state,
         client_telephone: order.client_telephone,
         products: order.products,
         client_country: order.client_country,
         value_to_collect: order.value_to_collect,
+        createdAt: order.createdAt
       };
     });
 
     orders_filtered.size = orders_filtered.orders.length;
 
     return orders_filtered;
+  }
+
+  public async insertStatus(){
+    const insertedStatus= await this.orderRepository.insertStatus();
+    return insertedStatus;
+  }
+
+  public async updateStatus(id, guide_status){
+    const updatedStatus= await this.orderRepository.updateStatus(id, guide_status);
+    return updatedStatus;
   }
 }

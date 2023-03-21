@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+var express_1 = require("express");
+var DepotService_1 = require("../../application/DepotService");
+var depot_ctrl_1 = require("../controller/depot.ctrl");
+var mongo_repository_1 = require("../repository/mongo.repository");
+// import { authMiddleware } from "../../../../infrastructure/middleware/auth.middleware";
+// const { body, check } = require("express-validator");
+var router = (0, express_1.Router)();
+exports.router = router;
+var mongoRepository = new mongo_repository_1.MongoRepository();
+var depotService = new DepotService_1.DepotService(mongoRepository);
+var depotCtrl = new depot_ctrl_1.DepotController(depotService);
+router.post("/depot", depotCtrl.insertDepot);
+router.post("/depots", depotCtrl.getDepots);
+router.put("/depot", depotCtrl.updateDepot);
+router.delete("/depot/:id", depotCtrl.deleteDepot);
