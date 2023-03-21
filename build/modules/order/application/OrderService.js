@@ -125,7 +125,9 @@ var OrderService = /** @class */ (function () {
             var old_order, orderValue, orderUpdated, order_response;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.orderRepository.findOrder(id)];
+                    case 0:
+                        products = JSON.parse(products);
+                        return [4 /*yield*/, this.orderRepository.findOrder(id)];
                     case 1:
                         old_order = _b.sent();
                         if (!old_order)
@@ -275,6 +277,19 @@ var OrderService = /** @class */ (function () {
                     case 1:
                         insertedStatus = _a.sent();
                         return [2 /*return*/, insertedStatus];
+                }
+            });
+        });
+    };
+    OrderService.prototype.updateStatus = function (id, guide_status) {
+        return __awaiter(this, void 0, void 0, function () {
+            var updatedStatus;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.updateStatus(id, guide_status)];
+                    case 1:
+                        updatedStatus = _a.sent();
+                        return [2 /*return*/, updatedStatus];
                 }
             });
         });

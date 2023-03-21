@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authMiddleware = void 0;
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var SECRET_KEY = "".concat(process.env.SECRET_KEY);
+// const SECRET_KEY = `secret@123`;
 var handleErrors_1 = __importDefault(require("../utils/handleErrors"));
 var authMiddleware = function (req, res, next) {
     var _a;

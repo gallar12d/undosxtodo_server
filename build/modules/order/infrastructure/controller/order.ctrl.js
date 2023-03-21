@@ -86,7 +86,6 @@ var OrderController = /** @class */ (function () {
                     case 4: return [3 /*break*/, 8];
                     case 5:
                         _a.trys.push([5, 7, , 8]);
-                        console.log(req.query.seller_id);
                         return [4 /*yield*/, this.orderService.allOrder(req.query.seller_id)];
                     case 6:
                         orders = _a.sent();
@@ -157,6 +156,29 @@ var OrderController = /** @class */ (function () {
                 }
             });
         }); };
+        this.updateStatus = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var id, guide_status, updatedStatus, err_6;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _b.trys.push([0, 2, , 3]);
+                            id = body.id, guide_status = body.guide_status;
+                            return [4 /*yield*/, this.orderService.updateStatus(id, guide_status)];
+                        case 1:
+                            updatedStatus = _b.sent();
+                            res.status(200).send(updatedStatus);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_6 = _b.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_6));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
     }
     return OrderController;
 }());

@@ -41,7 +41,7 @@ var DB_URI = "".concat(process.env.DB_URI);
 var dbInit = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, mongoose_1.connect)("mongodb+srv://admin:<password>@cluster0.rau7epe.mongodb.net/?retryWrites=true&w=majority")];
+            case 0: return [4 /*yield*/, (0, mongoose_1.connect)(DB_URI)];
             case 1:
                 _a.sent();
                 console.log("Init DB");
