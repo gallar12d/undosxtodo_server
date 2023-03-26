@@ -14,7 +14,7 @@ export class MongoRepository implements DepotRepository {
     }
 
     public async  getDepots(seller_id):Promise<DepotValue[] | null>{
-        const depots: DepotValue[] = await DepotModel.find({"seller_id": seller_id},{_id:1,id:1,name:1,city:1,state:1});
+        const depots: DepotValue[] = await DepotModel.find({"seller_id": seller_id},{_id:1,id:1,name:1,city:1,state:1,address:1});
         return depots;
     }
 

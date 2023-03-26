@@ -15,6 +15,7 @@ var authMiddleware = function (req, res, next) {
         if (!token) {
             throw new Error("Please authenticate");
         }
+        console.log(SECRET_KEY);
         var decoded = jsonwebtoken_1.default.verify(token, SECRET_KEY);
         req.token = decoded;
         next();
