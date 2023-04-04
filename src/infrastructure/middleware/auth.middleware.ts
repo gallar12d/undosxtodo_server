@@ -19,8 +19,6 @@ export const authMiddleware = (
     if (!token) {
       throw new Error("Please authenticate");
     }
-    console.log(SECRET_KEY);
-    
     const decoded = jwt.verify(token, SECRET_KEY);
     (req as CustomRequest).token = decoded;
 

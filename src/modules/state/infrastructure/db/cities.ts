@@ -2,7 +2,7 @@ export const cities =[
     {
         "id": "1",
         "state_id": "1",
-        "name": "MEDELLIN"
+        "name": "MEDELLÍN"
     },
     {
         "id": "2",
@@ -442,7 +442,7 @@ export const cities =[
     {
         "id": "89",
         "state_id": "1",
-        "name": "SAN ANDRES"
+        "name": "SAN ANDRÉS"
     },
     {
         "id": "90",
@@ -1902,7 +1902,7 @@ export const cities =[
     {
         "id": "381",
         "state_id": "8",
-        "name": "POPAYAN"
+        "name": "POPAYÁN"
     },
     {
         "id": "382",
@@ -2227,7 +2227,7 @@ export const cities =[
     {
         "id": "446",
         "state_id": "10",
-        "name": "MONTERIA"
+        "name": "MONTERÍA"
     },
     {
         "id": "447",
@@ -2947,7 +2947,7 @@ export const cities =[
     {
         "id": "590",
         "state_id": "12",
-        "name": "QUIBDO (SAN FRANCISCO DE QUIBDO)"
+        "name": "QUIBDÓ (SAN FRANCISCO DE QUIBDÓ)"
     },
     {
         "id": "591",
@@ -3922,7 +3922,7 @@ export const cities =[
     {
         "id": "785",
         "state_id": "18",
-        "name": "CUCUTA"
+        "name": "CÚCUTA"
     },
     {
         "id": "786",
@@ -4807,7 +4807,7 @@ export const cities =[
     {
         "id": "962",
         "state_id": "23",
-        "name": "IBAGUE"
+        "name": "IBAGUÉ"
     },
     {
         "id": "963",
@@ -5512,7 +5512,7 @@ export const cities =[
     {
         "id": "1103",
         "state_id": "30",
-        "name": "PUERTO INIRIDA"
+        "name": "PUERTO INÍRIDA"
     },
     {
         "id": "1104",
@@ -5552,7 +5552,7 @@ export const cities =[
     {
         "id": "1111",
         "state_id": "31",
-        "name": "SAN JOSE DEL GUAVIARE"
+        "name": "SAN JOSÉ DEL GUAVIARE"
     },
     {
         "id": "1112",
@@ -5572,7 +5572,7 @@ export const cities =[
     {
         "id": "1115",
         "state_id": "32",
-        "name": "MITU"
+        "name": "MITÚ"
     },
     {
         "id": "1116",
