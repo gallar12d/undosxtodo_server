@@ -63,7 +63,8 @@ export class UserService {
       id: user.id,
       name: user.name,
       email: user.email,
-      token: this.createToken(user.id)
+      token: this.createToken(user.id),
+      rol: user.rol
     };
     return user_response;
   }

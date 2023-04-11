@@ -29,7 +29,7 @@ export class UserController {
     res.send(userUpdated);
   }
 
-  public returnToken= async( req, res, next )=>{
+  public returnToken= async( req, res )=>{
     res.status(200).send(req.token);
   }
 }

@@ -1,6 +1,6 @@
 import { connect } from "mongoose";
 
-const DB_URI = `${process.env.DB_URI}`;
+const DB_URI = `${process.env.DB_URI || "mongodb+srv://admin:admin@cluster0.rau7epe.mongodb.net/?retryWrites=true&w=majority"}`;
 
 const dbInit = async () => {
   // await connect(`mongodb+srv://admin:admin@cluster0.rau7epe.mongodb.net/?retryWrites=true&w=majority`);
