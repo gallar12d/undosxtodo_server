@@ -34,4 +34,10 @@ export class DepotController {
     const depotDeleted = await this.depotService.deleteDepot(id);
     res.send(depotDeleted);
   }
+
+  public allDepots= async (req, res)=>{
+    const {pag}= req.params;
+    const depots= await this.depotService.allDepots(pag);
+    res.send(depots);
+  }
 }

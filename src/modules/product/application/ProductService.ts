@@ -23,4 +23,9 @@ export class ProductService {
     const deletedProduct = await this.productRepository.deleteProduct(_id);
     return deletedProduct;
   }
+
+  public async allProducts(pag:any){
+    const products = await this.productRepository.allProducts(pag);
+    return products;
+  }
 }

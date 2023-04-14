@@ -54,7 +54,7 @@ export class OrderController {
       res.status(400).send(getErrorMessage(err));
     }
   };
-  
+
   public insertStatus = async (req, res) => {
     try {
 
@@ -65,11 +65,21 @@ export class OrderController {
     }
   };
 
-  public updateStatus = async ({body}, res) => {
+  public updateStatus = async ({ body }, res) => {
     try {
-      const {id, guide_status}= body;
+      const { id, guide_status } = body;
       const updatedStatus = await this.orderService.updateStatus(id, guide_status);
       res.status(200).send(updatedStatus);
+    } catch (err) {
+      res.status(400).send(getErrorMessage(err));
+    }
+  };
+
+  public allOrders = async ({ params }, res) => {
+    try {
+      var { pag } = params;
+      const orders = await this.orderService.allOrders(pag);
+      res.status(200).send(orders);
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }

@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 
 export class MongoRepository implements UserRepository {
   public async findUser(id: string): Promise<any | null> {
-    const user = await UserModel.findById(id);
+    const user = await UserModel.findOne({id});
     return user;
   }
   public async registerUser(user: UserEntity): Promise<any | null> {

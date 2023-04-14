@@ -5,4 +5,5 @@ export interface ProductRepository {
     getProducts(depots_ids:any):Promise<any | null>;
     updateProduct(productToUpdate: any):Promise<any | null>;
     deleteProduct(_id: any):Promise<any | null>;
+    allProducts(pag: any):Promise<any | null>;
 }

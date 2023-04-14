@@ -23,4 +23,9 @@ export class DepotService {
     const deletedDepot = await this.depotRepository.deleteDepot(id);
     return deletedDepot;
   }
+
+  public async allDepots(pag:number){
+    const depots = await this.depotRepository.allDepots(pag);
+    return depots;
+  }
 }

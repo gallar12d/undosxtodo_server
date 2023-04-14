@@ -8,4 +8,5 @@ export interface OrderRepository {
   findOrderByGuide(guide: string): Promise<OrderEntity | null>;
   insertStatus(): Promise<any | null>;
   updateStatus(id, guide_status): Promise<any | null>;
+  allOrders(pag:number): Promise<any | null>;
 }

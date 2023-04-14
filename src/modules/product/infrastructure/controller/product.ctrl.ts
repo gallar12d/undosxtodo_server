@@ -42,4 +42,10 @@ export class ProductController {
     const deletedProduct = await this.productService.deleteProduct(_id);
     res.send(deletedProduct);
   }
+
+  public allProducts = async ({params}, res:any) => {
+    var { pag } = params;
+    const products = await this.productService.allProducts(pag);
+    res.send(products);
+  }
 }

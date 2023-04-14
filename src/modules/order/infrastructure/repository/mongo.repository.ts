@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { OrderEntity } from "../../domain/order.entity";
 import { OrderRepository } from "../../domain/order.respository";
-import OrderModel from "../model/order.schema";
+const OrderModel = require("../model/order.schema");
 import StatusModel from '../model/status.schema';
+import SellerModel from "../../../seller/infrastructure/model/seller.schema";
 
 export class MongoRepository implements OrderRepository {
   public async findOrder(id: string): Promise<any | null> {
@@ -22,10 +23,10 @@ export class MongoRepository implements OrderRepository {
   }
 
   public async allOrder(seller_id): Promise<any[] | null> {
-    var orders = await OrderModel.find({seller_id: new mongoose.Types.ObjectId(seller_id)});
+    var orders = await OrderModel.find({ seller_id: new mongoose.Types.ObjectId(seller_id) });
 
     for await (const order of orders) {
-      order.guide_status=(await StatusModel.findOne({id: order.guide_status},{name:1})).name;
+      order.guide_status = (await StatusModel.findOne({ id: order.guide_status }, { name: 1 })).name;
     }
 
     return orders;
@@ -35,23 +36,37 @@ export class MongoRepository implements OrderRepository {
     const order = await OrderModel.findOne({ guide });
     return order;
   }
-  
+
   public async insertStatus(): Promise<any | null> {
-    const statusToInsert=[
-      {id: 1, name: "En procesamiento"},
-      {id: 2, name: "Guía generada"},
-      {id: 3, name: "Cancelado"},
-      {id: 4, name: "Orden recogida"},
-      {id: 5, name: "En reparto"},
-      {id: 6, name: "Entregado"},
-      {id: 7, name: "Devolución"},
+    const statusToInsert = [
+      { id: 1, name: "En procesamiento" },
+      { id: 2, name: "Guía generada" },
+      { id: 3, name: "Cancelado" },
+      { id: 4, name: "Orden recogida" },
+      { id: 5, name: "En reparto" },
+      { id: 6, name: "Entregado" },
+      { id: 7, name: "Devolución" },
     ];
     const status = await StatusModel.create(statusToInsert);
     return status;
   }
 
-  public async updateStatus(id:string, guide_status): Promise<any | null> {
-    const updatedStatus = await OrderModel.updateOne( {id: id}, {$set : { guide_status: guide_status } } );
+  public async updateStatus(id: string, guide_status): Promise<any | null> {
+    const updatedStatus = await OrderModel.updateOne({ id: id }, { $set: { guide_status: guide_status } });
     return updatedStatus;
+  }
+
+  public async allOrders(pag: number): Promise<any | null> {
+    const options = {
+      page: pag,
+      limit: 7
+    }
+    var result = await OrderModel.paginate({}, options);
+    const orders = JSON.parse(JSON.stringify(result));
+    for await (const order of orders.docs) {
+      order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
+      order.seller= (await SellerModel.findOne({_id: order.seller_id})).name
+    }
+    return orders;
   }
 }

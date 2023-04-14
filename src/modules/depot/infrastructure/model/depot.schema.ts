@@ -1,6 +1,8 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose from "mongoose";
+// const paginate= require('mongoose-paginate-v2');
+import paginate from 'mongoose-paginate-v2';
 
-const DepotSchema = new Schema(
+const DepotSchema = new mongoose.Schema(
   {
     id: {type: String},
     seller_id: {
@@ -14,5 +16,6 @@ const DepotSchema = new Schema(
   },
   { timestamps: true }
 );
-const DepotModel = model("depots", DepotSchema);
-export default DepotModel;
+DepotSchema.plugin(paginate);
+// const DepotModel = model("depots", DepotSchema);
+module.exports= mongoose.model("depots", DepotSchema);

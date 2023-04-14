@@ -1,13 +1,14 @@
-import { Schema, model, Types } from "mongoose";
+import mongoose from "mongoose";
+import paginate from 'mongoose-paginate-v2';
 
-const OrderSchema = new Schema(
+const OrderSchema = new mongoose.Schema(
   {
     id: { type: String },
     depot_name: { type: String, required: false },
     depot_id: { type: String, required: false },
     guide: { type: Number, required: true },
     guide_status: { type: String, required: false },
-    seller_id:{ type: Types.ObjectId },
+    seller_id:{ type: mongoose.Types.ObjectId },
     seller_address: { type: String, required: false },
     seller_city: { type: String, required: false },
     seller_state: { type: String, required: false },
@@ -31,5 +32,6 @@ const OrderSchema = new Schema(
   },
   { timestamps: true }
 );
-const UserModel = model("orders", OrderSchema);
-export default UserModel;
+OrderSchema.plugin(paginate);
+// const UserModel = mongoose.model("orders", OrderSchema);
+module.exports= mongoose.model("orders", OrderSchema);

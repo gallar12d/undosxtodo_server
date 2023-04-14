@@ -237,4 +237,9 @@ export class OrderService {
     const updatedStatus= await this.orderRepository.updateStatus(id, guide_status);
     return updatedStatus;
   }
+
+  public async allOrders(pag){
+    const orders= await this.orderRepository.allOrders(pag);
+    return orders;
+  }
 }
