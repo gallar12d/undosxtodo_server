@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 // const PORT = 3000;
 const app = express();
 var corsOptions = {
-    origin: "http://ultimilla.com",
+    origin: "https://ultimilla.com",
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions));
