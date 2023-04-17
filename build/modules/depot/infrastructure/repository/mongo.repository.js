@@ -35,12 +35,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoRepository = void 0;
-var depot_schema_1 = __importDefault(require("../model/depot.schema"));
+var DepotModel = require("../model/depot.schema");
+var seller_schema_1 = __importDefault(require("../../../seller/infrastructure/model/seller.schema"));
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
     }
@@ -49,7 +57,7 @@ var MongoRepository = /** @class */ (function () {
             var insertedDepot;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, depot_schema_1.default.create(depot)];
+                    case 0: return [4 /*yield*/, DepotModel.create(depot)];
                     case 1:
                         insertedDepot = _a.sent();
                         return [2 /*return*/, insertedDepot];
@@ -62,7 +70,7 @@ var MongoRepository = /** @class */ (function () {
             var depots;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, depot_schema_1.default.find({ "seller_id": seller_id }, { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1 })];
+                    case 0: return [4 /*yield*/, DepotModel.find({ "seller_id": seller_id }, { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1 })];
                     case 1:
                         depots = _a.sent();
                         return [2 /*return*/, depots];
@@ -76,7 +84,7 @@ var MongoRepository = /** @class */ (function () {
             var updatedDepot;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, depot_schema_1.default.updateOne({ "id": "".concat(id) }, { seller_id: seller_id, name: name, state: state, city: city, address: address })];
+                    case 0: return [4 /*yield*/, DepotModel.updateOne({ "id": "".concat(id) }, { seller_id: seller_id, name: name, state: state, city: city, address: address })];
                     case 1:
                         updatedDepot = _b.sent();
                         return [2 /*return*/, updatedDepot];
@@ -89,10 +97,70 @@ var MongoRepository = /** @class */ (function () {
             var deletedDepot;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, depot_schema_1.default.deleteOne({ "id": id })];
+                    case 0: return [4 /*yield*/, DepotModel.deleteOne({ "id": id })];
                     case 1:
                         deletedDepot = _a.sent();
                         return [2 /*return*/, deletedDepot];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.allDepots = function (pag) {
+        var _a, e_1, _b, _c;
+        return __awaiter(this, void 0, void 0, function () {
+            var options, result, depots, _d, _e, _f, depot, _g, e_1_1;
+            return __generator(this, function (_h) {
+                switch (_h.label) {
+                    case 0:
+                        options = {
+                            page: pag,
+                            limit: 7
+                        };
+                        return [4 /*yield*/, DepotModel.paginate({}, options)];
+                    case 1:
+                        result = _h.sent();
+                        depots = JSON.parse(JSON.stringify(result));
+                        _h.label = 2;
+                    case 2:
+                        _h.trys.push([2, 10, 11, 16]);
+                        _d = true, _e = __asyncValues(depots.docs);
+                        _h.label = 3;
+                    case 3: return [4 /*yield*/, _e.next()];
+                    case 4:
+                        if (!(_f = _h.sent(), _a = _f.done, !_a)) return [3 /*break*/, 9];
+                        _c = _f.value;
+                        _d = false;
+                        _h.label = 5;
+                    case 5:
+                        _h.trys.push([5, , 7, 8]);
+                        depot = _c;
+                        _g = depot;
+                        return [4 /*yield*/, seller_schema_1.default.findOne({ _id: depot.seller_id })];
+                    case 6:
+                        _g.seller = (_h.sent()).name;
+                        return [3 /*break*/, 8];
+                    case 7:
+                        _d = true;
+                        return [7 /*endfinally*/];
+                    case 8: return [3 /*break*/, 3];
+                    case 9: return [3 /*break*/, 16];
+                    case 10:
+                        e_1_1 = _h.sent();
+                        e_1 = { error: e_1_1 };
+                        return [3 /*break*/, 16];
+                    case 11:
+                        _h.trys.push([11, , 14, 15]);
+                        if (!(!_d && !_a && (_b = _e.return))) return [3 /*break*/, 13];
+                        return [4 /*yield*/, _b.call(_e)];
+                    case 12:
+                        _h.sent();
+                        _h.label = 13;
+                    case 13: return [3 /*break*/, 15];
+                    case 14:
+                        if (e_1) throw e_1.error;
+                        return [7 /*endfinally*/];
+                    case 15: return [7 /*endfinally*/];
+                    case 16: return [2 /*return*/, depots];
                 }
             });
         });

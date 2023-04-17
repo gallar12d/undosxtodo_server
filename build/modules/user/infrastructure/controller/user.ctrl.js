@@ -100,7 +100,7 @@ var UserController = /** @class */ (function () {
                 });
             });
         };
-        this.returnToken = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+        this.returnToken = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 res.status(200).send(req.token);
                 return [2 /*return*/];

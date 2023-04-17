@@ -55,6 +55,15 @@ var MongoRepository = /** @class */ (function () {
                     case 0: return [4 /*yield*/, state_schema_1.default.find()];
                     case 1:
                         states = _a.sent();
+                        states.sort(function (a, b) {
+                            if (a.name < b.name) {
+                                return -1;
+                            }
+                            if (a.name > b.name) {
+                                return 1;
+                            }
+                            return 0;
+                        });
                         return [2 /*return*/, states];
                 }
             });
@@ -86,6 +95,15 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, city_schema_1.default.find({ state_id: resultState[0].id })];
                     case 2:
                         cities = _a.sent();
+                        cities.sort(function (a, b) {
+                            if (a.name < b.name) {
+                                return -1;
+                            }
+                            if (a.name > b.name) {
+                                return 1;
+                            }
+                            return 0;
+                        });
                         return [2 /*return*/, cities];
                 }
             });

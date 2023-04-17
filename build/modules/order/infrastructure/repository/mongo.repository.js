@@ -48,8 +48,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoRepository = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
-var order_schema_1 = __importDefault(require("../model/order.schema"));
+var OrderModel = require("../model/order.schema");
 var status_schema_1 = __importDefault(require("../model/status.schema"));
+var seller_schema_1 = __importDefault(require("../../../seller/infrastructure/model/seller.schema"));
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
     }
@@ -58,7 +59,7 @@ var MongoRepository = /** @class */ (function () {
             var user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, order_schema_1.default.find({ id: id })];
+                    case 0: return [4 /*yield*/, OrderModel.find({ id: id })];
                     case 1:
                         user = _a.sent();
                         return [2 /*return*/, user];
@@ -71,7 +72,7 @@ var MongoRepository = /** @class */ (function () {
             var orderCreated;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, order_schema_1.default.create(order)];
+                    case 0: return [4 /*yield*/, OrderModel.create(order)];
                     case 1:
                         orderCreated = _a.sent();
                         return [2 /*return*/, orderCreated];
@@ -84,7 +85,7 @@ var MongoRepository = /** @class */ (function () {
             var orderUpdated;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, order_schema_1.default.findOneAndUpdate({ id: id }, order, {
+                    case 0: return [4 /*yield*/, OrderModel.findOneAndUpdate({ id: id }, order, {
                             new: true,
                         })];
                     case 1:
@@ -100,7 +101,7 @@ var MongoRepository = /** @class */ (function () {
             var orders, _d, orders_1, orders_1_1, order, _e, e_1_1;
             return __generator(this, function (_f) {
                 switch (_f.label) {
-                    case 0: return [4 /*yield*/, order_schema_1.default.find({ seller_id: new mongoose_1.default.Types.ObjectId(seller_id) })];
+                    case 0: return [4 /*yield*/, OrderModel.find({ seller_id: new mongoose_1.default.Types.ObjectId(seller_id) })];
                     case 1:
                         orders = _f.sent();
                         _f.label = 2;
@@ -153,7 +154,7 @@ var MongoRepository = /** @class */ (function () {
             var order;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, order_schema_1.default.findOne({ guide: guide })];
+                    case 0: return [4 /*yield*/, OrderModel.findOne({ guide: guide })];
                     case 1:
                         order = _a.sent();
                         return [2 /*return*/, order];
@@ -189,10 +190,74 @@ var MongoRepository = /** @class */ (function () {
             var updatedStatus;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, order_schema_1.default.updateOne({ id: id }, { $set: { guide_status: guide_status } })];
+                    case 0: return [4 /*yield*/, OrderModel.updateOne({ id: id }, { $set: { guide_status: guide_status } })];
                     case 1:
                         updatedStatus = _a.sent();
                         return [2 /*return*/, updatedStatus];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.allOrders = function (pag) {
+        var _a, e_2, _b, _c;
+        return __awaiter(this, void 0, void 0, function () {
+            var options, result, orders, _d, _e, _f, order, _g, _h, e_2_1;
+            return __generator(this, function (_j) {
+                switch (_j.label) {
+                    case 0:
+                        options = {
+                            page: pag,
+                            limit: 7
+                        };
+                        return [4 /*yield*/, OrderModel.paginate({}, options)];
+                    case 1:
+                        result = _j.sent();
+                        orders = JSON.parse(JSON.stringify(result));
+                        _j.label = 2;
+                    case 2:
+                        _j.trys.push([2, 11, 12, 17]);
+                        _d = true, _e = __asyncValues(orders.docs);
+                        _j.label = 3;
+                    case 3: return [4 /*yield*/, _e.next()];
+                    case 4:
+                        if (!(_f = _j.sent(), _a = _f.done, !_a)) return [3 /*break*/, 10];
+                        _c = _f.value;
+                        _d = false;
+                        _j.label = 5;
+                    case 5:
+                        _j.trys.push([5, , 8, 9]);
+                        order = _c;
+                        _g = order;
+                        return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status })];
+                    case 6:
+                        _g.guide_status = (_j.sent()).name;
+                        _h = order;
+                        return [4 /*yield*/, seller_schema_1.default.findOne({ _id: order.seller_id })];
+                    case 7:
+                        _h.seller = (_j.sent()).name;
+                        return [3 /*break*/, 9];
+                    case 8:
+                        _d = true;
+                        return [7 /*endfinally*/];
+                    case 9: return [3 /*break*/, 3];
+                    case 10: return [3 /*break*/, 17];
+                    case 11:
+                        e_2_1 = _j.sent();
+                        e_2 = { error: e_2_1 };
+                        return [3 /*break*/, 17];
+                    case 12:
+                        _j.trys.push([12, , 15, 16]);
+                        if (!(!_d && !_a && (_b = _e.return))) return [3 /*break*/, 14];
+                        return [4 /*yield*/, _b.call(_e)];
+                    case 13:
+                        _j.sent();
+                        _j.label = 14;
+                    case 14: return [3 /*break*/, 16];
+                    case 15:
+                        if (e_2) throw e_2.error;
+                        return [7 /*endfinally*/];
+                    case 16: return [7 /*endfinally*/];
+                    case 17: return [2 /*return*/, orders];
                 }
             });
         });

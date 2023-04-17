@@ -47,9 +47,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoRepository = void 0;
-var product_schema_1 = __importDefault(require("../model/product.schema"));
-var depot_schema_1 = __importDefault(require("../../../depot/infrastructure/model/depot.schema"));
+var ProductModel = require("../model/product.schema");
+var DepotModel = require("../../../depot/infrastructure/model/depot.schema");
 var mongoose_1 = __importDefault(require("mongoose"));
+var seller_schema_1 = __importDefault(require("../../../seller/infrastructure/model/seller.schema"));
 // import jwt from "jsonwebtoken";
 // import bcrypt from "bcrypt";
 // import mongoose from "mongoose";
@@ -61,7 +62,7 @@ var MongoRepository = /** @class */ (function () {
             var insertedProduct;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, product_schema_1.default.create(newProduct)];
+                    case 0: return [4 /*yield*/, ProductModel.create(newProduct)];
                     case 1:
                         insertedProduct = _a.sent();
                         return [2 /*return*/, insertedProduct];
@@ -94,7 +95,7 @@ var MongoRepository = /** @class */ (function () {
                     case 4:
                         _k.trys.push([4, , 6, 7]);
                         depot_id = _d;
-                        return [4 /*yield*/, product_schema_1.default.find({ "depots_ids": { $all: ["".concat(depot_id._id)] } }, { id: 1, name: 1, price: 1, depots_ids: 1 })];
+                        return [4 /*yield*/, ProductModel.find({ "depots_ids": { $all: ["".concat(depot_id._id)] } }, { id: 1, name: 1, price: 1, depots_ids: 1 })];
                     case 5:
                         result = _k.sent();
                         products = products.concat(result.map(function (r) { return r; }));
@@ -141,7 +142,7 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, Promise.all(product.depots_ids.map(function (depot_id) { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
-                                        case 0: return [4 /*yield*/, depot_schema_1.default.findOne({ _id: depot_id }, { name: 1 })];
+                                        case 0: return [4 /*yield*/, DepotModel.findOne({ _id: depot_id }, { name: 1 })];
                                         case 1: return [2 /*return*/, _a.sent()];
                                     }
                                 });
@@ -181,7 +182,7 @@ var MongoRepository = /** @class */ (function () {
             var updatedProduct;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, product_schema_1.default.updateOne({ _id: new mongoose_1.default.Types.ObjectId(_id) }, { $set: { depots_ids: depots_ids, sku: sku, name: name, price: price } })];
+                    case 0: return [4 /*yield*/, ProductModel.updateOne({ _id: new mongoose_1.default.Types.ObjectId(_id) }, { $set: { depots_ids: depots_ids, sku: sku, name: name, price: price } })];
                     case 1:
                         updatedProduct = _b.sent();
                         return [2 /*return*/, updatedProduct];
@@ -194,10 +195,85 @@ var MongoRepository = /** @class */ (function () {
             var deletedProduct;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, product_schema_1.default.deleteOne({ _id: new mongoose_1.default.Types.ObjectId(_id) })];
+                    case 0: return [4 /*yield*/, ProductModel.deleteOne({ _id: new mongoose_1.default.Types.ObjectId(_id) })];
                     case 1:
                         deletedProduct = _a.sent();
                         return [2 /*return*/, deletedProduct];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.allProducts = function (pag) {
+        var _a, e_3, _b, _c;
+        return __awaiter(this, void 0, void 0, function () {
+            var options, result, products, _d, _e, _f, product, _g, e_3_1;
+            var _this = this;
+            return __generator(this, function (_h) {
+                switch (_h.label) {
+                    case 0:
+                        options = {
+                            page: pag,
+                            limit: 7
+                        };
+                        return [4 /*yield*/, ProductModel.paginate({}, options)];
+                    case 1:
+                        result = _h.sent();
+                        products = JSON.parse(JSON.stringify(result));
+                        _h.label = 2;
+                    case 2:
+                        _h.trys.push([2, 10, 11, 16]);
+                        _d = true, _e = __asyncValues(products.docs);
+                        _h.label = 3;
+                    case 3: return [4 /*yield*/, _e.next()];
+                    case 4:
+                        if (!(_f = _h.sent(), _a = _f.done, !_a)) return [3 /*break*/, 9];
+                        _c = _f.value;
+                        _d = false;
+                        _h.label = 5;
+                    case 5:
+                        _h.trys.push([5, , 7, 8]);
+                        product = _c;
+                        _g = product;
+                        return [4 /*yield*/, Promise.all(product.depots_ids.map(function (depot_id) { return __awaiter(_this, void 0, void 0, function () {
+                                var depot, _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0: return [4 /*yield*/, DepotModel.findOne({ _id: depot_id }, { name: 1, seller_id: 1 })];
+                                        case 1:
+                                            depot = _b.sent();
+                                            _a = product;
+                                            return [4 /*yield*/, seller_schema_1.default.findOne({ _id: depot.seller_id })];
+                                        case 2:
+                                            _a.seller = (_b.sent()).name;
+                                            return [2 /*return*/, depot];
+                                    }
+                                });
+                            }); }))];
+                    case 6:
+                        _g.depots_ids = _h.sent();
+                        return [3 /*break*/, 8];
+                    case 7:
+                        _d = true;
+                        return [7 /*endfinally*/];
+                    case 8: return [3 /*break*/, 3];
+                    case 9: return [3 /*break*/, 16];
+                    case 10:
+                        e_3_1 = _h.sent();
+                        e_3 = { error: e_3_1 };
+                        return [3 /*break*/, 16];
+                    case 11:
+                        _h.trys.push([11, , 14, 15]);
+                        if (!(!_d && !_a && (_b = _e.return))) return [3 /*break*/, 13];
+                        return [4 /*yield*/, _b.call(_e)];
+                    case 12:
+                        _h.sent();
+                        _h.label = 13;
+                    case 13: return [3 /*break*/, 15];
+                    case 14:
+                        if (e_3) throw e_3.error;
+                        return [7 /*endfinally*/];
+                    case 15: return [7 /*endfinally*/];
+                    case 16: return [2 /*return*/, products];
                 }
             });
         });

@@ -119,6 +119,23 @@ var ProductController = /** @class */ (function () {
                 });
             });
         };
+        this.allProducts = function (_a, res) {
+            var params = _a.params;
+            return __awaiter(_this, void 0, void 0, function () {
+                var pag, products;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            pag = params.pag;
+                            return [4 /*yield*/, this.productService.allProducts(pag)];
+                        case 1:
+                            products = _b.sent();
+                            res.send(products);
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
     }
     return ProductController;
 }());

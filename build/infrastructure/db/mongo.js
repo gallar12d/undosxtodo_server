@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
-var DB_URI = "".concat(process.env.DB_URI);
+var DB_URI = "".concat(process.env.DB_URI || "mongodb+srv://admin:admin@cluster0.rau7epe.mongodb.net/?retryWrites=true&w=majority");
 var dbInit = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {

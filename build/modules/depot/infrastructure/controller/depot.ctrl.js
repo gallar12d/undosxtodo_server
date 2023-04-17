@@ -115,6 +115,20 @@ var DepotController = /** @class */ (function () {
                 }
             });
         }); };
+        this.allDepots = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var pag, depots;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        pag = req.params.pag;
+                        return [4 /*yield*/, this.depotService.allDepots(pag)];
+                    case 1:
+                        depots = _a.sent();
+                        res.send(depots);
+                        return [2 /*return*/];
+                }
+            });
+        }); };
     }
     return DepotController;
 }());

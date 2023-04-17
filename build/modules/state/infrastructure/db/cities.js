@@ -5045,7 +5045,7 @@ exports.cities = [
     {
         "id": "1009",
         "state_id": "24",
-        "name": "CALI (SANTIAGO DE CALI)"
+        "name": "CALI"
     },
     {
         "id": "1010",

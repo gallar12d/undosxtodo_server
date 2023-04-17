@@ -32,7 +32,8 @@ var UserSchema = new mongoose_1.Schema({
     },
     name: String,
     email: String,
-    password: String
+    password: String,
+    rol: String
 }, { timestamps: true });
 var UserModel = (0, mongoose_1.model)("users", UserSchema);
 exports.default = UserModel;

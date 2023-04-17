@@ -93,6 +93,19 @@ var DepotService = /** @class */ (function () {
             });
         });
     };
+    DepotService.prototype.allDepots = function (pag) {
+        return __awaiter(this, void 0, void 0, function () {
+            var depots;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.depotRepository.allDepots(pag)];
+                    case 1:
+                        depots = _a.sent();
+                        return [2 /*return*/, depots];
+                }
+            });
+        });
+    };
     return DepotService;
 }());
 exports.DepotService = DepotService;

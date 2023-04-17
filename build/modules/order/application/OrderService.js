@@ -294,6 +294,19 @@ var OrderService = /** @class */ (function () {
             });
         });
     };
+    OrderService.prototype.allOrders = function (pag) {
+        return __awaiter(this, void 0, void 0, function () {
+            var orders;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.allOrders(pag)];
+                    case 1:
+                        orders = _a.sent();
+                        return [2 /*return*/, orders];
+                }
+            });
+        });
+    };
     return OrderService;
 }());
 exports.OrderService = OrderService;

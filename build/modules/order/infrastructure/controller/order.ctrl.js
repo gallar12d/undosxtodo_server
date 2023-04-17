@@ -179,6 +179,29 @@ var OrderController = /** @class */ (function () {
                 });
             });
         };
+        this.allOrders = function (_a, res) {
+            var params = _a.params;
+            return __awaiter(_this, void 0, void 0, function () {
+                var pag, orders, err_7;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _b.trys.push([0, 2, , 3]);
+                            pag = params.pag;
+                            return [4 /*yield*/, this.orderService.allOrders(pag)];
+                        case 1:
+                            orders = _b.sent();
+                            res.status(200).send(orders);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_7 = _b.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_7));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
     }
     return OrderController;
 }());

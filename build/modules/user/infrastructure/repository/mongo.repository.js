@@ -51,7 +51,7 @@ var MongoRepository = /** @class */ (function () {
             var user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, user_shchema_1.default.findById(id)];
+                    case 0: return [4 /*yield*/, user_shchema_1.default.findOne({ id: id })];
                     case 1:
                         user = _a.sent();
                         return [2 /*return*/, user];
@@ -88,7 +88,7 @@ var MongoRepository = /** @class */ (function () {
     MongoRepository.prototype.createToken = function (id) {
         var token = jsonwebtoken_1.default.sign({ id: id }, process.env.SECRET_KEY || "secret@123", {
             // const token = jwt.sign({ id }, "secret@123", {
-            expiresIn: "30m",
+            expiresIn: "50m",
         });
         return token;
     };
