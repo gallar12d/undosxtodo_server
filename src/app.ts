@@ -7,17 +7,12 @@ const PORT = process.env.PORT || 3000;
 // const PORT = 3000;
 const app = express();
 // const allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001'];
-app.use(cors({
-    origin: ['https://ultimilla.com', 'http://localhost:3001'],
+const corsOptions = {
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Authorization', 'Content-Type']
-  }))
-// app.use(async (req, res, next) => {
-//     res.header("Access-Control-Allow-Origin", "https://ultimilla.com"); // update to match the domain you will make the request from
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//     res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
+    allowedHeaders: ['Content-Type', 'Authorization']
+  };
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(router);
 db().then(() => console.log("Conexion Ready"));
