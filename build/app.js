@@ -11,9 +11,17 @@ var mongo_1 = __importDefault(require("./infrastructure/db/mongo"));
 var PORT = process.env.PORT || 3000;
 // const PORT = 3000;
 var app = (0, express_1.default)();
-// const allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001'];
+var allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001'];
 var corsOptions = {
-    origin: '*',
+    origin: function (origin, callback) {
+        console.log(origin);
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 };
