@@ -70,7 +70,9 @@ var MongoRepository = /** @class */ (function () {
             var depots;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, DepotModel.find({ "seller_id": seller_id }, { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1 })];
+                    case 0:
+                        console.log(DepotModel);
+                        return [4 /*yield*/, DepotModel.find({ "seller_id": seller_id }, { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1 })];
                     case 1:
                         depots = _a.sent();
                         return [2 /*return*/, depots];
