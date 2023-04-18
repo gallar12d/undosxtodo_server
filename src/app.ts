@@ -6,11 +6,12 @@ import db from "./infrastructure/db/mongo";
 const PORT = process.env.PORT || 3000;
 // const PORT = 3000;
 const app = express();
-app.use(cors({
-    origin: 'https://ultimilla.com',
+const allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001'];
+app.options('*', cors({
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Authorization', 'Content-Type']
-}));
+  }))
 // app.use(async (req, res, next) => {
 //     res.header("Access-Control-Allow-Origin", "https://ultimilla.com"); // update to match the domain you will make the request from
 //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
