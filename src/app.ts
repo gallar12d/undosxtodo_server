@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 3000;
 // const PORT = 3000;
 const app = express();
 // const allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001'];
-app.use('*', cors({
-    origin: ['https://ultimilla.com', 'https://ultimilla.com/#/', 'http://localhost:3001'],
+app.use(cors({
+    origin: ['https://ultimilla.com', 'http://localhost:3001'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Authorization', 'Content-Type']
   }))
