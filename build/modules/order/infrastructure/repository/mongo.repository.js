@@ -59,7 +59,7 @@ var MongoRepository = /** @class */ (function () {
             var user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, OrderModel.find({ id: id })];
+                    case 0: return [4 /*yield*/, OrderModel.default.find({ id: id })];
                     case 1:
                         user = _a.sent();
                         return [2 /*return*/, user];
@@ -72,7 +72,7 @@ var MongoRepository = /** @class */ (function () {
             var orderCreated;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, OrderModel.create(order)];
+                    case 0: return [4 /*yield*/, OrderModel.default.create(order)];
                     case 1:
                         orderCreated = _a.sent();
                         return [2 /*return*/, orderCreated];
@@ -85,7 +85,7 @@ var MongoRepository = /** @class */ (function () {
             var orderUpdated;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, OrderModel.findOneAndUpdate({ id: id }, order, {
+                    case 0: return [4 /*yield*/, OrderModel.default.findOneAndUpdate({ id: id }, order, {
                             new: true,
                         })];
                     case 1:
@@ -101,7 +101,7 @@ var MongoRepository = /** @class */ (function () {
             var orders, _d, orders_1, orders_1_1, order, _e, e_1_1;
             return __generator(this, function (_f) {
                 switch (_f.label) {
-                    case 0: return [4 /*yield*/, OrderModel.find({ seller_id: new mongoose_1.default.Types.ObjectId(seller_id) })];
+                    case 0: return [4 /*yield*/, OrderModel.default.find({ seller_id: new mongoose_1.default.Types.ObjectId(seller_id) })];
                     case 1:
                         orders = _f.sent();
                         _f.label = 2;
@@ -154,7 +154,7 @@ var MongoRepository = /** @class */ (function () {
             var order;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, OrderModel.findOne({ guide: guide })];
+                    case 0: return [4 /*yield*/, OrderModel.default.findOne({ guide: guide })];
                     case 1:
                         order = _a.sent();
                         return [2 /*return*/, order];
@@ -190,7 +190,7 @@ var MongoRepository = /** @class */ (function () {
             var updatedStatus;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, OrderModel.updateOne({ id: id }, { $set: { guide_status: guide_status } })];
+                    case 0: return [4 /*yield*/, OrderModel.default.updateOne({ id: id }, { $set: { guide_status: guide_status } })];
                     case 1:
                         updatedStatus = _a.sent();
                         return [2 /*return*/, updatedStatus];
@@ -209,7 +209,7 @@ var MongoRepository = /** @class */ (function () {
                             page: pag,
                             limit: 7
                         };
-                        return [4 /*yield*/, OrderModel.paginate({}, options)];
+                        return [4 /*yield*/, OrderModel.default.paginate({}, options)];
                     case 1:
                         result = _j.sent();
                         orders = JSON.parse(JSON.stringify(result));

@@ -17,5 +17,6 @@ const DepotSchema = new mongoose.Schema(
   { timestamps: true }
 );
 DepotSchema.plugin(paginate);
-// const DepotModel = model("depots", DepotSchema);
+// const DepotModel = mongoose.model("depots", DepotSchema);
+// export {DepotModel};
 module.exports= mongoose.model("depots", DepotSchema);

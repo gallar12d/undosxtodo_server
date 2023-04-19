@@ -57,7 +57,7 @@ var MongoRepository = /** @class */ (function () {
             var insertedDepot;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, DepotModel.create(depot)];
+                    case 0: return [4 /*yield*/, DepotModel.default.create(depot)];
                     case 1:
                         insertedDepot = _a.sent();
                         return [2 /*return*/, insertedDepot];
@@ -70,9 +70,7 @@ var MongoRepository = /** @class */ (function () {
             var depots;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.log(DepotModel);
-                        return [4 /*yield*/, DepotModel.find({ "seller_id": seller_id }, { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1 })];
+                    case 0: return [4 /*yield*/, DepotModel.default.find({ "seller_id": seller_id }, { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1 })];
                     case 1:
                         depots = _a.sent();
                         return [2 /*return*/, depots];
@@ -86,7 +84,7 @@ var MongoRepository = /** @class */ (function () {
             var updatedDepot;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, DepotModel.updateOne({ "id": "".concat(id) }, { seller_id: seller_id, name: name, state: state, city: city, address: address })];
+                    case 0: return [4 /*yield*/, DepotModel.default.updateOne({ "id": "".concat(id) }, { seller_id: seller_id, name: name, state: state, city: city, address: address })];
                     case 1:
                         updatedDepot = _b.sent();
                         return [2 /*return*/, updatedDepot];
@@ -99,7 +97,7 @@ var MongoRepository = /** @class */ (function () {
             var deletedDepot;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, DepotModel.deleteOne({ "id": id })];
+                    case 0: return [4 /*yield*/, DepotModel.default.deleteOne({ "id": id })];
                     case 1:
                         deletedDepot = _a.sent();
                         return [2 /*return*/, deletedDepot];
@@ -118,7 +116,7 @@ var MongoRepository = /** @class */ (function () {
                             page: pag,
                             limit: 7
                         };
-                        return [4 /*yield*/, DepotModel.paginate({}, options)];
+                        return [4 /*yield*/, DepotModel.default.paginate({}, options)];
                     case 1:
                         result = _h.sent();
                         depots = JSON.parse(JSON.stringify(result));

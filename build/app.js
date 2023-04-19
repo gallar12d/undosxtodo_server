@@ -13,17 +13,9 @@ var PORT = process.env.PORT || 3000;
 var app = (0, express_1.default)();
 var allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001'];
 var corsOptions = {
-    origin: function (origin, callback) {
-        console.log(origin);
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        }
-        else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
+    allowedHeaders: ['Content-Type', 'Authorization']
 };
 app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.json());
