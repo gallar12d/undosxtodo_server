@@ -10,7 +10,8 @@ const allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001'];
 const corsOptions = {
     origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Access-Control-Allow-Origin']
 };
 app.use(cors(corsOptions));
 app.use(express.json());
