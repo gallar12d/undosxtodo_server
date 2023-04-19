@@ -4,19 +4,19 @@ import paginate from 'mongoose-paginate-v2';
 
 const DepotSchema = new mongoose.Schema(
   {
-    id: {type: String},
+    id: { type: String },
     seller_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'sellers',
-      },
-    state: {type: String},
-    city: {type: String},
-    name: {type: String},
-    address: {type: String}
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'sellers',
+    },
+    state: { type: String },
+    city: { type: String },
+    name: { type: String },
+    address: { type: String }
   },
   { timestamps: true }
 );
 DepotSchema.plugin(paginate);
-// const DepotModel = mongoose.model("depots", DepotSchema);
-// export {DepotModel};
-module.exports= mongoose.model("depots", DepotSchema);
+interface DepotDocument extends mongoose.Document {seller_id}
+const DepotModel = mongoose.model<DepotDocument,mongoose.PaginateModel<DepotDocument>>('Depots', DepotSchema, 'depots');
+export { DepotModel };

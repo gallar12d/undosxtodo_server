@@ -12,5 +12,6 @@ const ProductSchema = new mongoose.Schema(
   { timestamps: true }
 );
 ProductSchema.plugin(paginate);
-// const ProductModel = mongoose.model("products", ProductSchema);
-module.exports= mongoose.model("products", ProductSchema);
+interface ProductDocument extends mongoose.Document { }
+const ProductModel = mongoose.model<ProductDocument,mongoose.PaginateModel<ProductDocument>>('Products', ProductSchema, 'products');
+export {ProductModel};

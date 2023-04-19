@@ -1,7 +1,7 @@
 import { ProductValue } from "../../domain/product.value";
 import { ProductRepository } from "../../domain/product.repository";
-const ProductModel = require("../model/product.schema");
-const DepotModel = require("../../../depot/infrastructure/model/depot.schema");
+import { ProductModel } from "../model/product.schema";
+import { DepotModel } from "../../../depot/infrastructure/model/depot.schema";
 import mongoose from "mongoose";
 import SellerModel from "../../../seller/infrastructure/model/seller.schema";
 // import jwt from "jsonwebtoken";
@@ -11,7 +11,7 @@ import SellerModel from "../../../seller/infrastructure/model/seller.schema";
 export class MongoRepository implements ProductRepository {
 
     public async insertProduct(newProduct: ProductValue): Promise<any | null> {
-        const insertedProduct = await ProductModel.default.create(newProduct);
+        const insertedProduct = await ProductModel.create(newProduct);
         return insertedProduct;
     }
 
@@ -21,7 +21,7 @@ export class MongoRepository implements ProductRepository {
         var result: any[] = [];
 
         for await (const depot_id of depots_ids) {
-            result = await ProductModel.default.find({ "depots_ids": { $all: [`${depot_id._id}`] } }, { id: 1, name: 1, price: 1, depots_ids: 1 });
+            result = await ProductModel.find({ "depots_ids": { $all: [`${depot_id._id}`] } }, { id: 1, name: 1, price: 1, depots_ids: 1 });
             products = products.concat(result.map(r => r));
         }
 
@@ -30,7 +30,7 @@ export class MongoRepository implements ProductRepository {
 
         for await (const product of products) {
             product.depots_ids = await Promise.all(product.depots_ids.map(async (depot_id) => {
-                return await DepotModel.default.findOne({ _id: depot_id }, { name: 1 });
+                return await DepotModel.findOne({ _id: depot_id }, { name: 1 });
             }));
         }
 
@@ -38,13 +38,13 @@ export class MongoRepository implements ProductRepository {
     }
 
     public async updateProduct({ _id, id, depots_ids, sku, name, price }: any): Promise<any | null> {
-        const updatedProduct = await ProductModel.default.updateOne({ _id: new mongoose.Types.ObjectId(_id) },
+        const updatedProduct = await ProductModel.updateOne({ _id: new mongoose.Types.ObjectId(_id) },
             { $set: { depots_ids: depots_ids, sku: sku, name: name, price: price } });
         return updatedProduct;
     }
 
     public async deleteProduct(_id): Promise<any | null> {
-        const deletedProduct = await ProductModel.default.deleteOne({ _id: new mongoose.Types.ObjectId(_id) });
+        const deletedProduct = await ProductModel.deleteOne({ _id: new mongoose.Types.ObjectId(_id) });
         return deletedProduct;
     }
 
@@ -53,13 +53,13 @@ export class MongoRepository implements ProductRepository {
             page: pag,
             limit: 7
         }
-        var result = await ProductModel.default.paginate({}, options);
+        var result = await ProductModel.paginate({}, options);
         const products = JSON.parse(JSON.stringify(result));
 
         for await (var product of products.docs) {
             product.depots_ids = await Promise.all(product.depots_ids.map(async (depot_id) => {
-                const depot= await DepotModel.default.findOne({ _id: depot_id },{name:1,seller_id:1});
-                product.seller= (await SellerModel.findOne({_id: depot.seller_id})).name;
+                const depot = await DepotModel.findOne({ _id: depot_id }, { name: 1, seller_id: 1 });
+                product.seller = (await SellerModel.findOne({ _id: depot.seller_id })).name;
                 return depot;
             }));
         }

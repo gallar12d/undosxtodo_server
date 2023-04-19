@@ -33,5 +33,6 @@ const OrderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 OrderSchema.plugin(paginate);
-// const UserModel = mongoose.model("orders", OrderSchema);
-module.exports= mongoose.model("orders", OrderSchema);
+interface OrderDocument extends mongoose.Document {guide_status}
+const OrderModel = mongoose.model<OrderDocument,mongoose.PaginateModel<OrderDocument>>('Orders', OrderSchema, 'orders');
+export { OrderModel };

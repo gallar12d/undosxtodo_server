@@ -1,13 +1,18 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var OrderSchema = new mongoose_1.Schema({
+exports.OrderModel = void 0;
+var mongoose_1 = __importDefault(require("mongoose"));
+var mongoose_paginate_v2_1 = __importDefault(require("mongoose-paginate-v2"));
+var OrderSchema = new mongoose_1.default.Schema({
     id: { type: String },
     depot_name: { type: String, required: false },
     depot_id: { type: String, required: false },
     guide: { type: Number, required: true },
     guide_status: { type: String, required: false },
-    seller_id: { type: mongoose_1.Types.ObjectId },
+    seller_id: { type: mongoose_1.default.Types.ObjectId },
     seller_address: { type: String, required: false },
     seller_city: { type: String, required: false },
     seller_state: { type: String, required: false },
@@ -28,5 +33,6 @@ var OrderSchema = new mongoose_1.Schema({
     client_country: { type: String, required: false },
     value_to_collect: { type: Number, required: false },
 }, { timestamps: true });
-var UserModel = (0, mongoose_1.model)("orders", OrderSchema);
-exports.default = UserModel;
+OrderSchema.plugin(mongoose_paginate_v2_1.default);
+var OrderModel = mongoose_1.default.model('Orders', OrderSchema, 'orders');
+exports.OrderModel = OrderModel;
