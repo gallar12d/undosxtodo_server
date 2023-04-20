@@ -104,6 +104,7 @@ var MongoRepository = /** @class */ (function () {
                     case 0: return [4 /*yield*/, order_schema_1.OrderModel.find({ seller_id: new mongoose_1.default.Types.ObjectId(seller_id) })];
                     case 1:
                         orders = _f.sent();
+                        orders = JSON.parse(JSON.stringify(orders));
                         _f.label = 2;
                     case 2:
                         _f.trys.push([2, 10, 11, 16]);
@@ -122,6 +123,7 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status }, { name: 1 })];
                     case 6:
                         _e.guide_status = (_f.sent()).name;
+                        order.createdAt = new Date("" + order.createdAt).toISOString().slice(0, 10);
                         return [3 /*break*/, 8];
                     case 7:
                         _d = true;
@@ -235,6 +237,7 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, seller_schema_1.default.findOne({ _id: order.seller_id })];
                     case 7:
                         _h.seller = (_j.sent()).name;
+                        order.createdAt = new Date("" + order.createdAt).toISOString().slice(0, 10);
                         return [3 /*break*/, 9];
                     case 8:
                         _d = true;

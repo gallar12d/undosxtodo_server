@@ -24,9 +24,11 @@ export class MongoRepository implements OrderRepository {
 
   public async allOrder(seller_id): Promise<any[] | null> {
     var orders = await OrderModel.find({ seller_id: new mongoose.Types.ObjectId(seller_id) });
+    orders = JSON.parse(JSON.stringify(orders));
 
     for await (const order of orders) {
       order.guide_status = (await StatusModel.findOne({ id: order.guide_status }, { name: 1 })).name;
+      order.createdAt = new Date(""+order.createdAt).toISOString().slice(0, 10);
     }
 
     return orders;
@@ -66,6 +68,7 @@ export class MongoRepository implements OrderRepository {
     for await (const order of orders.docs) {
       order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
       order.seller = (await SellerModel.findOne({ _id: order.seller_id })).name
+      order.createdAt = new Date(""+order.createdAt).toISOString().slice(0, 10);
     }
     return orders;
   }
