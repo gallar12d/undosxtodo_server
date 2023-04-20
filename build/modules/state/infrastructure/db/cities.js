@@ -5,52 +5,52 @@ exports.cities = [
     {
         "id": "1",
         "state_id": "1",
-        "name": "MEDELLÍN"
+        "name": "Medellín"
     },
     {
         "id": "2",
         "state_id": "1",
-        "name": "ABEJORRAL"
+        "name": "Abejorral"
     },
     {
         "id": "3",
         "state_id": "1",
-        "name": "ABRIAQUI"
+        "name": "Abriaquí"
     },
     {
         "id": "4",
         "state_id": "1",
-        "name": "ALEJANDRIA"
+        "name": "Alejandría"
     },
     {
         "id": "5",
         "state_id": "1",
-        "name": "AMAGA"
+        "name": "Amagá"
     },
     {
         "id": "6",
         "state_id": "1",
-        "name": "AMALFI"
+        "name": "Amalfi"
     },
     {
         "id": "7",
         "state_id": "1",
-        "name": "ANDES"
+        "name": "Andes"
     },
     {
         "id": "8",
         "state_id": "1",
-        "name": "ANGELOPOLIS"
+        "name": "Angelópolis"
     },
     {
         "id": "9",
         "state_id": "1",
-        "name": "ANGOSTURA"
+        "name": "Angostura"
     },
     {
         "id": "10",
         "state_id": "1",
-        "name": "ANORI"
+        "name": "Anorí"
     },
     {
         "id": "11",
@@ -60,107 +60,107 @@ exports.cities = [
     {
         "id": "12",
         "state_id": "1",
-        "name": "ANZA"
+        "name": "Anza"
     },
     {
         "id": "13",
         "state_id": "1",
-        "name": "APARTADO"
+        "name": "Apartadó"
     },
     {
         "id": "14",
         "state_id": "1",
-        "name": "ARBOLETES"
+        "name": "Arboletes"
     },
     {
         "id": "15",
         "state_id": "1",
-        "name": "ARGELIA"
+        "name": "Argelia"
     },
     {
         "id": "16",
         "state_id": "1",
-        "name": "ARMENIA"
+        "name": "Armenia"
     },
     {
         "id": "17",
         "state_id": "1",
-        "name": "BARBOSA"
+        "name": "Barbosa"
     },
     {
         "id": "18",
         "state_id": "1",
-        "name": "BELMIRA"
+        "name": "Belmira"
     },
     {
         "id": "19",
         "state_id": "1",
-        "name": "BELLO"
+        "name": "Bello"
     },
     {
         "id": "20",
         "state_id": "1",
-        "name": "BETANIA"
+        "name": "Betania"
     },
     {
         "id": "21",
         "state_id": "1",
-        "name": "BETULIA"
+        "name": "Betulia"
     },
     {
         "id": "22",
         "state_id": "1",
-        "name": "BOLIVAR"
+        "name": "Bolívar"
     },
     {
         "id": "23",
         "state_id": "1",
-        "name": "BRICEÑO"
+        "name": "Briceño"
     },
     {
         "id": "24",
         "state_id": "1",
-        "name": "BURITICA"
+        "name": "Buriticá"
     },
     {
         "id": "25",
         "state_id": "1",
-        "name": "CACERES"
+        "name": "Cáceres"
     },
     {
         "id": "26",
         "state_id": "1",
-        "name": "CAICEDO"
+        "name": "Caicedo"
     },
     {
         "id": "27",
         "state_id": "1",
-        "name": "CALDAS"
+        "name": "Caldas"
     },
     {
         "id": "28",
         "state_id": "1",
-        "name": "CAMPAMENTO"
+        "name": "Campamento"
     },
     {
         "id": "29",
         "state_id": "1",
-        "name": "CAÑASGORDAS"
+        "name": "Cañasgordas"
     },
     {
         "id": "30",
         "state_id": "1",
-        "name": "CARACOLI"
+        "name": "Caracolí"
     },
     {
         "id": "31",
         "state_id": "1",
-        "name": "CARAMANTA"
+        "name": "Caramanta"
     },
     {
         "id": "32",
         "state_id": "1",
-        "name": "CAREPA"
+        "name": "Carepa"
     },
     {
         "id": "33",
@@ -170,77 +170,77 @@ exports.cities = [
     {
         "id": "34",
         "state_id": "1",
-        "name": "CAROLINA"
+        "name": "Carolina"
     },
     {
         "id": "35",
         "state_id": "1",
-        "name": "CAUCASIA"
+        "name": "Caucasia"
     },
     {
         "id": "36",
         "state_id": "1",
-        "name": "CHIGORODO"
+        "name": "Chigorodó"
     },
     {
         "id": "37",
         "state_id": "1",
-        "name": "CISNEROS"
+        "name": "Cisneros"
     },
     {
         "id": "38",
         "state_id": "1",
-        "name": "COCORNA"
+        "name": "Cocorná"
     },
     {
         "id": "39",
         "state_id": "1",
-        "name": "CONCEPCION"
+        "name": "Concepción"
     },
     {
         "id": "40",
         "state_id": "1",
-        "name": "CONCORDIA"
+        "name": "Concordia"
     },
     {
         "id": "41",
         "state_id": "1",
-        "name": "COPACABANA"
+        "name": "Copacabana"
     },
     {
         "id": "42",
         "state_id": "1",
-        "name": "DABEIBA"
+        "name": "Dabeiba"
     },
     {
         "id": "43",
         "state_id": "1",
-        "name": "DON MATIAS"
+        "name": "Don Matías"
     },
     {
         "id": "44",
         "state_id": "1",
-        "name": "EBEJICO"
+        "name": "Ebéjico"
     },
     {
         "id": "45",
         "state_id": "1",
-        "name": "EL BAGRE"
+        "name": "El Bagre"
     },
     {
         "id": "46",
         "state_id": "1",
-        "name": "ENTRERRIOS"
+        "name": "Entrerrios"
     },
     {
         "id": "47",
         "state_id": "1",
-        "name": "ENVIGADO"
+        "name": "Envigado"
     },
     {
         "id": "48",
         "state_id": "1",
-        "name": "FREDONIA"
+        "name": "Fredonia"
     },
     {
         "id": "49",
@@ -250,17 +250,17 @@ exports.cities = [
     {
         "id": "50",
         "state_id": "1",
-        "name": "GIRALDO"
+        "name": "Giraldo"
     },
     {
         "id": "51",
         "state_id": "1",
-        "name": "GIRARDOTA"
+        "name": "Girardota"
     },
     {
         "id": "52",
         "state_id": "1",
-        "name": "GOMEZ PLATA"
+        "name": "Gómez Plata"
     },
     {
         "id": "53",
@@ -270,37 +270,37 @@ exports.cities = [
     {
         "id": "54",
         "state_id": "1",
-        "name": "GUADALUPE"
+        "name": "Guadalupe"
     },
     {
         "id": "55",
         "state_id": "1",
-        "name": "GUARNE"
+        "name": "Guarne"
     },
     {
         "id": "56",
         "state_id": "1",
-        "name": "GUATAPE"
+        "name": "Guatapé"
     },
     {
         "id": "57",
         "state_id": "1",
-        "name": "HELICONIA"
+        "name": "Heliconia"
     },
     {
         "id": "58",
         "state_id": "1",
-        "name": "HISPANIA"
+        "name": "Hispania"
     },
     {
         "id": "59",
         "state_id": "1",
-        "name": "ITAGUI"
+        "name": "Itagui"
     },
     {
         "id": "60",
         "state_id": "1",
-        "name": "ITUANGO"
+        "name": "Ituango"
     },
     {
         "id": "61",
@@ -310,142 +310,142 @@ exports.cities = [
     {
         "id": "62",
         "state_id": "1",
-        "name": "JERICO"
+        "name": "Jericó"
     },
     {
         "id": "63",
         "state_id": "1",
-        "name": "LA CEJA"
+        "name": "La Ceja"
     },
     {
         "id": "64",
         "state_id": "1",
-        "name": "LA ESTRELLA"
+        "name": "La Estrella"
     },
     {
         "id": "65",
         "state_id": "1",
-        "name": "LA PINTADA"
+        "name": "La Pintada"
     },
     {
         "id": "66",
         "state_id": "1",
-        "name": "LA UNION"
+        "name": "La Unión"
     },
     {
         "id": "67",
         "state_id": "1",
-        "name": "LIBORINA"
+        "name": "Liborina"
     },
     {
         "id": "68",
         "state_id": "1",
-        "name": "MACEO"
+        "name": "Maceo"
     },
     {
         "id": "69",
         "state_id": "1",
-        "name": "MARINILLA"
+        "name": "Marinilla"
     },
     {
         "id": "70",
         "state_id": "1",
-        "name": "MONTEBELLO"
+        "name": "Montebello"
     },
     {
         "id": "71",
         "state_id": "1",
-        "name": "MURINDO"
+        "name": "Murindó"
     },
     {
         "id": "72",
         "state_id": "1",
-        "name": "MUTATA"
+        "name": "Mutatá"
     },
     {
         "id": "73",
         "state_id": "1",
-        "name": "NARIÑO"
+        "name": "Nariño"
     },
     {
         "id": "74",
         "state_id": "1",
-        "name": "NECOCLI"
+        "name": "Necoclí"
     },
     {
         "id": "75",
         "state_id": "1",
-        "name": "NECHI"
+        "name": "Nechí"
     },
     {
         "id": "76",
         "state_id": "1",
-        "name": "OLAYA"
+        "name": "Olaya"
     },
     {
         "id": "77",
         "state_id": "1",
-        "name": "PEÑOL"
+        "name": "Peñol"
     },
     {
         "id": "78",
         "state_id": "1",
-        "name": "PEQUE"
+        "name": "Peque"
     },
     {
         "id": "79",
         "state_id": "1",
-        "name": "PUEBLORRICO"
+        "name": "Pueblorrico"
     },
     {
         "id": "80",
         "state_id": "1",
-        "name": "PUERTO BERRIO"
+        "name": "Puerto Berrío"
     },
     {
         "id": "81",
         "state_id": "1",
-        "name": "PUERTO NARE (LA MAGDALENA)"
+        "name": "Puerto Nare"
     },
     {
         "id": "82",
         "state_id": "1",
-        "name": "PUERTO TRIUNFO"
+        "name": "Puerto Triunfo"
     },
     {
         "id": "83",
         "state_id": "1",
-        "name": "REMEDIOS"
+        "name": "Remedios"
     },
     {
         "id": "84",
         "state_id": "1",
-        "name": "RETIRO"
+        "name": "Retiro"
     },
     {
         "id": "85",
         "state_id": "1",
-        "name": "RIONEGRO"
+        "name": "Rionegro"
     },
     {
         "id": "86",
         "state_id": "1",
-        "name": "SABANALARGA"
+        "name": "Sabanalarga"
     },
     {
         "id": "87",
         "state_id": "1",
-        "name": "SABANETA"
+        "name": "Sabaneta"
     },
     {
         "id": "88",
         "state_id": "1",
-        "name": "SALGAR"
+        "name": "Salgar"
     },
     {
         "id": "89",
         "state_id": "1",
-        "name": "SAN ANDRÉS"
+        "name": "San Andrés"
     },
     {
         "id": "90",
@@ -455,12 +455,12 @@ exports.cities = [
     {
         "id": "91",
         "state_id": "1",
-        "name": "SAN FRANCISCO"
+        "name": "San Francisco"
     },
     {
         "id": "92",
         "state_id": "1",
-        "name": "SAN JERONIMO"
+        "name": "San Jerónimo"
     },
     {
         "id": "93",
@@ -475,12 +475,12 @@ exports.cities = [
     {
         "id": "95",
         "state_id": "1",
-        "name": "SAN LUIS"
+        "name": "San Luis"
     },
     {
         "id": "96",
         "state_id": "1",
-        "name": "SAN PEDRO"
+        "name": "San Pedro"
     },
     {
         "id": "97",
@@ -490,22 +490,22 @@ exports.cities = [
     {
         "id": "98",
         "state_id": "1",
-        "name": "SAN RAFAEL"
+        "name": "San Rafael"
     },
     {
         "id": "99",
         "state_id": "1",
-        "name": "SAN ROQUE"
+        "name": "San Roque"
     },
     {
         "id": "100",
         "state_id": "1",
-        "name": "SAN VICENTE"
+        "name": "San Vicente"
     },
     {
         "id": "101",
         "state_id": "1",
-        "name": "SANTA BARBARA"
+        "name": "Santa Bárbara"
     },
     {
         "id": "102",
@@ -515,17 +515,17 @@ exports.cities = [
     {
         "id": "103",
         "state_id": "1",
-        "name": "SANTO DOMINGO"
+        "name": "Santo Domingo"
     },
     {
         "id": "104",
         "state_id": "1",
-        "name": "SANTUARIO"
+        "name": "Santuario"
     },
     {
         "id": "105",
         "state_id": "1",
-        "name": "SEGOVIA"
+        "name": "Segovia"
     },
     {
         "id": "106",
@@ -535,67 +535,67 @@ exports.cities = [
     {
         "id": "107",
         "state_id": "1",
-        "name": "SOPETRAN"
+        "name": "Sopetrán"
     },
     {
         "id": "108",
         "state_id": "1",
-        "name": "TAMESIS"
+        "name": "Támesis"
     },
     {
         "id": "109",
         "state_id": "1",
-        "name": "TARAZA"
+        "name": "Tarazá"
     },
     {
         "id": "110",
         "state_id": "1",
-        "name": "TARSO"
+        "name": "Tarso"
     },
     {
         "id": "111",
         "state_id": "1",
-        "name": "TITIRIBI"
+        "name": "Titiribí"
     },
     {
         "id": "112",
         "state_id": "1",
-        "name": "TOLEDO"
+        "name": "Toledo"
     },
     {
         "id": "113",
         "state_id": "1",
-        "name": "TURBO"
+        "name": "Turbo"
     },
     {
         "id": "114",
         "state_id": "1",
-        "name": "URAMITA"
+        "name": "Uramita"
     },
     {
         "id": "115",
         "state_id": "1",
-        "name": "URRAO"
+        "name": "Urrao"
     },
     {
         "id": "116",
         "state_id": "1",
-        "name": "VALDIVIA"
+        "name": "Valdivia"
     },
     {
         "id": "117",
         "state_id": "1",
-        "name": "VALPARAISO"
+        "name": "Valparaíso"
     },
     {
         "id": "118",
         "state_id": "1",
-        "name": "VEGACHI"
+        "name": "Vegachí"
     },
     {
         "id": "119",
         "state_id": "1",
-        "name": "VENECIA"
+        "name": "Venecia"
     },
     {
         "id": "120",
@@ -605,37 +605,37 @@ exports.cities = [
     {
         "id": "121",
         "state_id": "1",
-        "name": "YALI"
+        "name": "Yalí"
     },
     {
         "id": "122",
         "state_id": "1",
-        "name": "YARUMAL"
+        "name": "Yarumal"
     },
     {
         "id": "123",
         "state_id": "1",
-        "name": "YOLOMBO"
+        "name": "Yolombó"
     },
     {
         "id": "124",
         "state_id": "1",
-        "name": "YONDO"
+        "name": "Yondó"
     },
     {
         "id": "125",
         "state_id": "1",
-        "name": "ZARAGOZA"
+        "name": "Zaragoza"
     },
     {
         "id": "126",
         "state_id": "2",
-        "name": "BARRANQUILLA"
+        "name": "Barranquilla"
     },
     {
         "id": "127",
         "state_id": "2",
-        "name": "BARANOA"
+        "name": "Baranoa"
     },
     {
         "id": "128",
@@ -645,12 +645,12 @@ exports.cities = [
     {
         "id": "129",
         "state_id": "2",
-        "name": "CANDELARIA"
+        "name": "Candelaria"
     },
     {
         "id": "130",
         "state_id": "2",
-        "name": "GALAPA"
+        "name": "Galapa"
     },
     {
         "id": "131",
@@ -660,17 +660,17 @@ exports.cities = [
     {
         "id": "132",
         "state_id": "2",
-        "name": "LURUACO"
+        "name": "Luruaco"
     },
     {
         "id": "133",
         "state_id": "2",
-        "name": "MALAMBO"
+        "name": "Malambo"
     },
     {
         "id": "134",
         "state_id": "2",
-        "name": "MANATI"
+        "name": "Manatí"
     },
     {
         "id": "135",
@@ -680,12 +680,12 @@ exports.cities = [
     {
         "id": "136",
         "state_id": "2",
-        "name": "PIOJO"
+        "name": "Piojó"
     },
     {
         "id": "137",
         "state_id": "2",
-        "name": "POLO NUEVO"
+        "name": "Polonuevo"
     },
     {
         "id": "138",
@@ -745,7 +745,7 @@ exports.cities = [
     {
         "id": "149",
         "state_id": "3",
-        "name": "Santa Fe de Bogotá"
+        "name": "Bogotá"
     },
     {
         "id": "150",
@@ -850,7 +850,7 @@ exports.cities = [
     {
         "id": "170",
         "state_id": "4",
-        "name": "CARTAGENA"
+        "name": "Cartagena"
     },
     {
         "id": "171",
@@ -1075,7 +1075,7 @@ exports.cities = [
     {
         "id": "215",
         "state_id": "5",
-        "name": "TUNJA"
+        "name": "Tunja"
     },
     {
         "id": "216",
@@ -1690,7 +1690,7 @@ exports.cities = [
     {
         "id": "338",
         "state_id": "6",
-        "name": "MANIZALES"
+        "name": "Manizales"
     },
     {
         "id": "339",
@@ -1825,7 +1825,7 @@ exports.cities = [
     {
         "id": "365",
         "state_id": "7",
-        "name": "FLORENCIA"
+        "name": "Florencia"
     },
     {
         "id": "366",
@@ -1905,7 +1905,7 @@ exports.cities = [
     {
         "id": "381",
         "state_id": "8",
-        "name": "POPAYÁN"
+        "name": "Popayán"
     },
     {
         "id": "382",
@@ -2105,7 +2105,7 @@ exports.cities = [
     {
         "id": "421",
         "state_id": "9",
-        "name": "VALLEDUPAR"
+        "name": "Valledupar"
     },
     {
         "id": "422",
@@ -2230,7 +2230,7 @@ exports.cities = [
     {
         "id": "446",
         "state_id": "10",
-        "name": "MONTERÍA"
+        "name": "Montería"
     },
     {
         "id": "447",
@@ -2950,7 +2950,7 @@ exports.cities = [
     {
         "id": "590",
         "state_id": "12",
-        "name": "QUIBDÓ (SAN FRANCISCO DE QUIBDÓ)"
+        "name": "Quibdó"
     },
     {
         "id": "591",
@@ -3080,7 +3080,7 @@ exports.cities = [
     {
         "id": "616",
         "state_id": "13",
-        "name": "NEIVA"
+        "name": "Neiva"
     },
     {
         "id": "617",
@@ -3265,7 +3265,7 @@ exports.cities = [
     {
         "id": "653",
         "state_id": "14",
-        "name": "RIOHACHA"
+        "name": "Riohacha"
     },
     {
         "id": "654",
@@ -3335,7 +3335,7 @@ exports.cities = [
     {
         "id": "667",
         "state_id": "15",
-        "name": "SANTA MARTA"
+        "name": "Santa Marta"
     },
     {
         "id": "668",
@@ -3465,7 +3465,7 @@ exports.cities = [
     {
         "id": "693",
         "state_id": "16",
-        "name": "VILLAVICENCIO"
+        "name": "Villavicencio"
     },
     {
         "id": "694",
@@ -3610,7 +3610,7 @@ exports.cities = [
     {
         "id": "722",
         "state_id": "17",
-        "name": "PASTO (SAN JUAN DE PASTO)"
+        "name": "Pasto"
     },
     {
         "id": "723",
@@ -3925,7 +3925,7 @@ exports.cities = [
     {
         "id": "785",
         "state_id": "18",
-        "name": "CÚCUTA"
+        "name": "Cúcuta"
     },
     {
         "id": "786",
@@ -4185,7 +4185,7 @@ exports.cities = [
     {
         "id": "837",
         "state_id": "20",
-        "name": "PEREIRA"
+        "name": "Pereira"
     },
     {
         "id": "838",
@@ -4255,7 +4255,7 @@ exports.cities = [
     {
         "id": "851",
         "state_id": "21",
-        "name": "BUCARAMANGA"
+        "name": "Bucaramanga"
     },
     {
         "id": "852",
@@ -4690,7 +4690,7 @@ exports.cities = [
     {
         "id": "938",
         "state_id": "22",
-        "name": "SINCELEJO"
+        "name": "Sincelejo"
     },
     {
         "id": "939",
@@ -4810,7 +4810,7 @@ exports.cities = [
     {
         "id": "962",
         "state_id": "23",
-        "name": "IBAGUÉ"
+        "name": "Ibagué"
     },
     {
         "id": "963",
@@ -5045,7 +5045,7 @@ exports.cities = [
     {
         "id": "1009",
         "state_id": "24",
-        "name": "CALI"
+        "name": "Cali"
     },
     {
         "id": "1010",
@@ -5255,7 +5255,7 @@ exports.cities = [
     {
         "id": "1051",
         "state_id": "25",
-        "name": "ARAUCA"
+        "name": "Arauca"
     },
     {
         "id": "1052",
@@ -5290,7 +5290,7 @@ exports.cities = [
     {
         "id": "1058",
         "state_id": "26",
-        "name": "YOPAL"
+        "name": "Yopal"
     },
     {
         "id": "1059",
@@ -5385,7 +5385,7 @@ exports.cities = [
     {
         "id": "1077",
         "state_id": "27",
-        "name": "MOCOA"
+        "name": "Mocoa"
     },
     {
         "id": "1078",
@@ -5460,7 +5460,7 @@ exports.cities = [
     {
         "id": "1092",
         "state_id": "29",
-        "name": "LETICIA"
+        "name": "Leticia"
     },
     {
         "id": "1093",
@@ -5515,7 +5515,7 @@ exports.cities = [
     {
         "id": "1103",
         "state_id": "30",
-        "name": "PUERTO INÍRIDA"
+        "name": "Puerto Inírida"
     },
     {
         "id": "1104",
@@ -5555,7 +5555,7 @@ exports.cities = [
     {
         "id": "1111",
         "state_id": "31",
-        "name": "SAN JOSÉ DEL GUAVIARE"
+        "name": "San José del Guaviare"
     },
     {
         "id": "1112",
@@ -5575,7 +5575,7 @@ exports.cities = [
     {
         "id": "1115",
         "state_id": "32",
-        "name": "MITÚ"
+        "name": "Mitú"
     },
     {
         "id": "1116",
@@ -5605,7 +5605,7 @@ exports.cities = [
     {
         "id": "1121",
         "state_id": "33",
-        "name": "PUERTO CARREÑO"
+        "name": "Puerto Carreño"
     },
     {
         "id": "1122",
