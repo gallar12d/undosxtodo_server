@@ -11,7 +11,7 @@ var mongo_1 = __importDefault(require("./infrastructure/db/mongo"));
 var PORT = process.env.PORT || 3000;
 // const PORT = 3000;
 var app = (0, express_1.default)();
-var allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001'];
+var allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001', 'http://localhost'];
 var corsOptions = {
     origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],

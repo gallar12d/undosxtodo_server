@@ -6,7 +6,7 @@ import db from "./infrastructure/db/mongo";
 const PORT = process.env.PORT || 3000;
 // const PORT = 3000;
 const app = express();
-const allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001'];
+const allowedOrigins = ['https://ultimilla.com', 'http://localhost:3001', 'http://localhost'];
 const corsOptions = {
     origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
