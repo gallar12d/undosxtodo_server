@@ -16,7 +16,8 @@ var DepotSchema = new mongoose_1.default.Schema({
     state: { type: String },
     city: { type: String },
     name: { type: String },
-    address: { type: String }
+    address: { type: String },
+    status: { type: String }
 }, { timestamps: true });
 DepotSchema.plugin(mongoose_paginate_v2_1.default);
 var DepotModel = mongoose_1.default.model('Depots', DepotSchema, 'depots');

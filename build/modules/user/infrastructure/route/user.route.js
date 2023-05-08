@@ -15,5 +15,5 @@ var userCtrl = new user_ctrl_1.UserController(userService);
 router.get("/user/:id", userCtrl.findUser);
 router.get("/user", auth_middleware_1.authMiddleware, userCtrl.allUser);
 router.post("/user", userCtrl.registerUser);
-router.put("/user", body("email").isEmail(), userCtrl.updateUser);
+// router.put(`/user`, body("email").isEmail(),userCtrl.updateUser);
 router.get("/userToken", auth_middleware_1.authMiddleware, userCtrl.returnToken);

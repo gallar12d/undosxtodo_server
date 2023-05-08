@@ -64,8 +64,31 @@ var OrderController = /** @class */ (function () {
                 }
             });
         }); };
+        this.getOrdersPage = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var seller_id, pag, orders, err_2;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _b.trys.push([0, 2, , 3]);
+                            seller_id = body.seller_id, pag = body.pag;
+                            return [4 /*yield*/, this.orderService.getOrdersPage(seller_id, pag)];
+                        case 1:
+                            orders = _b.sent();
+                            res.status(200).send(orders);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_2 = _b.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_2));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
         this.allOrder = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var order, err_2, orders, error_1;
+            var order, err_3, orders, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -80,8 +103,8 @@ var OrderController = /** @class */ (function () {
                         res.status(200).send(order);
                         return [3 /*break*/, 4];
                     case 3:
-                        err_2 = _a.sent();
-                        res.status(400).send((0, handleErrors_1.default)(err_2));
+                        err_3 = _a.sent();
+                        res.status(400).send((0, handleErrors_1.default)(err_3));
                         return [3 /*break*/, 4];
                     case 4: return [3 /*break*/, 8];
                     case 5:
@@ -100,31 +123,12 @@ var OrderController = /** @class */ (function () {
             });
         }); };
         this.registerOrder = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var order, err_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.orderService.registerOrder(req.body)];
-                    case 1:
-                        order = _a.sent();
-                        res.send(order);
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_3 = _a.sent();
-                        res.status(400).send((0, handleErrors_1.default)(err_3));
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); };
-        this.updateOrder = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
             var order, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.orderService.updateOrder(req.params.id, req.body)];
+                        return [4 /*yield*/, this.orderService.registerOrder(req.body)];
                     case 1:
                         order = _a.sent();
                         res.send(order);
@@ -137,8 +141,27 @@ var OrderController = /** @class */ (function () {
                 }
             });
         }); };
+        this.updateOrder = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var order, err_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.orderService.updateOrder(req.params.id, req.body)];
+                    case 1:
+                        order = _a.sent();
+                        res.send(order);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_5 = _a.sent();
+                        res.status(400).send((0, handleErrors_1.default)(err_5));
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
         this.insertStatus = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var newStatus, err_5;
+            var newStatus, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -149,8 +172,8 @@ var OrderController = /** @class */ (function () {
                         res.send(newStatus);
                         return [3 /*break*/, 3];
                     case 2:
-                        err_5 = _a.sent();
-                        res.status(400).send((0, handleErrors_1.default)(err_5));
+                        err_6 = _a.sent();
+                        res.status(400).send((0, handleErrors_1.default)(err_6));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -159,7 +182,7 @@ var OrderController = /** @class */ (function () {
         this.updateStatus = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var id, guide_status, updatedStatus, err_6;
+                var id, guide_status, updatedStatus, err_7;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
@@ -171,8 +194,8 @@ var OrderController = /** @class */ (function () {
                             res.status(200).send(updatedStatus);
                             return [3 /*break*/, 3];
                         case 2:
-                            err_6 = _b.sent();
-                            res.status(400).send((0, handleErrors_1.default)(err_6));
+                            err_7 = _b.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_7));
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
                     }
@@ -182,7 +205,7 @@ var OrderController = /** @class */ (function () {
         this.allOrders = function (_a, res) {
             var params = _a.params;
             return __awaiter(_this, void 0, void 0, function () {
-                var pag, orders, err_7;
+                var pag, orders, err_8;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
@@ -194,10 +217,40 @@ var OrderController = /** @class */ (function () {
                             res.status(200).send(orders);
                             return [3 /*break*/, 3];
                         case 2:
-                            err_7 = _b.sent();
-                            res.status(400).send((0, handleErrors_1.default)(err_7));
+                            err_8 = _b.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_8));
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.ordersDate = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var rol, date, seller_id, ordersDate, ordersDate, err_9;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _b.trys.push([0, 5, , 6]);
+                            rol = body.rol, date = body.date, seller_id = body.seller_id;
+                            if (!(rol === 'superuser')) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.orderService.ordersDate(rol, date, '')];
+                        case 1:
+                            ordersDate = _b.sent();
+                            res.status(200).send(ordersDate);
+                            return [3 /*break*/, 4];
+                        case 2: return [4 /*yield*/, this.orderService.ordersDate(rol, date, seller_id)];
+                        case 3:
+                            ordersDate = _b.sent();
+                            res.status(200).send(ordersDate);
+                            _b.label = 4;
+                        case 4: return [3 /*break*/, 6];
+                        case 5:
+                            err_9 = _b.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_9));
+                            return [3 /*break*/, 6];
+                        case 6: return [2 /*return*/];
                     }
                 });
             });

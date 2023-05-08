@@ -48,7 +48,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoRepository = void 0;
 var depot_schema_1 = require("../model/depot.schema");
-var seller_schema_1 = __importDefault(require("../../../seller/infrastructure/model/seller.schema"));
+var seller_schema_1 = require("../../../seller/infrastructure/model/seller.schema");
+var mongoose_1 = __importDefault(require("mongoose"));
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
     }
@@ -65,12 +66,31 @@ var MongoRepository = /** @class */ (function () {
             });
         });
     };
+    MongoRepository.prototype.getDepotsPage = function (seller_id, pag) {
+        return __awaiter(this, void 0, void 0, function () {
+            var options, depots;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        options = {
+                            page: pag,
+                            limit: 6,
+                            sort: { createdAt: -1 }
+                        };
+                        return [4 /*yield*/, depot_schema_1.DepotModel.paginate({ $and: [{ "seller_id": new mongoose_1.default.Types.ObjectId(seller_id) }, { status: "active" }] }, options)];
+                    case 1:
+                        depots = _a.sent();
+                        return [2 /*return*/, depots];
+                }
+            });
+        });
+    };
     MongoRepository.prototype.getDepots = function (seller_id) {
         return __awaiter(this, void 0, void 0, function () {
             var depots;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, depot_schema_1.DepotModel.find({ "seller_id": seller_id }, { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1 })];
+                    case 0: return [4 /*yield*/, depot_schema_1.DepotModel.find({ $and: [{ "seller_id": seller_id }, { status: "active" }] }, { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1, status: 1 })];
                     case 1:
                         depots = _a.sent();
                         return [2 /*return*/, depots];
@@ -79,12 +99,12 @@ var MongoRepository = /** @class */ (function () {
         });
     };
     MongoRepository.prototype.updateDepot = function (_a) {
-        var id = _a.id, seller_id = _a.seller_id, name = _a.name, state = _a.state, city = _a.city, address = _a.address;
+        var id = _a.id, seller_id = _a.seller_id, name = _a.name, state = _a.state, city = _a.city, address = _a.address, status = _a.status;
         return __awaiter(this, void 0, void 0, function () {
             var updatedDepot;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, depot_schema_1.DepotModel.updateOne({ "id": "".concat(id) }, { seller_id: seller_id, name: name, state: state, city: city, address: address })];
+                    case 0: return [4 /*yield*/, depot_schema_1.DepotModel.updateOne({ "id": "".concat(id) }, { seller_id: seller_id, name: name, state: state, city: city, address: address, status: status })];
                     case 1:
                         updatedDepot = _b.sent();
                         return [2 /*return*/, updatedDepot];
@@ -114,7 +134,8 @@ var MongoRepository = /** @class */ (function () {
                     case 0:
                         options = {
                             page: pag,
-                            limit: 7
+                            limit: 10,
+                            sort: { createdAt: -1 }
                         };
                         return [4 /*yield*/, depot_schema_1.DepotModel.paginate({}, options)];
                     case 1:
@@ -135,7 +156,7 @@ var MongoRepository = /** @class */ (function () {
                         _h.trys.push([5, , 7, 8]);
                         depot = _c;
                         _g = depot;
-                        return [4 /*yield*/, seller_schema_1.default.findOne({ _id: depot.seller_id })];
+                        return [4 /*yield*/, seller_schema_1.SellerModel.findOne({ _id: depot.seller_id })];
                     case 6:
                         _g.seller = (_h.sent()).name;
                         return [3 /*break*/, 8];

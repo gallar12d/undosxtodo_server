@@ -15,4 +15,5 @@ var sellerService = new SellerService_1.SellerService(mongoRepository);
 var sellerCtrl = new seller_ctrl_1.SellerController(sellerService);
 router.post("/seller", sellerCtrl.createSeller);
 router.get("/seller", auth_middleware_1.authMiddleware, sellerCtrl.getSeller);
+router.get("/sellers/:pag", auth_middleware_1.authMiddleware, sellerCtrl.getAllSellers);
 router.put("/seller", body("email").isEmail(), sellerCtrl.updateSeller);

@@ -45,17 +45,18 @@ var DepotController = /** @class */ (function () {
         this.insertDepot = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var seller_id, name, state, city, address, newDepot, insertedDepot;
+                var seller_id, name, state, city, address, status, newDepot, insertedDepot;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
-                            seller_id = body.seller_id, name = body.name, state = body.state, city = body.city, address = body.address;
+                            seller_id = body.seller_id, name = body.name, state = body.state, city = body.city, address = body.address, status = body.status;
                             newDepot = new depot_value_1.DepotValue({
                                 seller_id: seller_id,
                                 name: name,
                                 state: state,
                                 city: city,
-                                address: address
+                                address: address,
+                                status: status
                             });
                             return [4 /*yield*/, this.depotService.insertDepot(newDepot)];
                         case 1:
@@ -83,16 +84,30 @@ var DepotController = /** @class */ (function () {
                 });
             });
         };
-        this.updateDepot = function (_a, res) {
+        this.getDepotsPage = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var id, seller_id, name, state, city, address, depot, updatedDepot;
+                var seller_id, pag, depots;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
-                            id = body.id, seller_id = body.seller_id, name = body.name, state = body.state, city = body.city, address = body.address;
-                            depot = { id: id, seller_id: seller_id, name: name, state: state, city: city, address: address };
-                            return [4 /*yield*/, this.depotService.updateDepot(depot)];
+                            seller_id = body.seller_id, pag = body.pag;
+                            return [4 /*yield*/, this.depotService.getDepotsPage(seller_id, pag)];
+                        case 1:
+                            depots = _b.sent();
+                            res.send(depots);
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.updateDepot = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var updatedDepot;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0: return [4 /*yield*/, this.depotService.updateDepot(body)];
                         case 1:
                             updatedDepot = _b.sent();
                             res.send(updatedDepot);

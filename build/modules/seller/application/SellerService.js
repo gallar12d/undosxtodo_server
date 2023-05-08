@@ -54,6 +54,19 @@ var SellerService = /** @class */ (function () {
             });
         });
     };
+    SellerService.prototype.getAllSellers = function (pag) {
+        return __awaiter(this, void 0, void 0, function () {
+            var seller;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sellerRepository.getAllSellers(pag)];
+                    case 1:
+                        seller = _a.sent();
+                        return [2 /*return*/, seller];
+                }
+            });
+        });
+    };
     SellerService.prototype.createSeller = function (newSeller) {
         return __awaiter(this, void 0, void 0, function () {
             var sellerCreated;

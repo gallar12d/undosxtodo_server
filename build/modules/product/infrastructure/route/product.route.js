@@ -14,6 +14,7 @@ var productService = new ProductService_1.ProductService(mongoRepository);
 var productCtrl = new product_ctrl_1.ProductController(productService);
 router.post("/product", productCtrl.insertProduct);
 router.post("/products", productCtrl.getProducts);
+router.post("/productsPage", productCtrl.getProductsPage);
 router.put("/product", productCtrl.updateProduct);
 router.delete("/product/:_id", productCtrl.deleteProduct);
 router.get("/products/:pag", auth_middleware_1.authMiddleware, productCtrl.allProducts);

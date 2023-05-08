@@ -50,7 +50,7 @@ exports.MongoRepository = void 0;
 var product_schema_1 = require("../model/product.schema");
 var depot_schema_1 = require("../../../depot/infrastructure/model/depot.schema");
 var mongoose_1 = __importDefault(require("mongoose"));
-var seller_schema_1 = __importDefault(require("../../../seller/infrastructure/model/seller.schema"));
+var seller_schema_1 = require("../../../seller/infrastructure/model/seller.schema");
 // import jwt from "jsonwebtoken";
 // import bcrypt from "bcrypt";
 // import mongoose from "mongoose";
@@ -95,7 +95,7 @@ var MongoRepository = /** @class */ (function () {
                     case 4:
                         _k.trys.push([4, , 6, 7]);
                         depot_id = _d;
-                        return [4 /*yield*/, product_schema_1.ProductModel.find({ "depots_ids": { $all: ["".concat(depot_id._id)] } }, { id: 1, name: 1, price: 1, depots_ids: 1 })];
+                        return [4 /*yield*/, product_schema_1.ProductModel.find({ "depots_ids": { $all: ["".concat(depot_id._id)] } }, { id: 1, name: 1, price: 1, depots_ids: 1, status: 1 })];
                     case 5:
                         result = _k.sent();
                         products = products.concat(result.map(function (r) { return r; }));
@@ -176,13 +176,89 @@ var MongoRepository = /** @class */ (function () {
             });
         });
     };
+    MongoRepository.prototype.getProductsPage = function (depots_ids, pag) {
+        var _a, e_3, _b, _c;
+        return __awaiter(this, void 0, void 0, function () {
+            var options, result, hash, _d, _e, _f, product, _g, e_3_1;
+            var _this = this;
+            return __generator(this, function (_h) {
+                switch (_h.label) {
+                    case 0:
+                        options = {
+                            page: pag,
+                            limit: 6,
+                            sort: { createdAt: -1 }
+                        };
+                        result = [];
+                        return [4 /*yield*/, product_schema_1.ProductModel.paginate({ $and: [{ "depots_ids": { $in: depots_ids.map(function (d) { return d._id; }) } }, { status: "active" }] }, options)];
+                    case 1:
+                        // for await (const depot_id of depots_ids) {
+                        //     result = await ProductModel.find({ "depots_ids": { $all: [`${depot_id._id}`] } }, { id: 1, name: 1, price: 1, depots_ids: 1, status: 1 });
+                        //     products = products.concat(result.map(r => r));
+                        // }
+                        // result = await ProductModel.paginate({ "depots_ids": { $in: depots_ids.map((d) => d._id) } }, options);
+                        result = _h.sent();
+                        hash = {};
+                        result.docs = result.docs.filter(function (product) { return hash[product._id] ? false : hash[product._id] = true; });
+                        _h.label = 2;
+                    case 2:
+                        _h.trys.push([2, 10, 11, 16]);
+                        _d = true, _e = __asyncValues(result.docs);
+                        _h.label = 3;
+                    case 3: return [4 /*yield*/, _e.next()];
+                    case 4:
+                        if (!(_f = _h.sent(), _a = _f.done, !_a)) return [3 /*break*/, 9];
+                        _c = _f.value;
+                        _d = false;
+                        _h.label = 5;
+                    case 5:
+                        _h.trys.push([5, , 7, 8]);
+                        product = _c;
+                        _g = product;
+                        return [4 /*yield*/, Promise.all(product.depots_ids.map(function (depot_id) { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, depot_schema_1.DepotModel.findOne({ _id: depot_id }, { name: 1 })];
+                                        case 1: return [2 /*return*/, _a.sent()];
+                                    }
+                                });
+                            }); }))];
+                    case 6:
+                        _g.depots_ids = _h.sent();
+                        return [3 /*break*/, 8];
+                    case 7:
+                        _d = true;
+                        return [7 /*endfinally*/];
+                    case 8: return [3 /*break*/, 3];
+                    case 9: return [3 /*break*/, 16];
+                    case 10:
+                        e_3_1 = _h.sent();
+                        e_3 = { error: e_3_1 };
+                        return [3 /*break*/, 16];
+                    case 11:
+                        _h.trys.push([11, , 14, 15]);
+                        if (!(!_d && !_a && (_b = _e.return))) return [3 /*break*/, 13];
+                        return [4 /*yield*/, _b.call(_e)];
+                    case 12:
+                        _h.sent();
+                        _h.label = 13;
+                    case 13: return [3 /*break*/, 15];
+                    case 14:
+                        if (e_3) throw e_3.error;
+                        return [7 /*endfinally*/];
+                    case 15: return [7 /*endfinally*/];
+                    case 16: return [2 /*return*/, result];
+                }
+            });
+        });
+    };
     MongoRepository.prototype.updateProduct = function (_a) {
-        var _id = _a._id, id = _a.id, depots_ids = _a.depots_ids, sku = _a.sku, name = _a.name, price = _a.price;
+        var _id = _a._id, id = _a.id, depots_ids = _a.depots_ids, sku = _a.sku, name = _a.name, price = _a.price, status = _a.status;
         return __awaiter(this, void 0, void 0, function () {
             var updatedProduct;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, product_schema_1.ProductModel.updateOne({ _id: new mongoose_1.default.Types.ObjectId(_id) }, { $set: { depots_ids: depots_ids, sku: sku, name: name, price: price } })];
+                    case 0: return [4 /*yield*/, product_schema_1.ProductModel.updateOne({ _id: new mongoose_1.default.Types.ObjectId(_id) }, { $set: { depots_ids: depots_ids, sku: sku, name: name, price: price, status: status } })];
                     case 1:
                         updatedProduct = _b.sent();
                         return [2 /*return*/, updatedProduct];
@@ -204,16 +280,17 @@ var MongoRepository = /** @class */ (function () {
         });
     };
     MongoRepository.prototype.allProducts = function (pag) {
-        var _a, e_3, _b, _c;
+        var _a, e_4, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var options, result, products, _d, _e, _f, product, _g, e_3_1;
+            var options, result, products, _d, _e, _f, product, _g, e_4_1;
             var _this = this;
             return __generator(this, function (_h) {
                 switch (_h.label) {
                     case 0:
                         options = {
                             page: pag,
-                            limit: 7
+                            limit: 7,
+                            sort: { createdAt: -1 }
                         };
                         return [4 /*yield*/, product_schema_1.ProductModel.paginate({}, options)];
                     case 1:
@@ -242,7 +319,7 @@ var MongoRepository = /** @class */ (function () {
                                         case 1:
                                             depot = _b.sent();
                                             _a = product;
-                                            return [4 /*yield*/, seller_schema_1.default.findOne({ _id: depot.seller_id })];
+                                            return [4 /*yield*/, seller_schema_1.SellerModel.findOne({ _id: depot.seller_id })];
                                         case 2:
                                             _a.seller = (_b.sent()).name;
                                             return [2 /*return*/, depot];
@@ -258,8 +335,8 @@ var MongoRepository = /** @class */ (function () {
                     case 8: return [3 /*break*/, 3];
                     case 9: return [3 /*break*/, 16];
                     case 10:
-                        e_3_1 = _h.sent();
-                        e_3 = { error: e_3_1 };
+                        e_4_1 = _h.sent();
+                        e_4 = { error: e_4_1 };
                         return [3 /*break*/, 16];
                     case 11:
                         _h.trys.push([11, , 14, 15]);
@@ -270,7 +347,7 @@ var MongoRepository = /** @class */ (function () {
                         _h.label = 13;
                     case 13: return [3 /*break*/, 15];
                     case 14:
-                        if (e_3) throw e_3.error;
+                        if (e_4) throw e_4.error;
                         return [7 /*endfinally*/];
                     case 15: return [7 /*endfinally*/];
                     case 16: return [2 /*return*/, products];

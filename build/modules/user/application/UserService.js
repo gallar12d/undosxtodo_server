@@ -54,7 +54,7 @@ var UserService = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        userValue = new user_value_1.UserValue({ seller_id: seller_id, name: name, email: email, password: password, rol: rol });
+                        userValue = new user_value_1.UserValue({ seller_id: seller_id, name: name, email: email, password: password, rol: rol, status: "inactive" });
                         return [4 /*yield*/, this.userRepository.encriptPassword(userValue.password)];
                     case 1:
                         encripted_password = _b.sent();
@@ -129,7 +129,8 @@ var UserService = /** @class */ (function () {
                             name: user.name,
                             email: user.email,
                             token: this.createToken(user.id),
-                            rol: user.rol
+                            rol: user.rol,
+                            status: user.status
                         };
                         return [2 /*return*/, user_response];
                 }

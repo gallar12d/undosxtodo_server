@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoRepository = void 0;
-var seller_schema_1 = __importDefault(require("../model/seller.schema"));
+var seller_schema_1 = require("../model/seller.schema");
 var user_shchema_1 = __importDefault(require("../../../user/infrastructure/model/user.shchema"));
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
@@ -53,10 +53,29 @@ var MongoRepository = /** @class */ (function () {
                     case 0: return [4 /*yield*/, user_shchema_1.default.findOne({ "id": id })];
                     case 1:
                         seller_id = (_a.sent()).seller_id;
-                        return [4 /*yield*/, seller_schema_1.default.findOne({ _id: seller_id })];
+                        return [4 /*yield*/, seller_schema_1.SellerModel.findOne({ _id: seller_id })];
                     case 2:
                         seller = _a.sent();
                         return [2 /*return*/, seller];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.getAllSellers = function (pag) {
+        return __awaiter(this, void 0, void 0, function () {
+            var options, sellers;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        options = {
+                            page: pag,
+                            limit: 6,
+                            sort: { createdAt: -1 }
+                        };
+                        return [4 /*yield*/, seller_schema_1.SellerModel.paginate({}, options)];
+                    case 1:
+                        sellers = _a.sent();
+                        return [2 /*return*/, sellers];
                 }
             });
         });
@@ -66,7 +85,7 @@ var MongoRepository = /** @class */ (function () {
             var sellerUpdated;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, seller_schema_1.default.create(seller)];
+                    case 0: return [4 /*yield*/, seller_schema_1.SellerModel.create(seller)];
                     case 1:
                         sellerUpdated = _a.sent();
                         return [2 /*return*/, sellerUpdated];
@@ -83,7 +102,7 @@ var MongoRepository = /** @class */ (function () {
                     case 0: return [4 /*yield*/, user_shchema_1.default.findOne({ "id": id })];
                     case 1:
                         seller_id = (_b.sent()).seller_id;
-                        return [4 /*yield*/, seller_schema_1.default.updateOne({ "_id": "".concat(seller_id) }, { seller_id: seller_id, name: name, country: country, state: state, city: city, address: address, telephone: telephone, nit: nit, postal_code: postal_code, email: email })];
+                        return [4 /*yield*/, seller_schema_1.SellerModel.updateOne({ "_id": "".concat(seller_id) }, { seller_id: seller_id, name: name, country: country, state: state, city: city, address: address, telephone: telephone, nit: nit, postal_code: postal_code, email: email })];
                     case 2:
                         sellerUpdated = _b.sent();
                         return [2 /*return*/, sellerUpdated];

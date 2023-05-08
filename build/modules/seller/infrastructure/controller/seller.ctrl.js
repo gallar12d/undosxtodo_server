@@ -57,6 +57,23 @@ var SellerController = /** @class */ (function () {
                 });
             });
         };
+        this.getAllSellers = function (_a, res) {
+            var params = _a.params;
+            return __awaiter(_this, void 0, void 0, function () {
+                var pag, sellers;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            pag = params.pag;
+                            return [4 /*yield*/, this.sellerService.getAllSellers(pag)];
+                        case 1:
+                            sellers = _b.sent();
+                            res.send(sellers);
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
         this.createSeller = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {

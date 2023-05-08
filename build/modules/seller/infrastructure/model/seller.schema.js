@@ -1,7 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var SellerSchema = new mongoose_1.Schema({
+exports.SellerModel = void 0;
+var mongoose_1 = __importDefault(require("mongoose"));
+var mongoose_paginate_v2_1 = __importDefault(require("mongoose-paginate-v2"));
+var SellerSchema = new mongoose_1.default.Schema({
     id: { type: String },
     name: { type: String },
     country: { type: String },
@@ -13,5 +18,6 @@ var SellerSchema = new mongoose_1.Schema({
     postal_code: { type: String },
     email: { type: String },
 }, { timestamps: true });
-var SellerModel = (0, mongoose_1.model)("seller", SellerSchema);
-exports.default = SellerModel;
+SellerSchema.plugin(mongoose_paginate_v2_1.default);
+var SellerModel = mongoose_1.default.model('Sellers', SellerSchema, 'sellers');
+exports.SellerModel = SellerModel;

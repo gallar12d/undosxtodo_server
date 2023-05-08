@@ -45,17 +45,17 @@ var ProductController = /** @class */ (function () {
         this.insertProduct = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var depots, sku, name, price, arrayDepots, depots_ids, newProduct, insertedProduct;
+                var depots, sku, name, price, status, arrayDepots, depots_ids, newProduct, insertedProduct;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
-                            depots = body.depots, sku = body.sku, name = body.name, price = body.price;
+                            depots = body.depots, sku = body.sku, name = body.name, price = body.price, status = body.status;
                             arrayDepots = JSON.parse(depots);
                             depots_ids = [];
                             arrayDepots.forEach(function (depot) {
                                 depots_ids.push(depot._id);
                             });
-                            newProduct = new product_value_1.ProductValue({ depots_ids: depots_ids, sku: sku, name: name, price: price });
+                            newProduct = new product_value_1.ProductValue({ depots_ids: depots_ids, sku: sku, name: name, price: price, status: status });
                             return [4 /*yield*/, this.productService.insertProduct(newProduct)];
                         case 1:
                             insertedProduct = _b.sent();
@@ -83,16 +83,34 @@ var ProductController = /** @class */ (function () {
                 });
             });
         };
-        this.updateProduct = function (_a, res) {
+        this.getProductsPage = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var _id, id, depots_string, sku, name, price, depots_ids, productToUpdate, updatedProduct;
+                var depots, pag, arrayDepots, products;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
-                            _id = body._id, id = body.id, depots_string = body.depots_string, sku = body.sku, name = body.name, price = body.price;
+                            depots = body.depots, pag = body.pag;
+                            arrayDepots = JSON.parse(depots);
+                            return [4 /*yield*/, this.productService.getProductsPage(arrayDepots, pag)];
+                        case 1:
+                            products = _b.sent();
+                            res.send(products);
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.updateProduct = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var _id, id, depots_string, sku, name, price, status, depots_ids, productToUpdate, updatedProduct;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _id = body._id, id = body.id, depots_string = body.depots_string, sku = body.sku, name = body.name, price = body.price, status = body.status;
                             depots_ids = JSON.parse(depots_string);
-                            productToUpdate = { _id: _id, id: id, depots_ids: depots_ids, sku: sku, name: name, price: price };
+                            productToUpdate = { _id: _id, id: id, depots_ids: depots_ids, sku: sku, name: name, price: price, status: status };
                             return [4 /*yield*/, this.productService.updateProduct(productToUpdate)];
                         case 1:
                             updatedProduct = _b.sent();

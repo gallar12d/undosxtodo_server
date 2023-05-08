@@ -11,7 +11,8 @@ var ProductSchema = new mongoose_1.default.Schema({
     depots_ids: { type: [] },
     sku: { type: String },
     name: { type: String },
-    price: { type: Number }
+    price: { type: Number },
+    status: { type: String }
 }, { timestamps: true });
 ProductSchema.plugin(mongoose_paginate_v2_1.default);
 var ProductModel = mongoose_1.default.model('Products', ProductSchema, 'products');
