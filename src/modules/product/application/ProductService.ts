@@ -13,6 +13,11 @@ export class ProductService {
     const products = await this.productRepository.getProducts(depots_ids);
     return products;
   }
+
+  public async getProductsPage(depots_ids:any, pag){
+    const products = await this.productRepository.getProductsPage(depots_ids,pag);
+    return products;
+  }
   
   public async updateProduct(productToUpdate:any){
     const updatedProduct = await this.productRepository.updateProduct(productToUpdate);

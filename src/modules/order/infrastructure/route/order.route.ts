@@ -13,9 +13,11 @@ const orderCtrl = new OrderController(orderService);
 router.get(`/order/:id`, authMiddleware, orderCtrl.findOrder);
 router.get(`/order`, authMiddleware, orderCtrl.allOrder);
 router.post(`/order`, authMiddleware, orderCtrl.registerOrder);
+router.post(`/ordersPage`,authMiddleware, orderCtrl.getOrdersPage);
 router.put(`/order/:id`, authMiddleware, orderCtrl.updateOrder);
 router.post(`/status`, authMiddleware, orderCtrl.insertStatus);
 router.put(`/status`, authMiddleware, orderCtrl.updateStatus);
 router.get(`/orders/:pag`, authMiddleware, orderCtrl.allOrders);
+router.post(`/ordersDate`, authMiddleware, orderCtrl.ordersDate);
 
 export { router };

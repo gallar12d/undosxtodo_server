@@ -14,6 +14,11 @@ export class DepotService {
     return depots;
   }
 
+  public async getDepotsPage(seller_id:string, pag:number) {
+    const depots = await this.depotRepository.getDepotsPage(seller_id, pag);
+    return depots;
+  }
+
   public async updateDepot(depot : DepotValue){
     const updatedDepot = await this.depotRepository.updateDepot(depot);
     return updatedDepot;

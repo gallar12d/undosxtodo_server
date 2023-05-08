@@ -13,6 +13,7 @@ const sellerService = new SellerService(mongoRepository);
 const sellerCtrl = new SellerController(sellerService);
 router.post(`/seller`,sellerCtrl.createSeller);
 router.get(`/seller`,authMiddleware,sellerCtrl.getSeller);
+router.get(`/sellers/:pag`,authMiddleware,sellerCtrl.getAllSellers);
 router.put(`/seller`, body("email").isEmail(),sellerCtrl.updateSeller);
 
 export { router };

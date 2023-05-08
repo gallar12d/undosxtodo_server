@@ -10,7 +10,8 @@ const UserSchema = new Schema(
     name: String,
     email: String,
     password: String,
-    rol: String
+    rol: String,
+    status: String
   },
   { timestamps: true }
 );

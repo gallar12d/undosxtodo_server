@@ -9,6 +9,11 @@ export class SellerService {
     return seller;
   }
 
+  public async getAllSellers(pag:number) {
+    const seller= await this.sellerRepository.getAllSellers(pag);
+    return seller;
+  }
+
   public async createSeller(newSeller: SellerValue) {
     const sellerCreated = await this.sellerRepository.createSeller(newSeller);
     return sellerCreated;

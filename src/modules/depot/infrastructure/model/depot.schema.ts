@@ -12,11 +12,12 @@ const DepotSchema = new mongoose.Schema(
     state: { type: String },
     city: { type: String },
     name: { type: String },
-    address: { type: String }
+    address: { type: String },
+    status: { type: String }
   },
   { timestamps: true }
 );
 DepotSchema.plugin(paginate);
-interface DepotDocument extends mongoose.Document {seller_id}
-const DepotModel = mongoose.model<DepotDocument,mongoose.PaginateModel<DepotDocument>>('Depots', DepotSchema, 'depots');
+interface DepotDocument extends mongoose.Document { seller_id }
+const DepotModel = mongoose.model<DepotDocument, mongoose.PaginateModel<DepotDocument>>('Depots', DepotSchema, 'depots');
 export { DepotModel };

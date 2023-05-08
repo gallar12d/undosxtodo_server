@@ -1,6 +1,7 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose from "mongoose";
+import paginate from 'mongoose-paginate-v2';
 
-const SellerSchema = new Schema(
+const SellerSchema = new mongoose.Schema(
   {
     id: {type: String},
     name: {type: String},
@@ -15,5 +16,7 @@ const SellerSchema = new Schema(
   },
   { timestamps: true }
 );
-const SellerModel = model("seller", SellerSchema);
-export default SellerModel;
+SellerSchema.plugin(paginate);
+interface SellerDocument extends mongoose.Document {name}
+const SellerModel = mongoose.model<SellerDocument, mongoose.PaginateModel<SellerDocument>>('Sellers', SellerSchema, 'sellers');
+export { SellerModel };

@@ -3,7 +3,7 @@ import { UserRepository } from "../domain/user.respository";
 import { UserValue } from "../domain/user.value";
 
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository) { }
 
   public async registerUser({
     seller_id,
@@ -18,7 +18,7 @@ export class UserService {
     password: string;
     rol: string;
   }) {
-    const userValue = new UserValue({ seller_id, name, email, password, rol });
+    const userValue = new UserValue({ seller_id, name, email, password, rol, status: "inactive" });
     const encripted_password = await this.userRepository.encriptPassword(
       userValue.password
     );
@@ -64,13 +64,14 @@ export class UserService {
       name: user.name,
       email: user.email,
       token: this.createToken(user.id),
-      rol: user.rol
+      rol: user.rol,
+      status: user.status
     };
     return user_response;
   }
 
-  public async updateUser(id:string, email:string) {
-    const userUpdated = await this.userRepository.updateUser(id,email);
+  public async updateUser(id: string, email: string) {
+    const userUpdated = await this.userRepository.updateUser(id, email);
     return userUpdated;
   }
 

@@ -11,19 +11,22 @@ export class UserValue implements UserEntity {
   email: string;
   password: string;
   rol: string;
+  status:string;
 
   constructor({
     seller_id,
     name,
     email,
     password,
-    rol
+    rol,
+    status
   }: {
     seller_id: ObjectId;
     name: string;
     email: string;
     password: string;
     rol: string;
+    status:string
   }) {
     this.id = uuid();
     this.seller_id= seller_id;
@@ -31,6 +34,7 @@ export class UserValue implements UserEntity {
     this.email = email.toLowerCase();
     this.password = password;
     this.rol= rol;
+    this.status= status;
   }
 
   public encript = (encriptedPaswword): void => {

@@ -12,6 +12,7 @@ const depotService = new DepotService(mongoRepository);
 const depotCtrl = new DepotController(depotService);
 router.post(`/depot`, depotCtrl.insertDepot);
 router.post(`/depots`, depotCtrl.getDepots);
+router.post(`/depotsPage`, depotCtrl.getDepotsPage);
 router.put(`/depot`, depotCtrl.updateDepot);
 router.delete(`/depot/:id`, depotCtrl.deleteDepot);
 router.get(`/depots/:pag`, authMiddleware, depotCtrl.allDepots);

@@ -13,7 +13,7 @@ const userCtrl = new UserController(userService);
 router.get(`/user/:id`, userCtrl.findUser);
 router.get(`/user`, authMiddleware, userCtrl.allUser);
 router.post(`/user`, userCtrl.registerUser);
-router.put(`/user`, body("email").isEmail(),userCtrl.updateUser);
+// router.put(`/user`, body("email").isEmail(),userCtrl.updateUser);
 router.get(`/userToken`, authMiddleware, userCtrl.returnToken);
 
 export { router };

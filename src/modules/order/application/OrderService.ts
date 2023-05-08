@@ -170,6 +170,11 @@ export class OrderService {
     return this.filterOrder(order);
 
   }
+  
+  public async getOrdersPage(seller_id: string, pag:number) {
+    const orders:any = await this.orderRepository.getOrdersPage(seller_id, pag);
+    return orders;
+  }
 
   public async findOrderByGuide(guide: string) {
     let order = await this.orderRepository.findOrderByGuide(guide);
@@ -241,5 +246,10 @@ export class OrderService {
   public async allOrders(pag){
     const orders= await this.orderRepository.allOrders(pag);
     return orders;
+  }
+
+  public async ordersDate(rol, date,seller_id){
+    const ordersDate= await this.orderRepository.ordersDate(rol, date, seller_id);
+    return ordersDate;
   }
 }

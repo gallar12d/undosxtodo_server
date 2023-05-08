@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 
 export class MongoRepository implements UserRepository {
   public async findUser(id: string): Promise<any | null> {
-    const user = await UserModel.findOne({id});
+    const user = await UserModel.findOne({ id });
     return user;
   }
   public async registerUser(user: UserEntity): Promise<any | null> {
@@ -21,7 +21,7 @@ export class MongoRepository implements UserRepository {
 
   public createToken(id: string): string {
     const token = jwt.sign({ id }, process.env.SECRET_KEY || "secret@123", {
-    // const token = jwt.sign({ id }, "secret@123", {
+      // const token = jwt.sign({ id }, "secret@123", {
       expiresIn: "50m",
     });
     return token;
@@ -44,7 +44,7 @@ export class MongoRepository implements UserRepository {
     return user;
   }
 
-  public async updateUser(id:string, email: string): Promise<any | null> {
+  public async updateUser(id: string, email: string): Promise<any | null> {
     const userUpdated = await UserModel.updateOne({ "id": `${id}` }, { $set: { "email": `${email}` } });
     return userUpdated;
   }

@@ -14,6 +14,16 @@ export class OrderController {
     }
   };
 
+  public getOrdersPage = async ({body}: Request, res: Response) => {
+    try {
+      const { seller_id, pag } = body;
+      const orders = await this.orderService.getOrdersPage(seller_id, pag);
+      res.status(200).send(orders);
+    } catch (err) {
+      res.status(400).send(getErrorMessage(err));
+    }
+  };
+
   public allOrder = async (req, res) => {
     if (req.query.guide) {
       console.log(req.query.guide);
@@ -80,6 +90,21 @@ export class OrderController {
       var { pag } = params;
       const orders = await this.orderService.allOrders(pag);
       res.status(200).send(orders);
+    } catch (err) {
+      res.status(400).send(getErrorMessage(err));
+    }
+  };
+
+  public ordersDate = async ({ body }, res) => {
+    try {
+      const { rol, date, seller_id } = body;
+      if (rol === 'superuser') {
+        const ordersDate = await this.orderService.ordersDate(rol, date, '');
+        res.status(200).send(ordersDate);
+      } else {
+        const ordersDate = await this.orderService.ordersDate(rol, date, seller_id);
+        res.status(200).send(ordersDate);
+      }
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }

@@ -7,4 +7,5 @@ export interface DepotEntity{
     city: string;
     name: string;
     address: string;
+    status?: string;
 }
