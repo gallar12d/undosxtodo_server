@@ -11,4 +11,5 @@ export interface OrderRepository {
   updateStatus(id, guide_status): Promise<any | null>;
   allOrders(pag:number): Promise<any | null>;
   ordersDate(rol:string, date:string,seller_id:string): Promise<any | null>;
+  authR99(): Promise<any | null>;
 }

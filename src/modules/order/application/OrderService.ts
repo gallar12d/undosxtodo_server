@@ -252,4 +252,9 @@ export class OrderService {
     const ordersDate= await this.orderRepository.ordersDate(rol, date, seller_id);
     return ordersDate;
   }
+
+  public async authR99(){
+    const token= await this.orderRepository.authR99();
+    return token;
+  }
 }

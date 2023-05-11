@@ -333,6 +333,19 @@ var OrderService = /** @class */ (function () {
             });
         });
     };
+    OrderService.prototype.authR99 = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var token;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.authR99()];
+                    case 1:
+                        token = _a.sent();
+                        return [2 /*return*/, token];
+                }
+            });
+        });
+    };
     return OrderService;
 }());
 exports.OrderService = OrderService;

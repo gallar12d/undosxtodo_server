@@ -51,6 +51,7 @@ var mongoose_1 = __importDefault(require("mongoose"));
 var order_schema_1 = require("../model/order.schema");
 var status_schema_1 = __importDefault(require("../model/status.schema"));
 var seller_schema_1 = require("../../../seller/infrastructure/model/seller.schema");
+var axios_1 = __importDefault(require("axios"));
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
     }
@@ -449,6 +450,28 @@ var MongoRepository = /** @class */ (function () {
                         return [7 /*endfinally*/];
                     case 37: return [7 /*endfinally*/];
                     case 38: return [2 /*return*/, ordersDate];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.authR99 = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var token;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
+                            "grant_type": "client_credentials",
+                            "client_id": "1007",
+                            "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
+                        }, {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            }
+                        })];
+                    case 1:
+                        token = _a.sent();
+                        return [2 /*return*/, token];
                 }
             });
         });

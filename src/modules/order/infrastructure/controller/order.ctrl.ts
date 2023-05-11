@@ -109,4 +109,13 @@ export class OrderController {
       res.status(400).send(getErrorMessage(err));
     }
   };
+
+  public authR99 = async (req, res) => {
+    try {
+      const token= await this.orderService.authR99();
+      res.status(200).send(token);
+    } catch (err) {
+      res.status(400).send(getErrorMessage(err));
+    }
+  };
 }

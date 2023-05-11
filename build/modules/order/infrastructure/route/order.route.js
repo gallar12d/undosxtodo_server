@@ -20,3 +20,4 @@ router.post("/status", auth_middleware_1.authMiddleware, orderCtrl.insertStatus)
 router.put("/status", auth_middleware_1.authMiddleware, orderCtrl.updateStatus);
 router.get("/orders/:pag", auth_middleware_1.authMiddleware, orderCtrl.allOrders);
 router.post("/ordersDate", auth_middleware_1.authMiddleware, orderCtrl.ordersDate);
+router.get("/authR99", auth_middleware_1.authMiddleware, orderCtrl.authR99);

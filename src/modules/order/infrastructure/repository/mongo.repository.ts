@@ -4,6 +4,7 @@ import { OrderRepository } from "../../domain/order.respository";
 import { OrderModel } from "../model/order.schema";
 import StatusModel from '../model/status.schema';
 import { SellerModel } from "../../../seller/infrastructure/model/seller.schema";
+import axios from 'axios';
 
 export class MongoRepository implements OrderRepository {
   public async findOrder(id: string): Promise<any | null> {
@@ -95,6 +96,7 @@ export class MongoRepository implements OrderRepository {
     return orders;
   }
 
+
   public async ordersDate(rol: string, date: string, seller_id: string): Promise<any | null> {
     // , $lt: new Date(`${date}-01`)
     const theDate = date.split('-');
@@ -130,5 +132,22 @@ export class MongoRepository implements OrderRepository {
       }
       return ordersDate;
     }
+  }
+
+  public async authR99(): Promise<any | null> {
+    // const data= await axios.get('https://pokeapi.co/api/v2/');
+    // console.log(data.data);
+
+    const token = await axios.post(`https://api.ruta99.co/oauth/token`, {
+      "grant_type": "client_credentials",
+      "client_id": "1007",
+      "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    });
+    return token;
   }
 }

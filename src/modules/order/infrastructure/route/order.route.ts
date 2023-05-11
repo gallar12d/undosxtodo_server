@@ -19,5 +19,6 @@ router.post(`/status`, authMiddleware, orderCtrl.insertStatus);
 router.put(`/status`, authMiddleware, orderCtrl.updateStatus);
 router.get(`/orders/:pag`, authMiddleware, orderCtrl.allOrders);
 router.post(`/ordersDate`, authMiddleware, orderCtrl.ordersDate);
+router.get(`/authR99`, authMiddleware, orderCtrl.authR99);
 
 export { router };

@@ -255,6 +255,25 @@ var OrderController = /** @class */ (function () {
                 });
             });
         };
+        this.authR99 = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var token, err_10;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.orderService.authR99()];
+                    case 1:
+                        token = _a.sent();
+                        res.status(200).send(token);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_10 = _a.sent();
+                        res.status(400).send((0, handleErrors_1.default)(err_10));
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
     }
     return OrderController;
 }());
