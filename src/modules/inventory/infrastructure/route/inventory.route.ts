@@ -15,5 +15,6 @@ router.get(`/getInventory`, authMiddleware, inventoryCtrl.getInventory);
 router.post(`/editInventoryObj`, authMiddleware, inventoryCtrl.editInventoryObj);
 router.post(`/getRelatedDepots`, authMiddleware, inventoryCtrl.getRelatedDepots);
 router.post(`/getProducts`, authMiddleware, inventoryCtrl.getProducts);
+router.post(`/subtractAmount`, authMiddleware, inventoryCtrl.subtractAmount);
 
 export { router };

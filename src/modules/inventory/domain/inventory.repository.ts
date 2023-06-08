@@ -6,4 +6,5 @@ export interface InventoryRepository {
     editInventoryObj(inventoryObj: InventoryEntity, queryId: string): Promise<InventoryEntity[] | any | null>;
     getRelatedDepots(seller_id: string): Promise<InventoryEntity[] | any | null>;
     getProducts(depot_id: string): Promise<InventoryEntity[] | any | null>;
+    subtractAmount(product_ids, depot_id, date, transacction_type): Promise<InventoryEntity[] | any | null>;
 }

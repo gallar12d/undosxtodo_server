@@ -52,4 +52,13 @@ export class InventoryController {
             res.status(400).send(getErrorMessage(err));
         }
     }
+
+    public subtractAmount = async ({ body }: Request, res: Response) => {
+        try {
+            const { product_ids, depot_id, date, transacction_type } = body;
+            res.status(200).send(await this.inventoryService.subtractAmount(product_ids, depot_id, date, transacction_type));
+        } catch (err) {
+            res.status(400).send(getErrorMessage(err));
+        }
+    }
 }

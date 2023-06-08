@@ -16,3 +16,4 @@ router.get("/getInventory", auth_middleware_1.authMiddleware, inventoryCtrl.getI
 router.post("/editInventoryObj", auth_middleware_1.authMiddleware, inventoryCtrl.editInventoryObj);
 router.post("/getRelatedDepots", auth_middleware_1.authMiddleware, inventoryCtrl.getRelatedDepots);
 router.post("/getProducts", auth_middleware_1.authMiddleware, inventoryCtrl.getProducts);
+router.post("/subtractAmount", auth_middleware_1.authMiddleware, inventoryCtrl.subtractAmount);

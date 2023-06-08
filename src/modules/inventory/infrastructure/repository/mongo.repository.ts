@@ -148,7 +148,7 @@ export class MongoRepository implements InventoryRepository {
         const invProducts = await InventoryModel.find({ depot_id }, { product_id: 1, quantity: 1 });
         const myProducts = [];
         for await (const product of invProducts) {
-            const currentProduct= await ProductModel.findOne({ id: product.product_id });
+            const currentProduct = await ProductModel.findOne({ id: product.product_id });
             myProducts.push({
                 _id: currentProduct._id,
                 id: currentProduct.id,
@@ -162,6 +162,24 @@ export class MongoRepository implements InventoryRepository {
             });
         }
         return myProducts;
+    }
+
+    public async subtractAmount(product_ids, depot_id, date, transacction_type): Promise<any | null> {
+        for await (const product of product_ids) {
+
+            const currentInventory = await InventoryModel.findOne({ product_id: product.id, depot_id });
+            const currentHistory = currentInventory.history;
+            currentHistory.push({
+                date,
+                quantity: product.quantity,
+                transaccion_type: transacction_type
+            });
+            await InventoryModel.updateOne({product_id:product.id, depot_id},{$set:{
+                quantity: currentInventory.quantity - product.quantity,
+                history: currentHistory
+            }});
+        }
+        return 200;
     }
 
 }

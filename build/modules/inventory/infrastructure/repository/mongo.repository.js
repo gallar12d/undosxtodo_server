@@ -346,6 +346,68 @@ var MongoRepository = /** @class */ (function () {
             });
         });
     };
+    MongoRepository.prototype.subtractAmount = function (product_ids, depot_id, date, transacction_type) {
+        var _a, product_ids_1, product_ids_1_1;
+        var _b, e_4, _c, _d;
+        return __awaiter(this, void 0, void 0, function () {
+            var product, currentInventory, currentHistory, e_4_1;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
+                    case 0:
+                        _e.trys.push([0, 9, 10, 15]);
+                        _a = true, product_ids_1 = __asyncValues(product_ids);
+                        _e.label = 1;
+                    case 1: return [4 /*yield*/, product_ids_1.next()];
+                    case 2:
+                        if (!(product_ids_1_1 = _e.sent(), _b = product_ids_1_1.done, !_b)) return [3 /*break*/, 8];
+                        _d = product_ids_1_1.value;
+                        _a = false;
+                        _e.label = 3;
+                    case 3:
+                        _e.trys.push([3, , 6, 7]);
+                        product = _d;
+                        return [4 /*yield*/, inventory_schema_1.InventoryModel.findOne({ product_id: product.id, depot_id: depot_id })];
+                    case 4:
+                        currentInventory = _e.sent();
+                        currentHistory = currentInventory.history;
+                        currentHistory.push({
+                            date: date,
+                            quantity: product.quantity,
+                            transaccion_type: transacction_type
+                        });
+                        return [4 /*yield*/, inventory_schema_1.InventoryModel.updateOne({ product_id: product.id, depot_id: depot_id }, { $set: {
+                                    quantity: currentInventory.quantity - product.quantity,
+                                    history: currentHistory
+                                } })];
+                    case 5:
+                        _e.sent();
+                        return [3 /*break*/, 7];
+                    case 6:
+                        _a = true;
+                        return [7 /*endfinally*/];
+                    case 7: return [3 /*break*/, 1];
+                    case 8: return [3 /*break*/, 15];
+                    case 9:
+                        e_4_1 = _e.sent();
+                        e_4 = { error: e_4_1 };
+                        return [3 /*break*/, 15];
+                    case 10:
+                        _e.trys.push([10, , 13, 14]);
+                        if (!(!_a && !_b && (_c = product_ids_1.return))) return [3 /*break*/, 12];
+                        return [4 /*yield*/, _c.call(product_ids_1)];
+                    case 11:
+                        _e.sent();
+                        _e.label = 12;
+                    case 12: return [3 /*break*/, 14];
+                    case 13:
+                        if (e_4) throw e_4.error;
+                        return [7 /*endfinally*/];
+                    case 14: return [7 /*endfinally*/];
+                    case 15: return [2 /*return*/, 200];
+                }
+            });
+        });
+    };
     return MongoRepository;
 }());
 exports.MongoRepository = MongoRepository;

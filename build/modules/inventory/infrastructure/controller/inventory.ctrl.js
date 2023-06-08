@@ -159,6 +159,29 @@ var InventoryController = /** @class */ (function () {
                 });
             });
         };
+        this.subtractAmount = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var product_ids, depot_id, date, transacction_type, _b, _c, err_6;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            product_ids = body.product_ids, depot_id = body.depot_id, date = body.date, transacction_type = body.transacction_type;
+                            _c = (_b = res.status(200)).send;
+                            return [4 /*yield*/, this.inventoryService.subtractAmount(product_ids, depot_id, date, transacction_type)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_6 = _d.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_6));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
     }
     return InventoryController;
 }());
