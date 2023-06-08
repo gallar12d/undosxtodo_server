@@ -18,6 +18,6 @@ const DepotSchema = new mongoose.Schema(
   { timestamps: true }
 );
 DepotSchema.plugin(paginate);
-interface DepotDocument extends mongoose.Document { seller_id }
+interface DepotDocument extends mongoose.Document { seller_id, name }
 const DepotModel = mongoose.model<DepotDocument, mongoose.PaginateModel<DepotDocument>>('Depots', DepotSchema, 'depots');
 export { DepotModel };

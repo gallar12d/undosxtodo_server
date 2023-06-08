@@ -6,17 +6,18 @@ export class ProductController {
   constructor(private productService: ProductService) { }
 
   public insertProduct = async ({ body }, res) => {
-    const { depots, sku, name, price, status } = body;
+    const { depots, sku, name, price, status, inventory_id } = body;
     const arrayDepots = JSON.parse(depots);
     const depots_ids: string[] = [];
     arrayDepots.forEach((depot: any) => {
       depots_ids.push(depot._id);
     });
 
-    const newProduct = new ProductValue({ depots_ids, sku, name, price, status });
+    const newProduct = new ProductValue({ depots_ids, sku, name, price, status, inventory_id });
 
     const insertedProduct = await this.productService.insertProduct(newProduct);
-    res.send(insertedProduct);
+    // res.send(insertedProduct);
+    res.json({data: insertedProduct});
   }
 
   public getProducts = async ({ body }, res) => {

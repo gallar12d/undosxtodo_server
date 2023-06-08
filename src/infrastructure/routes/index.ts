@@ -6,6 +6,9 @@ import { router as sellerRoutes } from "../../modules/seller/infrastructure/rout
 import { router as stateRoutes } from "../../modules/state/infrastructure/route/state.route";
 import { router as depotRoutes } from "../../modules/depot/infrastructure/route/depot.route";
 import { router as productRoutes } from "../../modules/product/infrastructure/route/product.route";
+import { router as zoneRoutes } from "../../modules/zone/infrastructure/route/zone.route";
+import { router as dealerRoutes } from "../../modules/dealer/infrastructure/route/dealer.route";
+import { router as inventoryRoutes } from "../../modules/inventory/infrastructure/route/inventory.route";
 
 
 const router = Router();
@@ -17,5 +20,8 @@ router.use(sellerRoutes);
 router.use(stateRoutes);
 router.use(depotRoutes);
 router.use(productRoutes);
+router.use(zoneRoutes);
+router.use(dealerRoutes);
+router.use(inventoryRoutes);
 
 export { router };

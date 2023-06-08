@@ -30,6 +30,7 @@ const OrderSchema = new mongoose.Schema(
     client_country: { type: String, required: false },
     value_to_collect: { type: Number, required: false },
   },
+  // { timestamps: { currentTime: () => new Date(Date.now() - 5 * 60 * 60 * 1000) } } //Comprobar si funciona
   { timestamps: true }
 );
 OrderSchema.plugin(paginate);

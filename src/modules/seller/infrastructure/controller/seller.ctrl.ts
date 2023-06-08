@@ -11,7 +11,7 @@ export class SellerController {
   }
 
   public getAllSellers = async ({ params }, res) => {
-    const { pag } = params
+    const { pag } = params;
     const sellers = await this.sellerService.getAllSellers(pag);
     res.send(sellers);
   }

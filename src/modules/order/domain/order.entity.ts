@@ -1,4 +1,3 @@
-
 export interface OrderEntity {
   id: string; 
   depot_name?: string;

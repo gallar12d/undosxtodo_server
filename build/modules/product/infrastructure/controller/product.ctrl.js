@@ -45,21 +45,22 @@ var ProductController = /** @class */ (function () {
         this.insertProduct = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var depots, sku, name, price, status, arrayDepots, depots_ids, newProduct, insertedProduct;
+                var depots, sku, name, price, status, inventory_id, arrayDepots, depots_ids, newProduct, insertedProduct;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
-                            depots = body.depots, sku = body.sku, name = body.name, price = body.price, status = body.status;
+                            depots = body.depots, sku = body.sku, name = body.name, price = body.price, status = body.status, inventory_id = body.inventory_id;
                             arrayDepots = JSON.parse(depots);
                             depots_ids = [];
                             arrayDepots.forEach(function (depot) {
                                 depots_ids.push(depot._id);
                             });
-                            newProduct = new product_value_1.ProductValue({ depots_ids: depots_ids, sku: sku, name: name, price: price, status: status });
+                            newProduct = new product_value_1.ProductValue({ depots_ids: depots_ids, sku: sku, name: name, price: price, status: status, inventory_id: inventory_id });
                             return [4 /*yield*/, this.productService.insertProduct(newProduct)];
                         case 1:
                             insertedProduct = _b.sent();
-                            res.send(insertedProduct);
+                            // res.send(insertedProduct);
+                            res.json({ data: insertedProduct });
                             return [2 /*return*/];
                     }
                 });

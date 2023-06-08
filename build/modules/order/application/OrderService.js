@@ -335,14 +335,29 @@ var OrderService = /** @class */ (function () {
     };
     OrderService.prototype.authR99 = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var token;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.orderRepository.authR99()];
-                    case 1:
-                        token = _a.sent();
-                        return [2 /*return*/, token];
-                }
+                return [2 /*return*/, this.orderRepository.authR99()];
+            });
+        });
+    };
+    OrderService.prototype.createScenario = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.orderRepository.createScenario()];
+            });
+        });
+    };
+    OrderService.prototype.orderReports = function (start, ending, seller_id, rol) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.orderRepository.orderReports(start, ending, seller_id, rol)];
+            });
+        });
+    };
+    OrderService.prototype.recentOrders = function (rol, seller_id) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.orderRepository.recentOrders(rol, seller_id)];
             });
         });
     };

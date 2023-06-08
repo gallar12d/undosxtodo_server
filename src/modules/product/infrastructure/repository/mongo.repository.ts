@@ -1,16 +1,18 @@
-import { ProductValue } from "../../domain/product.value";
+// import { ProductValue } from "../../domain/product.value";
 import { ProductRepository } from "../../domain/product.repository";
 import { ProductModel } from "../model/product.schema";
 import { DepotModel } from "../../../depot/infrastructure/model/depot.schema";
 import mongoose from "mongoose";
 import { SellerModel } from "../../../seller/infrastructure/model/seller.schema";
+import { ProductEntity } from "../../domain/product.entity";
+import { InventoryModel } from "../../../inventory/infrastructure/model/inventory.schema";
 // import jwt from "jsonwebtoken";
 // import bcrypt from "bcrypt";
 // import mongoose from "mongoose";
 
 export class MongoRepository implements ProductRepository {
 
-    public async insertProduct(newProduct: ProductValue): Promise<any | null> {
+    public async insertProduct(newProduct: ProductEntity): Promise<any | null> {
         const insertedProduct = await ProductModel.create(newProduct);
         return insertedProduct;
     }
@@ -60,11 +62,47 @@ export class MongoRepository implements ProductRepository {
         let hash = {};
         result.docs = result.docs.filter((product: any) => hash[product._id] ? false : hash[product._id] = true);
 
+        // for await (const product of result.docs) {
+        //     product.depots_ids = await Promise.all(product.depots_ids.map(async (depot_id) => {
+        //         return await DepotModel.findOne({ _id: depot_id }, { name: 1 });
+        //     }));
+        //     // if (product.inventory_ids.length > 0) {
+        //     //     myInventories.push(await InventoryModel.find({ $and: [{ "id": { $in: product.inventory_ids.map((p) => p) } }] }));
+        //     // }
+
+        // }
+
+        const myProducts = [];
         for await (const product of result.docs) {
-            product.depots_ids = await Promise.all(product.depots_ids.map(async (depot_id) => {
-                return await DepotModel.findOne({ _id: depot_id }, { name: 1 });
-            }));
+
+            if (product.inventory_ids.length > 0) {
+                const productInventories = (await InventoryModel.find({ $and: [{ "id": { $in: product.inventory_ids.map((p) => p) } }] }));
+                const ultimilla_depots = await DepotModel.find({ $and: [{ "id": { $in: productInventories.map((pi) => pi.depot_id) } }, { status: "active" }] }, { id: 1, name: 1 })
+
+                myProducts.push({
+                    id: product.id,
+                    depots_ids: await DepotModel.find({ $and: [{ "_id": { $in: product.depots_ids.map((depot_id) => depot_id) } }, { status: "active" }] }, { name: 1 }),
+                    sku: product.sku,
+                    name: product.name,
+                    price: product.price,
+                    status: product.status,
+                    inventories: productInventories,
+                    ultimilla_depots
+                });
+            } else {
+                myProducts.push({
+                    id: product.id,
+                    depots_ids: await DepotModel.find({ $and: [{ "_id": { $in: product.depots_ids.map((depot_id) => depot_id) } }, { status: "active" }] }, { name: 1 }),
+                    sku: product.sku,
+                    name: product.name,
+                    price: product.price,
+                    status: product.status,
+                    inventory_ids: []
+                });
+            }
+
         }
+        result.docs = myProducts;
 
         return result;
     }

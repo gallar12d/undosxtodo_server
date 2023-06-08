@@ -30,7 +30,7 @@ export class OrderService {
     client_country,
     value_to_collect
   }) {
-    products= JSON.parse(products);
+    products = JSON.parse(products);
     const orderValue = new OrderValue({
       depot_name,
       depot_id,
@@ -92,7 +92,7 @@ export class OrderService {
     client_country,
     value_to_collect
   }) {
-    products= JSON.parse(products);
+    products = JSON.parse(products);
     const old_order = await this.orderRepository.findOrder(id);
     if (!old_order) throw new Error("Order not found");
 
@@ -170,9 +170,9 @@ export class OrderService {
     return this.filterOrder(order);
 
   }
-  
-  public async getOrdersPage(seller_id: string, pag:number) {
-    const orders:any = await this.orderRepository.getOrdersPage(seller_id, pag);
+
+  public async getOrdersPage(seller_id: string, pag: number) {
+    const orders: any = await this.orderRepository.getOrdersPage(seller_id, pag);
     return orders;
   }
 
@@ -193,7 +193,7 @@ export class OrderService {
   }
 
   public async allOrder(seller_id) {
-    const orders:any = await this.orderRepository.allOrder(seller_id);
+    const orders: any = await this.orderRepository.allOrder(seller_id);
     let orders_filtered = {
       size: 0,
       orders: [],
@@ -233,28 +233,39 @@ export class OrderService {
     return orders_filtered;
   }
 
-  public async insertStatus(){
-    const insertedStatus= await this.orderRepository.insertStatus();
+  public async insertStatus() {
+    const insertedStatus = await this.orderRepository.insertStatus();
     return insertedStatus;
   }
 
-  public async updateStatus(id, guide_status){
-    const updatedStatus= await this.orderRepository.updateStatus(id, guide_status);
+  public async updateStatus(id, guide_status) {
+    const updatedStatus = await this.orderRepository.updateStatus(id, guide_status);
     return updatedStatus;
   }
 
-  public async allOrders(pag){
-    const orders= await this.orderRepository.allOrders(pag);
+  public async allOrders(pag) {
+    const orders = await this.orderRepository.allOrders(pag);
     return orders;
   }
 
-  public async ordersDate(rol, date,seller_id){
-    const ordersDate= await this.orderRepository.ordersDate(rol, date, seller_id);
+  public async ordersDate(rol, date, seller_id) {
+    const ordersDate = await this.orderRepository.ordersDate(rol, date, seller_id);
     return ordersDate;
   }
 
-  public async authR99(){
-    const token= await this.orderRepository.authR99();
-    return token;
+  public async authR99() {
+    return this.orderRepository.authR99();
+  }
+
+  public async createScenario() {
+    return this.orderRepository.createScenario();
+  }
+
+  public async orderReports(start: string, ending: string, seller_id: string, rol: string) {
+    return this.orderRepository.orderReports(start, ending, seller_id, rol);
+  }
+
+  public async recentOrders(rol: string, seller_id: string) {
+    return this.orderRepository.recentOrders(rol, seller_id);
   }
 }

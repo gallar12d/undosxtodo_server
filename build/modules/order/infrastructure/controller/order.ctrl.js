@@ -240,7 +240,9 @@ var OrderController = /** @class */ (function () {
                             ordersDate = _b.sent();
                             res.status(200).send(ordersDate);
                             return [3 /*break*/, 4];
-                        case 2: return [4 /*yield*/, this.orderService.ordersDate(rol, date, seller_id)];
+                        case 2:
+                            if (!(rol === 'admin')) return [3 /*break*/, 4];
+                            return [4 /*yield*/, this.orderService.ordersDate(rol, date, seller_id)];
                         case 3:
                             ordersDate = _b.sent();
                             res.status(200).send(ordersDate);
@@ -256,24 +258,101 @@ var OrderController = /** @class */ (function () {
             });
         };
         this.authR99 = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var token, err_10;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, _b, err_10;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _c.trys.push([0, 2, , 3]);
+                        _b = (_a = res).json;
                         return [4 /*yield*/, this.orderService.authR99()];
                     case 1:
-                        token = _a.sent();
-                        res.status(200).send(token);
+                        _b.apply(_a, [_c.sent()]);
                         return [3 /*break*/, 3];
                     case 2:
-                        err_10 = _a.sent();
+                        err_10 = _c.sent();
                         res.status(400).send((0, handleErrors_1.default)(err_10));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });
         }); };
+        this.createScenario = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var newScenario, err_11;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.orderService.createScenario()];
+                    case 1:
+                        newScenario = _a.sent();
+                        res.json(newScenario);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_11 = _a.sent();
+                        res.status(400).send((0, handleErrors_1.default)(err_11));
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
+        this.deleteScenario = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                try {
+                    // res.json(await this.orderService);
+                    res.json({ m: "Eliminando escenario" });
+                }
+                catch (err) {
+                    res.status(400).send((0, handleErrors_1.default)(err));
+                }
+                return [2 /*return*/];
+            });
+        }); };
+        this.orderReports = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var start, ending, seller_id, rol, _b, _c, err_12;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            start = body.start, ending = body.ending, seller_id = body.seller_id, rol = body.rol;
+                            _c = (_b = res).send;
+                            return [4 /*yield*/, this.orderService.orderReports(start, ending, seller_id, rol)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_12 = _d.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_12));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.recentOrders = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var rol, seller_id, _b, _c, err_13;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            rol = body.rol, seller_id = body.seller_id;
+                            _c = (_b = res).send;
+                            return [4 /*yield*/, this.orderService.recentOrders(rol, seller_id)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_13 = _d.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_13));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
     }
     return OrderController;
 }());

@@ -12,9 +12,9 @@ export class OrderController {
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }
-  };
+  }
 
-  public getOrdersPage = async ({body}: Request, res: Response) => {
+  public getOrdersPage = async ({ body }: Request, res: Response) => {
     try {
       const { seller_id, pag } = body;
       const orders = await this.orderService.getOrdersPage(seller_id, pag);
@@ -22,7 +22,7 @@ export class OrderController {
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }
-  };
+  }
 
   public allOrder = async (req, res) => {
     if (req.query.guide) {
@@ -44,7 +44,7 @@ export class OrderController {
 
     }
 
-  };
+  }
 
   public registerOrder = async (req, res) => {
     try {
@@ -53,7 +53,7 @@ export class OrderController {
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }
-  };
+  }
 
   public updateOrder = async (req, res) => {
     try {
@@ -63,7 +63,7 @@ export class OrderController {
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }
-  };
+  }
 
   public insertStatus = async (req, res) => {
     try {
@@ -73,7 +73,7 @@ export class OrderController {
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }
-  };
+  }
 
   public updateStatus = async ({ body }, res) => {
     try {
@@ -83,7 +83,7 @@ export class OrderController {
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }
-  };
+  }
 
   public allOrders = async ({ params }, res) => {
     try {
@@ -93,7 +93,7 @@ export class OrderController {
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }
-  };
+  }
 
   public ordersDate = async ({ body }, res) => {
     try {
@@ -101,21 +101,56 @@ export class OrderController {
       if (rol === 'superuser') {
         const ordersDate = await this.orderService.ordersDate(rol, date, '');
         res.status(200).send(ordersDate);
-      } else {
+      } else if (rol === 'admin') {
         const ordersDate = await this.orderService.ordersDate(rol, date, seller_id);
         res.status(200).send(ordersDate);
       }
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }
-  };
+  }
 
   public authR99 = async (req, res) => {
     try {
-      const token= await this.orderService.authR99();
-      res.status(200).send(token);
+      res.json(await this.orderService.authR99())
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }
   };
+
+  public createScenario = async (req, res) => {
+    try {
+      const newScenario = await this.orderService.createScenario();
+      res.json(newScenario);
+    } catch (err) {
+      res.status(400).send(getErrorMessage(err));
+    }
+  };
+
+  public deleteScenario = async (req, res) => {
+    try {
+      // res.json(await this.orderService);
+      res.json({ m: "Eliminando escenario" });
+    } catch (err) {
+      res.status(400).send(getErrorMessage(err));
+    }
+  };
+
+  public orderReports = async ({ body }, res) => {
+    try {
+      const { start, ending, seller_id, rol } = body;
+      res.send(await this.orderService.orderReports(start, ending, seller_id, rol));
+    } catch (err) {
+      res.status(400).send(getErrorMessage(err));
+    }
+  }
+
+  public recentOrders = async ({ body }, res) => {
+    try {
+      const { rol, seller_id } = body;
+      res.send(await this.orderService.recentOrders(rol, seller_id));
+    } catch (err) {
+      res.status(400).send(getErrorMessage(err));
+    }
+  }
 }

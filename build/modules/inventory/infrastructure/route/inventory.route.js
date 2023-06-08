@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+var express_1 = require("express");
+var InventoryService_1 = require("../../application/InventoryService");
+var inventory_ctrl_1 = require("../controller/inventory.ctrl");
+var mongo_repository_1 = require("../repository/mongo.repository");
+var auth_middleware_1 = require("../../../../infrastructure/middleware/auth.middleware");
+var router = (0, express_1.Router)();
+exports.router = router;
+var mongoRepository = new mongo_repository_1.MongoRepository();
+var inventoryService = new InventoryService_1.InventoryService(mongoRepository);
+var inventoryCtrl = new inventory_ctrl_1.InventoryController(inventoryService);
+router.post("/createInventoryObj", auth_middleware_1.authMiddleware, inventoryCtrl.createInventoryObj);
+router.get("/getInventory", auth_middleware_1.authMiddleware, inventoryCtrl.getInventory);
+router.post("/editInventoryObj", auth_middleware_1.authMiddleware, inventoryCtrl.editInventoryObj);
+router.post("/getRelatedDepots", auth_middleware_1.authMiddleware, inventoryCtrl.getRelatedDepots);
+router.post("/getProducts", auth_middleware_1.authMiddleware, inventoryCtrl.getProducts);

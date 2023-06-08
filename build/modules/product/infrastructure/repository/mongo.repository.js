@@ -51,6 +51,7 @@ var product_schema_1 = require("../model/product.schema");
 var depot_schema_1 = require("../../../depot/infrastructure/model/depot.schema");
 var mongoose_1 = __importDefault(require("mongoose"));
 var seller_schema_1 = require("../../../seller/infrastructure/model/seller.schema");
+var inventory_schema_1 = require("../../../inventory/infrastructure/model/inventory.schema");
 // import jwt from "jsonwebtoken";
 // import bcrypt from "bcrypt";
 // import mongoose from "mongoose";
@@ -179,10 +180,10 @@ var MongoRepository = /** @class */ (function () {
     MongoRepository.prototype.getProductsPage = function (depots_ids, pag) {
         var _a, e_3, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var options, result, hash, _d, _e, _f, product, _g, e_3_1;
-            var _this = this;
-            return __generator(this, function (_h) {
-                switch (_h.label) {
+            var options, result, hash, myProducts, _d, _e, _f, product, productInventories, ultimilla_depots, _g, _h, _j, _k, e_3_1;
+            var _l, _m;
+            return __generator(this, function (_o) {
+                switch (_o.label) {
                     case 0:
                         options = {
                             page: pag,
@@ -197,57 +198,86 @@ var MongoRepository = /** @class */ (function () {
                         //     products = products.concat(result.map(r => r));
                         // }
                         // result = await ProductModel.paginate({ "depots_ids": { $in: depots_ids.map((d) => d._id) } }, options);
-                        result = _h.sent();
+                        result = _o.sent();
                         hash = {};
                         result.docs = result.docs.filter(function (product) { return hash[product._id] ? false : hash[product._id] = true; });
-                        _h.label = 2;
+                        myProducts = [];
+                        _o.label = 2;
                     case 2:
-                        _h.trys.push([2, 10, 11, 16]);
+                        _o.trys.push([2, 15, 16, 21]);
                         _d = true, _e = __asyncValues(result.docs);
-                        _h.label = 3;
+                        _o.label = 3;
                     case 3: return [4 /*yield*/, _e.next()];
                     case 4:
-                        if (!(_f = _h.sent(), _a = _f.done, !_a)) return [3 /*break*/, 9];
+                        if (!(_f = _o.sent(), _a = _f.done, !_a)) return [3 /*break*/, 14];
                         _c = _f.value;
                         _d = false;
-                        _h.label = 5;
+                        _o.label = 5;
                     case 5:
-                        _h.trys.push([5, , 7, 8]);
+                        _o.trys.push([5, , 12, 13]);
                         product = _c;
-                        _g = product;
-                        return [4 /*yield*/, Promise.all(product.depots_ids.map(function (depot_id) { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, depot_schema_1.DepotModel.findOne({ _id: depot_id }, { name: 1 })];
-                                        case 1: return [2 /*return*/, _a.sent()];
-                                    }
-                                });
-                            }); }))];
+                        if (!(product.inventory_ids.length > 0)) return [3 /*break*/, 9];
+                        return [4 /*yield*/, inventory_schema_1.InventoryModel.find({ $and: [{ "id": { $in: product.inventory_ids.map(function (p) { return p; }) } }] })];
                     case 6:
-                        _g.depots_ids = _h.sent();
-                        return [3 /*break*/, 8];
+                        productInventories = (_o.sent());
+                        return [4 /*yield*/, depot_schema_1.DepotModel.find({ $and: [{ "id": { $in: productInventories.map(function (pi) { return pi.depot_id; }) } }, { status: "active" }] }, { id: 1, name: 1 })];
                     case 7:
+                        ultimilla_depots = _o.sent();
+                        _h = (_g = myProducts).push;
+                        _l = {
+                            id: product.id
+                        };
+                        return [4 /*yield*/, depot_schema_1.DepotModel.find({ $and: [{ "_id": { $in: product.depots_ids.map(function (depot_id) { return depot_id; }) } }, { status: "active" }] }, { name: 1 })];
+                    case 8:
+                        _h.apply(_g, [(_l.depots_ids = _o.sent(),
+                                _l.sku = product.sku,
+                                _l.name = product.name,
+                                _l.price = product.price,
+                                _l.status = product.status,
+                                _l.inventories = productInventories,
+                                _l.ultimilla_depots = ultimilla_depots,
+                                _l)]);
+                        return [3 /*break*/, 11];
+                    case 9:
+                        _k = (_j = myProducts).push;
+                        _m = {
+                            id: product.id
+                        };
+                        return [4 /*yield*/, depot_schema_1.DepotModel.find({ $and: [{ "_id": { $in: product.depots_ids.map(function (depot_id) { return depot_id; }) } }, { status: "active" }] }, { name: 1 })];
+                    case 10:
+                        _k.apply(_j, [(_m.depots_ids = _o.sent(),
+                                _m.sku = product.sku,
+                                _m.name = product.name,
+                                _m.price = product.price,
+                                _m.status = product.status,
+                                _m.inventory_ids = [],
+                                _m)]);
+                        _o.label = 11;
+                    case 11: return [3 /*break*/, 13];
+                    case 12:
                         _d = true;
                         return [7 /*endfinally*/];
-                    case 8: return [3 /*break*/, 3];
-                    case 9: return [3 /*break*/, 16];
-                    case 10:
-                        e_3_1 = _h.sent();
+                    case 13: return [3 /*break*/, 3];
+                    case 14: return [3 /*break*/, 21];
+                    case 15:
+                        e_3_1 = _o.sent();
                         e_3 = { error: e_3_1 };
-                        return [3 /*break*/, 16];
-                    case 11:
-                        _h.trys.push([11, , 14, 15]);
-                        if (!(!_d && !_a && (_b = _e.return))) return [3 /*break*/, 13];
+                        return [3 /*break*/, 21];
+                    case 16:
+                        _o.trys.push([16, , 19, 20]);
+                        if (!(!_d && !_a && (_b = _e.return))) return [3 /*break*/, 18];
                         return [4 /*yield*/, _b.call(_e)];
-                    case 12:
-                        _h.sent();
-                        _h.label = 13;
-                    case 13: return [3 /*break*/, 15];
-                    case 14:
+                    case 17:
+                        _o.sent();
+                        _o.label = 18;
+                    case 18: return [3 /*break*/, 20];
+                    case 19:
                         if (e_3) throw e_3.error;
                         return [7 /*endfinally*/];
-                    case 15: return [7 /*endfinally*/];
-                    case 16: return [2 /*return*/, result];
+                    case 20: return [7 /*endfinally*/];
+                    case 21:
+                        result.docs = myProducts;
+                        return [2 /*return*/, result];
                 }
             });
         });

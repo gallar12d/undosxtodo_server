@@ -52,6 +52,8 @@ var order_schema_1 = require("../model/order.schema");
 var status_schema_1 = __importDefault(require("../model/status.schema"));
 var seller_schema_1 = require("../../../seller/infrastructure/model/seller.schema");
 var axios_1 = __importDefault(require("axios"));
+var tokenR99 = '';
+var nroPeticiones = 0;
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
     }
@@ -463,15 +465,271 @@ var MongoRepository = /** @class */ (function () {
                             "grant_type": "client_credentials",
                             "client_id": "1007",
                             "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
-                        }, {
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Accept": "application/json"
-                            }
                         })];
                     case 1:
                         token = _a.sent();
-                        return [2 /*return*/, token];
+                        tokenR99 = token.data.access_token;
+                        return [2 /*return*/, 200];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.createScenario = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var gmt5Now, vehicles;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (nroPeticiones >= 1)
+                            return [2 /*return*/];
+                        gmt5Now = new Date(new Date().getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
+                        return [4 /*yield*/, axios_1.default.get("https://api.ruta99.co/v1/vehicle", {
+                                headers: {
+                                    Authorization: "Bearer ".concat(tokenR99)
+                                }
+                            })];
+                    case 1:
+                        vehicles = _a.sent();
+                        // console.log(vehicles.data.data);
+                        // console.log(vehicles.data.data.map((v: any) => v.id));
+                        // const newScenario = await axios.post(`https://api.ruta99.co/v1/scenario`, {
+                        //   "date": `${gmt5Now}`,
+                        //   "name": "Escenario mil",
+                        //   "depot_id": 1,
+                        //   "vehicles": vehicles.data.data.map((v: any) => v.id),
+                        //   "service_time": 10,
+                        //   "start_time": "12:00",
+                        //   "end_time": "20:00"
+                        // }, {
+                        //   headers: {
+                        //     'Content-Type': 'application/json',
+                        //     'Accept': 'application/json',
+                        //     'Authorization': `Bearer ${tokenR99}`
+                        //   }
+                        // });
+                        // console.log(newScenario.data.scenario);
+                        // const newOrder = await axios.post(`https://api.ruta99.co/v1/order`, {
+                        //   "scenario_id": newScenario.data.scenario.id,
+                        //   "code": "ULTM01000",
+                        //   "country": "Mexico",
+                        //   "state": "Estado de mexico",
+                        //   "city": "Nezahualcoyotl",
+                        //   "address": "C. 9 12, Col Metropolitana, Nezahualcoyotl, 57420",
+                        //   "reference": "White house",
+                        //   "zip_code": "170150",
+                        //   "demand": 1,
+                        //   "packages": 1,
+                        //   "customer": {
+                        //     "code": "545345345",
+                        //     "name": "Aaron Bernal",
+                        //     "email": "aaron.bernal@99minutos.com",
+                        //     "phone": "321654987"
+                        //   },
+                        //   "items": [
+                        //     {
+                        //       "quantity": 3,
+                        //       "description": "Item 1 description",
+                        //       "amount": 300
+                        //     },
+                        //     {
+                        //       "quantity": 1,
+                        //       "description": "Item 2 description",
+                        //       "amount": 100
+                        //     },
+                        //     {
+                        //       "quantity": 1,
+                        //       "description": "Item 1 description",
+                        //       "amount": 100
+                        //     }
+                        //   ],
+                        //   "window_start_time": "08:00",
+                        //   "window_end_time": "18:00",
+                        //   "cash_on_delivery": true,
+                        //   "cash_amount": 500.00,
+                        //   "cash_currency": "MXN",
+                        //   "type": "delivery"
+                        // }, {
+                        //   headers: {
+                        //     'Content-Type': 'application/json',
+                        //     'Accept': 'application/json',
+                        //     'Authorization': `Bearer ${tokenR99}`
+                        //   }
+                        // });
+                        // console.log(newOrder.data);
+                        // const deletedScenario = await axios.delete(`https://api.ruta99.co/v1/scenario/23`, {
+                        //   headers: {
+                        //     Authorization: `Bearer ${tokenR99}`
+                        //   }
+                        // });
+                        // console.log(deletedScenario.data);
+                        // const scenarios = await axios.get(`https://api.ruta99.co/v1/scenario`, {
+                        //   headers: {
+                        //     Authorization: `Bearer ${tokenR99}`
+                        //   }
+                        // });
+                        // console.log(scenarios.data.data);
+                        // const orders = await axios.get(`https://api.ruta99.co/v1/order`, {
+                        //   headers: {
+                        //     Authorization: `Bearer ${tokenR99}`
+                        //   }
+                        // });
+                        // console.log(orders.data.data);
+                        nroPeticiones++;
+                        return [2 /*return*/, vehicles.data.data];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.orderReports = function (start, ending, seller_id, rol) {
+        var _a, e_6, _b, _c;
+        return __awaiter(this, void 0, void 0, function () {
+            var ordersDate, ordersDateWithNames, _d, ordersDate_3, ordersDate_3_1, order, _e, _f, _g, e_6_1;
+            var _h;
+            return __generator(this, function (_j) {
+                switch (_j.label) {
+                    case 0:
+                        ordersDate = [];
+                        if (!(rol === 'superuser')) return [3 /*break*/, 2];
+                        return [4 /*yield*/, order_schema_1.OrderModel.find({ createdAt: { $gt: new Date("".concat(start)), $lt: new Date("".concat(ending)) } }, {
+                                guide: 1, depot_name: 1, client_name: 1, client_surname: 1, client_address: 1, client_address_detail: 1, client_city: 1, client_state: 1, client_telephone: 1,
+                                guide_status: 1, products: 1, value_to_collect: 1, createdAt: 1
+                            })
+                            // ordersDate = await OrderModel.find({ createdAt: { $gt: new Date(`${start}`), $lt: new Date(`${ending}`) } });
+                        ];
+                    case 1:
+                        ordersDate = _j.sent();
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, order_schema_1.OrderModel.find({ createdAt: { $gt: new Date("".concat(start)), $lt: new Date("".concat(ending)) }, seller_id: new mongoose_1.default.Types.ObjectId(seller_id) })];
+                    case 3:
+                        ordersDate = _j.sent();
+                        _j.label = 4;
+                    case 4:
+                        ordersDateWithNames = [];
+                        _j.label = 5;
+                    case 5:
+                        _j.trys.push([5, 13, 14, 19]);
+                        _d = true, ordersDate_3 = __asyncValues(ordersDate);
+                        _j.label = 6;
+                    case 6: return [4 /*yield*/, ordersDate_3.next()];
+                    case 7:
+                        if (!(ordersDate_3_1 = _j.sent(), _a = ordersDate_3_1.done, !_a)) return [3 /*break*/, 12];
+                        _c = ordersDate_3_1.value;
+                        _d = false;
+                        _j.label = 8;
+                    case 8:
+                        _j.trys.push([8, , 10, 11]);
+                        order = _c;
+                        _f = (_e = ordersDateWithNames).push;
+                        _h = {
+                            Fecha: new Date(new Date("" + order.createdAt).getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10),
+                            Guia: order.guide,
+                            Bodega: order.depot_name,
+                            'Nombre cliente': order.client_name,
+                            'Apellido cliente': order.client_surname,
+                            'Dirección': order.client_address,
+                            Detalle: order.client_address_detail,
+                            Ciudad: order.client_city,
+                            Departamento: order.client_state,
+                            'Teléfono': order.client_telephone
+                        };
+                        _g = 'Estado de orden';
+                        return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status }, { name: 1 })];
+                    case 9:
+                        _f.apply(_e, [(_h[_g] = (_j.sent()).name,
+                                _h.Productos = order.products.map(function (p) { return p.name; }).join(', '),
+                                _h.Cantidad = order.products.map(function (p) { return p.quantity; }).join(', '),
+                                _h['Valor a recoger'] = order.value_to_collect,
+                                _h)]);
+                        return [3 /*break*/, 11];
+                    case 10:
+                        _d = true;
+                        return [7 /*endfinally*/];
+                    case 11: return [3 /*break*/, 6];
+                    case 12: return [3 /*break*/, 19];
+                    case 13:
+                        e_6_1 = _j.sent();
+                        e_6 = { error: e_6_1 };
+                        return [3 /*break*/, 19];
+                    case 14:
+                        _j.trys.push([14, , 17, 18]);
+                        if (!(!_d && !_a && (_b = ordersDate_3.return))) return [3 /*break*/, 16];
+                        return [4 /*yield*/, _b.call(ordersDate_3)];
+                    case 15:
+                        _j.sent();
+                        _j.label = 16;
+                    case 16: return [3 /*break*/, 18];
+                    case 17:
+                        if (e_6) throw e_6.error;
+                        return [7 /*endfinally*/];
+                    case 18: return [7 /*endfinally*/];
+                    case 19: return [2 /*return*/, ordersDateWithNames];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.recentOrders = function (rol, seller_id) {
+        var _a, e_7, _b, _c;
+        return __awaiter(this, void 0, void 0, function () {
+            var options, recentOrders, _d, _e, _f, order, _g, e_7_1;
+            return __generator(this, function (_h) {
+                switch (_h.label) {
+                    case 0:
+                        options = {
+                            page: 1,
+                            limit: 10,
+                            // sort: { createdAt: -1 },
+                            select: { client_name: 1, client_surname: 1, products: 1, value_to_collect: 1, guide_status: 1 }
+                        };
+                        recentOrders = [];
+                        if (!(rol === 'superuser')) return [3 /*break*/, 2];
+                        return [4 /*yield*/, order_schema_1.OrderModel.paginate({ guide_status: "6" }, { options: options })];
+                    case 1:
+                        recentOrders = _h.sent();
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, order_schema_1.OrderModel.paginate({ guide_status: "6", seller_id: new mongoose_1.default.Types.ObjectId(seller_id) }, { options: options })];
+                    case 3:
+                        recentOrders = _h.sent();
+                        _h.label = 4;
+                    case 4:
+                        _h.trys.push([4, 12, 13, 18]);
+                        _d = true, _e = __asyncValues(recentOrders.docs);
+                        _h.label = 5;
+                    case 5: return [4 /*yield*/, _e.next()];
+                    case 6:
+                        if (!(_f = _h.sent(), _a = _f.done, !_a)) return [3 /*break*/, 11];
+                        _c = _f.value;
+                        _d = false;
+                        _h.label = 7;
+                    case 7:
+                        _h.trys.push([7, , 9, 10]);
+                        order = _c;
+                        _g = order;
+                        return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status })];
+                    case 8:
+                        _g.guide_status = (_h.sent()).name;
+                        return [3 /*break*/, 10];
+                    case 9:
+                        _d = true;
+                        return [7 /*endfinally*/];
+                    case 10: return [3 /*break*/, 5];
+                    case 11: return [3 /*break*/, 18];
+                    case 12:
+                        e_7_1 = _h.sent();
+                        e_7 = { error: e_7_1 };
+                        return [3 /*break*/, 18];
+                    case 13:
+                        _h.trys.push([13, , 16, 17]);
+                        if (!(!_d && !_a && (_b = _e.return))) return [3 /*break*/, 15];
+                        return [4 /*yield*/, _b.call(_e)];
+                    case 14:
+                        _h.sent();
+                        _h.label = 15;
+                    case 15: return [3 /*break*/, 17];
+                    case 16:
+                        if (e_7) throw e_7.error;
+                        return [7 /*endfinally*/];
+                    case 17: return [7 /*endfinally*/];
+                    case 18: return [2 /*return*/, recentOrders];
                 }
             });
         });

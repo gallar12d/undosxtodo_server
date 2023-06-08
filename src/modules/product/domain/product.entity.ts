@@ -7,4 +7,5 @@ export interface ProductEntity {
     name: string;
     price: number;
     status?: string;
+    inventory_id?: [];
 }
