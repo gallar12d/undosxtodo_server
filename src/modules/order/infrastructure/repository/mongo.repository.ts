@@ -93,8 +93,10 @@ export class MongoRepository implements OrderRepository {
       order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
       order.seller = (await SellerModel.findOne({ _id: order.seller_id })).name
       var fechaUtc = new Date("" + order.createdAt);
+      order.equalDates= order.createdAt === order.updatedAt;
       order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
     }
+    
     return orders;
   }
 
