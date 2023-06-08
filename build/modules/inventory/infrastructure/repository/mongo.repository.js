@@ -281,13 +281,13 @@ var MongoRepository = /** @class */ (function () {
             });
         });
     };
-    MongoRepository.prototype.getProducts = function (depot_id) {
+    MongoRepository.prototype.getProducts = function (depot_id, seller_id) {
         var _a, e_3, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
             var invProducts, myProducts, _d, invProducts_1, invProducts_1_1, product, currentProduct, e_3_1;
             return __generator(this, function (_e) {
                 switch (_e.label) {
-                    case 0: return [4 /*yield*/, inventory_schema_1.InventoryModel.find({ depot_id: depot_id }, { product_id: 1, quantity: 1 })];
+                    case 0: return [4 /*yield*/, inventory_schema_1.InventoryModel.find({ depot_id: depot_id, seller_id: seller_id }, { product_id: 1, quantity: 1 })];
                     case 1:
                         invProducts = _e.sent();
                         myProducts = [];
@@ -375,10 +375,12 @@ var MongoRepository = /** @class */ (function () {
                             quantity: product.quantity,
                             transaccion_type: transacction_type
                         });
-                        return [4 /*yield*/, inventory_schema_1.InventoryModel.updateOne({ product_id: product.id, depot_id: depot_id }, { $set: {
-                                    quantity: currentInventory.quantity - product.quantity,
+                        return [4 /*yield*/, inventory_schema_1.InventoryModel.updateOne({ product_id: product.id, depot_id: depot_id }, {
+                                $set: {
+                                    quantity: currentInventory.quantity + product.quantity,
                                     history: currentHistory
-                                } })];
+                                }
+                            })];
                     case 5:
                         _e.sent();
                         return [3 /*break*/, 7];

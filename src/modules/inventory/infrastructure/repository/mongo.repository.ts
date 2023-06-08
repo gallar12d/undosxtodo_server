@@ -30,7 +30,9 @@ export class MongoRepository implements InventoryRepository {
             return myInventory;
         } else {
             const inventoryobj = await InventoryModel.find({ product_id: product.id });
+            // Busca coinciddencias entre depot_id ingresado que es: inventory.depot_id y el arreglo de inventario donde se encuentra el producto
             const coincidence = inventoryobj.findIndex((inv) => inv.depot_id === inventory.depot_id);
+            // Esta condicion es para cuando existe la coincidencia, el else es para cuando no.
             if (coincidence !== -1) {
                 const updatedHistory = inventoryobj[coincidence].history;
                 updatedHistory.push(inventory.history[inventory.history.length - 1]);
@@ -144,8 +146,8 @@ export class MongoRepository implements InventoryRepository {
         return relatedDepots
     }
 
-    public async getProducts(depot_id: string): Promise<any | null> {
-        const invProducts = await InventoryModel.find({ depot_id }, { product_id: 1, quantity: 1 });
+    public async getProducts(depot_id: string, seller_id: string): Promise<any | null> {
+        const invProducts = await InventoryModel.find({ depot_id, seller_id }, { product_id: 1, quantity: 1 });
         const myProducts = [];
         for await (const product of invProducts) {
             const currentProduct = await ProductModel.findOne({ id: product.product_id });
@@ -174,10 +176,12 @@ export class MongoRepository implements InventoryRepository {
                 quantity: product.quantity,
                 transaccion_type: transacction_type
             });
-            await InventoryModel.updateOne({product_id:product.id, depot_id},{$set:{
-                quantity: currentInventory.quantity - product.quantity,
-                history: currentHistory
-            }});
+            await InventoryModel.updateOne({ product_id: product.id, depot_id }, {
+                $set: {
+                    quantity: currentInventory.quantity + product.quantity,
+                    history: currentHistory
+                }
+            });
         }
         return 200;
     }

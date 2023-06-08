@@ -46,8 +46,8 @@ export class InventoryController {
 
     public getProducts = async ({ body }: Request, res: Response) => {
         try {
-            const { depot_id } = body;
-            res.status(200).send(await this.inventoryService.getProducts(depot_id));
+            const { depot_id, seller_id } = body;
+            res.status(200).send(await this.inventoryService.getProducts(depot_id, seller_id));
         } catch (err) {
             res.status(400).send(getErrorMessage(err));
         }

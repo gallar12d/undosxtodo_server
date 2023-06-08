@@ -19,8 +19,8 @@ export class InventoryService {
         return await this.inventoryRepository.getRelatedDepots(seller_id);
     }
 
-    public async getProducts(depot_id: string) {
-        return await this.inventoryRepository.getProducts(depot_id);
+    public async getProducts(depot_id: string, seller_id: string) {
+        return await this.inventoryRepository.getProducts(depot_id, seller_id);
     }
 
     public async subtractAmount(product_ids, depot_id, date, transacction_type) {
