@@ -336,9 +336,10 @@ var MongoRepository = /** @class */ (function () {
     MongoRepository.prototype.ordersDate = function (rol, date, seller_id) {
         var _a, e_4, _b, _c, _d, e_5, _e, _f;
         return __awaiter(this, void 0, void 0, function () {
-            var theDate, theYear, theMonth, theDay, ordersDate, _g, ordersDate_1, ordersDate_1_1, order, _h, fechaUtc, e_4_1, ordersDate, _j, ordersDate_2, ordersDate_2_1, order, _k, fechaUtc, e_5_1;
-            return __generator(this, function (_l) {
-                switch (_l.label) {
+            var theDate, theYear, theMonth, theDay, ordersDate, _g, ordersDate_1, ordersDate_1_1, order, _h, fechaUtc, e_4_1, ordersDate, myOrders, _j, ordersDate_2, ordersDate_2_1, order, fechaUtc, _k, _l, e_5_1;
+            var _m;
+            return __generator(this, function (_o) {
+                switch (_o.label) {
                     case 0:
                         theDate = date.split('-');
                         theYear = parseInt(theDate[0]);
@@ -349,32 +350,32 @@ var MongoRepository = /** @class */ (function () {
                         if (!Number.isNaN(theDay)) return [3 /*break*/, 2];
                         return [4 /*yield*/, order_schema_1.OrderModel.find({ createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-01")), $lt: new Date("".concat(theYear, "-").concat(theMonth + 1, "-01")) } })];
                     case 1:
-                        ordersDate = _l.sent();
+                        ordersDate = _o.sent();
                         return [3 /*break*/, 4];
                     case 2: return [4 /*yield*/, order_schema_1.OrderModel.find({ createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-").concat(theDay)) } })];
                     case 3:
-                        ordersDate = _l.sent();
-                        _l.label = 4;
+                        ordersDate = _o.sent();
+                        _o.label = 4;
                     case 4:
                         ordersDate = JSON.parse(JSON.stringify(ordersDate));
-                        _l.label = 5;
+                        _o.label = 5;
                     case 5:
-                        _l.trys.push([5, 13, 14, 19]);
+                        _o.trys.push([5, 13, 14, 19]);
                         _g = true, ordersDate_1 = __asyncValues(ordersDate);
-                        _l.label = 6;
+                        _o.label = 6;
                     case 6: return [4 /*yield*/, ordersDate_1.next()];
                     case 7:
-                        if (!(ordersDate_1_1 = _l.sent(), _a = ordersDate_1_1.done, !_a)) return [3 /*break*/, 12];
+                        if (!(ordersDate_1_1 = _o.sent(), _a = ordersDate_1_1.done, !_a)) return [3 /*break*/, 12];
                         _c = ordersDate_1_1.value;
                         _g = false;
-                        _l.label = 8;
+                        _o.label = 8;
                     case 8:
-                        _l.trys.push([8, , 10, 11]);
+                        _o.trys.push([8, , 10, 11]);
                         order = _c;
                         _h = order;
                         return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status })];
                     case 9:
-                        _h.guide_status = (_l.sent()).name;
+                        _h.guide_status = (_o.sent()).name;
                         fechaUtc = new Date("" + order.createdAt);
                         order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
                         return [3 /*break*/, 11];
@@ -384,16 +385,16 @@ var MongoRepository = /** @class */ (function () {
                     case 11: return [3 /*break*/, 6];
                     case 12: return [3 /*break*/, 19];
                     case 13:
-                        e_4_1 = _l.sent();
+                        e_4_1 = _o.sent();
                         e_4 = { error: e_4_1 };
                         return [3 /*break*/, 19];
                     case 14:
-                        _l.trys.push([14, , 17, 18]);
+                        _o.trys.push([14, , 17, 18]);
                         if (!(!_g && !_a && (_b = ordersDate_1.return))) return [3 /*break*/, 16];
                         return [4 /*yield*/, _b.call(ordersDate_1)];
                     case 15:
-                        _l.sent();
-                        _l.label = 16;
+                        _o.sent();
+                        _o.label = 16;
                     case 16: return [3 /*break*/, 18];
                     case 17:
                         if (e_4) throw e_4.error;
@@ -405,54 +406,64 @@ var MongoRepository = /** @class */ (function () {
                         if (!Number.isNaN(theDay)) return [3 /*break*/, 22];
                         return [4 /*yield*/, order_schema_1.OrderModel.find({ createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-01")), $lt: new Date("".concat(theYear, "-").concat(theMonth + 1, "-01")) }, seller_id: new mongoose_1.default.Types.ObjectId(seller_id) })];
                     case 21:
-                        ordersDate = _l.sent();
+                        ordersDate = _o.sent();
                         return [3 /*break*/, 24];
                     case 22: return [4 /*yield*/, order_schema_1.OrderModel.find({ createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-").concat(theDay)) }, seller_id: new mongoose_1.default.Types.ObjectId(seller_id) })];
                     case 23:
-                        ordersDate = _l.sent();
-                        _l.label = 24;
+                        ordersDate = _o.sent();
+                        _o.label = 24;
                     case 24:
-                        _l.trys.push([24, 32, 33, 38]);
+                        myOrders = [];
+                        _o.label = 25;
+                    case 25:
+                        _o.trys.push([25, 33, 34, 39]);
                         _j = true, ordersDate_2 = __asyncValues(ordersDate);
-                        _l.label = 25;
-                    case 25: return [4 /*yield*/, ordersDate_2.next()];
-                    case 26:
-                        if (!(ordersDate_2_1 = _l.sent(), _d = ordersDate_2_1.done, !_d)) return [3 /*break*/, 31];
+                        _o.label = 26;
+                    case 26: return [4 /*yield*/, ordersDate_2.next()];
+                    case 27:
+                        if (!(ordersDate_2_1 = _o.sent(), _d = ordersDate_2_1.done, !_d)) return [3 /*break*/, 32];
                         _f = ordersDate_2_1.value;
                         _j = false;
-                        _l.label = 27;
-                    case 27:
-                        _l.trys.push([27, , 29, 30]);
-                        order = _f;
-                        _k = order;
-                        return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status })];
+                        _o.label = 28;
                     case 28:
-                        _k.guide_status = (_l.sent()).name;
+                        _o.trys.push([28, , 30, 31]);
+                        order = _f;
                         fechaUtc = new Date("" + order.createdAt);
-                        order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
-                        return [3 /*break*/, 30];
+                        _l = (_k = myOrders).push;
+                        _m = {
+                            client_name: order.client_name,
+                            client_surname: order.client_surname,
+                            products: order.products,
+                            value_to_collect: order.value_to_collect
+                        };
+                        return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status })];
                     case 29:
+                        _l.apply(_k, [(_m.guide_status = (_o.sent()).name,
+                                _m.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10),
+                                _m)]);
+                        return [3 /*break*/, 31];
+                    case 30:
                         _j = true;
                         return [7 /*endfinally*/];
-                    case 30: return [3 /*break*/, 25];
-                    case 31: return [3 /*break*/, 38];
-                    case 32:
-                        e_5_1 = _l.sent();
-                        e_5 = { error: e_5_1 };
-                        return [3 /*break*/, 38];
+                    case 31: return [3 /*break*/, 26];
+                    case 32: return [3 /*break*/, 39];
                     case 33:
-                        _l.trys.push([33, , 36, 37]);
-                        if (!(!_j && !_d && (_e = ordersDate_2.return))) return [3 /*break*/, 35];
-                        return [4 /*yield*/, _e.call(ordersDate_2)];
+                        e_5_1 = _o.sent();
+                        e_5 = { error: e_5_1 };
+                        return [3 /*break*/, 39];
                     case 34:
-                        _l.sent();
-                        _l.label = 35;
-                    case 35: return [3 /*break*/, 37];
-                    case 36:
+                        _o.trys.push([34, , 37, 38]);
+                        if (!(!_j && !_d && (_e = ordersDate_2.return))) return [3 /*break*/, 36];
+                        return [4 /*yield*/, _e.call(ordersDate_2)];
+                    case 35:
+                        _o.sent();
+                        _o.label = 36;
+                    case 36: return [3 /*break*/, 38];
+                    case 37:
                         if (e_5) throw e_5.error;
                         return [7 /*endfinally*/];
-                    case 37: return [7 /*endfinally*/];
-                    case 38: return [2 /*return*/, ordersDate];
+                    case 38: return [7 /*endfinally*/];
+                    case 39: return [2 /*return*/, myOrders];
                 }
             });
         });

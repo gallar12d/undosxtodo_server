@@ -1,8 +1,26 @@
+// {
+//   "compilerOptions": {
+//       "target": "es5",
+//       "lib": ["es6"],
+//       "types": ["reflect-metadata"],
+//       "moduleResolution": "node",
+//       "experimentalDecorators": true,
+//       "emitDecoratorMetadata": true,
+//       "esModuleInterop": true ,
+//       "typeRoots": ["src/@types", "./node_modules/@types"], 
+//       "outDir": "build",                          /* Redirect output structure to the directory. */
+//       "rootDir": "src",
+      
+//   },
+//   "include": ["./src/*", "src/infrastructure/routes/routes.ts"],
+  
+// }
+
 {
   "compilerOptions": {
       "target": "es5",
       "lib": ["es6"],
-      "types": ["reflect-metadata"],
+      "types": [],
       "moduleResolution": "node",
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,

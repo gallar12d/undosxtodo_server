@@ -93,10 +93,10 @@ export class MongoRepository implements OrderRepository {
       order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
       order.seller = (await SellerModel.findOne({ _id: order.seller_id })).name
       var fechaUtc = new Date("" + order.createdAt);
-      order.equalDates= order.createdAt === order.updatedAt;
+      order.equalDates = order.createdAt === order.updatedAt;
       order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
     }
-    
+
     return orders;
   }
 
@@ -129,12 +129,26 @@ export class MongoRepository implements OrderRepository {
       } else {
         ordersDate = await OrderModel.find({ createdAt: { $gt: new Date(`${theYear}-${theMonth}-${theDay}`) }, seller_id: new mongoose.Types.ObjectId(seller_id) });
       }
+      // for await (const order of ordersDate) {
+      //   order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
+      //   var fechaUtc = new Date("" + order.createdAt);
+      //   order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
+      // }
+      // console.log(ordersDate);
+      let myOrders = [];
       for await (const order of ordersDate) {
-        order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
         var fechaUtc = new Date("" + order.createdAt);
-        order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
+        myOrders.push({
+          client_name: order.client_name,
+          client_surname: order.client_surname,
+          products: order.products,
+          value_to_collect: order.value_to_collect,
+          guide_status: (await StatusModel.findOne({ id: order.guide_status })).name,
+          createdAt: new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10)
+        });
       }
-      return ordersDate;
+
+      return myOrders;
     }
   }
 
