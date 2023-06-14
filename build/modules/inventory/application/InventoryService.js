@@ -71,6 +71,26 @@ var InventoryService = /** @class */ (function () {
             });
         });
     };
+    InventoryService.prototype.getRelatedSellers = function (pag) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.inventoryRepository.getRelatedSellers(pag)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    InventoryService.prototype.setInventoryStatus = function (seller_id, depots) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.inventoryRepository.setInventoryStatus(seller_id, depots)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     InventoryService.prototype.getRelatedDepots = function (seller_id) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

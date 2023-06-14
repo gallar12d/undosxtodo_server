@@ -9,6 +9,7 @@ export class InventoryValue implements InventoryEntity {
     depot_id: string;
     income_type: string;
     history?: [];
+    status: string;
 
     constructor({
         seller_id,
@@ -16,14 +17,16 @@ export class InventoryValue implements InventoryEntity {
         quantity,
         depot_id,
         income_type,
-        history
+        history,
+        status
     }: {
         seller_id: string;
         product_id: string;
         quantity: number;
         depot_id: string;
         income_type: string;
-        history?: []
+        history?: [];
+        status: string;
     }) {
         this.id = uuid();
         this.seller_id = seller_id;
@@ -32,5 +35,6 @@ export class InventoryValue implements InventoryEntity {
         this.depot_id = depot_id;
         this.income_type = income_type;
         this.history = history;
+        this.status = status;
     }
 }

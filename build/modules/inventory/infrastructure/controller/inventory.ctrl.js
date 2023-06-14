@@ -49,13 +49,13 @@ var InventoryController = /** @class */ (function () {
         this.createInventoryObj = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var seller_id, product_id, quantity, location, depot_id, income_type, history, myInventory, _b, _c, err_1;
+                var seller_id, product_id, quantity, depot_id, income_type, history, status, myInventory, _b, _c, err_1;
                 return __generator(this, function (_d) {
                     switch (_d.label) {
                         case 0:
                             _d.trys.push([0, 2, , 3]);
-                            seller_id = body.seller_id, product_id = body.product_id, quantity = body.quantity, location = body.location, depot_id = body.depot_id, income_type = body.income_type, history = body.history;
-                            myInventory = new inventory_value_1.InventoryValue({ seller_id: seller_id, product_id: product_id, quantity: quantity, depot_id: depot_id, income_type: income_type, history: history });
+                            seller_id = body.seller_id, product_id = body.product_id, quantity = body.quantity, depot_id = body.depot_id, income_type = body.income_type, history = body.history, status = body.status;
+                            myInventory = new inventory_value_1.InventoryValue({ seller_id: seller_id, product_id: product_id, quantity: quantity, depot_id: depot_id, income_type: income_type, history: history, status: status });
                             _c = (_b = res.status(200)).send;
                             return [4 /*yield*/, this.inventoryService.createInventoryObj(myInventory)];
                         case 1:
@@ -73,13 +73,13 @@ var InventoryController = /** @class */ (function () {
         this.editInventoryObj = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var seller_id, product_id, quantity, location, depot_id, income_type, queryId, inventoryObj, _b, _c, err_2;
+                var seller_id, product_id, quantity, depot_id, income_type, queryId, status, inventoryObj, _b, _c, err_2;
                 return __generator(this, function (_d) {
                     switch (_d.label) {
                         case 0:
                             _d.trys.push([0, 2, , 3]);
-                            seller_id = body.seller_id, product_id = body.product_id, quantity = body.quantity, location = body.location, depot_id = body.depot_id, income_type = body.income_type, queryId = body.queryId;
-                            inventoryObj = new inventory_value_1.InventoryValue({ seller_id: seller_id, product_id: product_id, quantity: quantity, depot_id: depot_id, income_type: income_type });
+                            seller_id = body.seller_id, product_id = body.product_id, quantity = body.quantity, depot_id = body.depot_id, income_type = body.income_type, queryId = body.queryId, status = body.status;
+                            inventoryObj = new inventory_value_1.InventoryValue({ seller_id: seller_id, product_id: product_id, quantity: quantity, depot_id: depot_id, income_type: income_type, status: status });
                             _c = (_b = res.status(200)).send;
                             return [4 /*yield*/, this.inventoryService.editInventoryObj(inventoryObj, queryId)];
                         case 1:
@@ -113,10 +113,57 @@ var InventoryController = /** @class */ (function () {
                 }
             });
         }); };
+        this.getRelatedSellers = function (_a, res) {
+            var params = _a.params;
+            return __awaiter(_this, void 0, void 0, function () {
+                var pag, _b, _c, err_4;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            pag = params.pag;
+                            _c = (_b = res.status(200)).json;
+                            return [4 /*yield*/, this.inventoryService.getRelatedSellers(parseInt(pag))];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_4 = _d.sent();
+                            res.status(400).json((0, handleErrors_1.default)(err_4));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.setInventoryStatus = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var seller_id, depots, theDepots, _b, _c, err_5;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            seller_id = body.seller_id, depots = body.depots;
+                            theDepots = JSON.parse(depots);
+                            _c = (_b = res.status(200)).json;
+                            return [4 /*yield*/, this.inventoryService.setInventoryStatus(seller_id, theDepots)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_5 = _d.sent();
+                            res.status(400).json((0, handleErrors_1.default)(err_5));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
         this.getRelatedDepots = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var seller_id, _b, _c, err_4;
+                var seller_id, _b, _c, err_6;
                 return __generator(this, function (_d) {
                     switch (_d.label) {
                         case 0:
@@ -128,8 +175,8 @@ var InventoryController = /** @class */ (function () {
                             _c.apply(_b, [_d.sent()]);
                             return [3 /*break*/, 3];
                         case 2:
-                            err_4 = _d.sent();
-                            res.status(400).send((0, handleErrors_1.default)(err_4));
+                            err_6 = _d.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_6));
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
                     }
@@ -139,7 +186,7 @@ var InventoryController = /** @class */ (function () {
         this.getProducts = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var depot_id, seller_id, _b, _c, err_5;
+                var depot_id, seller_id, _b, _c, err_7;
                 return __generator(this, function (_d) {
                     switch (_d.label) {
                         case 0:
@@ -151,8 +198,8 @@ var InventoryController = /** @class */ (function () {
                             _c.apply(_b, [_d.sent()]);
                             return [3 /*break*/, 3];
                         case 2:
-                            err_5 = _d.sent();
-                            res.status(400).send((0, handleErrors_1.default)(err_5));
+                            err_7 = _d.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_7));
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
                     }
@@ -162,7 +209,7 @@ var InventoryController = /** @class */ (function () {
         this.subtractAmount = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var product_ids, depot_id, date, transacction_type, _b, _c, err_6;
+                var product_ids, depot_id, date, transacction_type, _b, _c, err_8;
                 return __generator(this, function (_d) {
                     switch (_d.label) {
                         case 0:
@@ -174,8 +221,8 @@ var InventoryController = /** @class */ (function () {
                             _c.apply(_b, [_d.sent()]);
                             return [3 /*break*/, 3];
                         case 2:
-                            err_6 = _d.sent();
-                            res.status(400).send((0, handleErrors_1.default)(err_6));
+                            err_8 = _d.sent();
+                            res.status(400).send((0, handleErrors_1.default)(err_8));
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
                     }

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 import { InventoryRepository } from "../../domain/inventory.repository";
 import { InventoryModel } from "../model/inventory.schema";
 import { SellerModel } from "../../../seller/infrastructure/model/seller.schema";
@@ -41,7 +41,7 @@ export class MongoRepository implements InventoryRepository {
                 for await (const historyObj of inventoryobj[coincidence].history) {
                     updatedQuantity = updatedQuantity + parseInt(historyObj.quantity);
                 }
-                await InventoryModel.updateOne({ product_id: product.id }, { $set: { history: updatedHistory, quantity: updatedQuantity } });
+                await InventoryModel.updateOne({ product_id: product.id }, { $set: { history: updatedHistory, quantity: updatedQuantity, status: inventory.status } });
                 return {
                     id: inventoryobj[coincidence].id,
                     createdAt: inventoryobj[coincidence].createdAt.toISOString().slice(0, 10),
@@ -109,7 +109,7 @@ export class MongoRepository implements InventoryRepository {
     }
 
     public async getInventory(): Promise<any | null> {
-        const inventoryobj = await InventoryModel.find();
+        const inventoryobj = await InventoryModel.find({ status: "active" });
         const myInventory = [];
 
         for await (const obj of inventoryobj) {
@@ -140,8 +140,51 @@ export class MongoRepository implements InventoryRepository {
         });
     }
 
+    public async getRelatedSellers(pag: number): Promise<any | null> {
+        const options = {
+            page: pag,
+            limit: 6,
+            sort: { createdAt: -1 }
+        }
+        const result = await SellerModel.paginate({}, options);
+
+        const myRelatedSellers = [];
+        for await (const seller of result.docs) {
+            if (seller.name !== "Ultimilla") {
+                // const sellerDepots = await InventoryModel.find({ seller_id: seller.id }, { depot_id: 1, createdAt: 1 });
+                const sellerDepots = await InventoryModel.find({ $and: [{ seller_id: seller.id }, { status: "active" }] }, { depot_id: 1, createdAt: 1 });
+                if (sellerDepots.length > 0) {
+                    myRelatedSellers.push({
+                        id: seller.id,
+                        createdAt: sellerDepots[0].createdAt.toISOString().slice(0, 10),
+                        seller: seller.name,
+                        depots: await DepotModel.find({ $and: [{ "id": { $in: sellerDepots.map((sd) => sd.depot_id) } }] }, { id: 1, name: 1 })
+                    });
+                };
+            }
+        }
+        return myRelatedSellers;
+    }
+
+    public async setInventoryStatus(seller_id: string, depots: any): Promise<any | null> {
+        // const result = await InventoryModel.find({ seller_id, depot_id: depots.map((depot: any) => depot.id) });
+        for await (const depot of depots) {
+            await InventoryModel.updateMany({
+                $and: [
+                    { seller_id },
+                    { depot_id: depot.id }
+                ]
+            }, {
+                $set: {
+                    status: depot.status
+                }
+            });
+        }
+        return 200;
+    }
+
     public async getRelatedDepots(seller_id: string): Promise<any | null> {
-        const depotIds = await InventoryModel.find({ seller_id }, { depot_id: 1 });
+        const depotIds = await InventoryModel.find({ $and: [{ seller_id }, { status: "active" }] }, { depot_id: 1 });
         const relatedDepots = await DepotModel.find({ $and: [{ "id": { $in: depotIds.map((depot) => depot.depot_id) } }, { status: "active" }] });
         return relatedDepots
     }

@@ -3,8 +3,7 @@ export interface InventoryEntity {
     seller_id: string,
     product_id: string,
     quantity: number,
-    // location: string,
     depot_id: string,
-    // income_type: string,
-    history?: []
+    history?: [],
+    status: string
 }

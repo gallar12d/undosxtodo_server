@@ -8,7 +8,8 @@ const InventorySchema = new mongoose.Schema(
         product_id: { type: String },
         quantity: { type: Number },
         depot_id: { type: String },
-        history: { type: Array }
+        history: { type: Array },
+        status: { type: String }
     },
     { timestamps: { currentTime: () => new Date(Date.now() - 5 * 60 * 60 * 1000) } }
     //   { timestamps: true }

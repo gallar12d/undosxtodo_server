@@ -15,6 +15,15 @@ export class InventoryService {
     public async editInventoryObj(inventoryObj: InventoryEntity, queryId: string) {
         return await this.inventoryRepository.editInventoryObj(inventoryObj, queryId);
     }
+
+    public async getRelatedSellers(pag: number) {
+        return await this.inventoryRepository.getRelatedSellers(pag);
+    }
+
+    public async setInventoryStatus(seller_id: string, depots: any) {
+        return await this.inventoryRepository.setInventoryStatus(seller_id, depots);
+    }
+
     public async getRelatedDepots(seller_id: string) {
         return await this.inventoryRepository.getRelatedDepots(seller_id);
     }

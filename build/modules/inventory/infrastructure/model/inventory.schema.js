@@ -12,7 +12,8 @@ var InventorySchema = new mongoose_1.default.Schema({
     product_id: { type: String },
     quantity: { type: Number },
     depot_id: { type: String },
-    history: { type: Array }
+    history: { type: Array },
+    status: { type: String }
 }, { timestamps: { currentTime: function () { return new Date(Date.now() - 5 * 60 * 60 * 1000); } } }
 //   { timestamps: true }
 );

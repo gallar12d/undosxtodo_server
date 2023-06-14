@@ -132,7 +132,7 @@ var MongoRepository = /** @class */ (function () {
                         if (e_1) throw e_1.error;
                         return [7 /*endfinally*/];
                     case 19: return [7 /*endfinally*/];
-                    case 20: return [4 /*yield*/, inventory_schema_1.InventoryModel.updateOne({ product_id: product.id }, { $set: { history: updatedHistory, quantity: updatedQuantity } })];
+                    case 20: return [4 /*yield*/, inventory_schema_1.InventoryModel.updateOne({ product_id: product.id }, { $set: { history: updatedHistory, quantity: updatedQuantity, status: inventory.status } })];
                     case 21:
                         _k.sent();
                         _h = {
@@ -185,7 +185,7 @@ var MongoRepository = /** @class */ (function () {
             var _g;
             return __generator(this, function (_h) {
                 switch (_h.label) {
-                    case 0: return [4 /*yield*/, inventory_schema_1.InventoryModel.find()];
+                    case 0: return [4 /*yield*/, inventory_schema_1.InventoryModel.find({ status: "active" })];
                     case 1:
                         inventoryobj = _h.sent();
                         myInventory = [];
@@ -265,12 +265,148 @@ var MongoRepository = /** @class */ (function () {
             });
         });
     };
+    MongoRepository.prototype.getRelatedSellers = function (pag) {
+        var _a, e_3, _b, _c;
+        return __awaiter(this, void 0, void 0, function () {
+            var options, result, myRelatedSellers, _d, _e, _f, seller, sellerDepots, _g, _h, e_3_1;
+            var _j;
+            return __generator(this, function (_k) {
+                switch (_k.label) {
+                    case 0:
+                        options = {
+                            page: pag,
+                            limit: 6,
+                            sort: { createdAt: -1 }
+                        };
+                        return [4 /*yield*/, seller_schema_1.SellerModel.paginate({}, options)];
+                    case 1:
+                        result = _k.sent();
+                        myRelatedSellers = [];
+                        _k.label = 2;
+                    case 2:
+                        _k.trys.push([2, 13, 14, 19]);
+                        _d = true, _e = __asyncValues(result.docs);
+                        _k.label = 3;
+                    case 3: return [4 /*yield*/, _e.next()];
+                    case 4:
+                        if (!(_f = _k.sent(), _a = _f.done, !_a)) return [3 /*break*/, 12];
+                        _c = _f.value;
+                        _d = false;
+                        _k.label = 5;
+                    case 5:
+                        _k.trys.push([5, , 10, 11]);
+                        seller = _c;
+                        if (!(seller.name !== "Ultimilla")) return [3 /*break*/, 9];
+                        return [4 /*yield*/, inventory_schema_1.InventoryModel.find({ $and: [{ seller_id: seller.id }, { status: "active" }] }, { depot_id: 1, createdAt: 1 })];
+                    case 6:
+                        sellerDepots = _k.sent();
+                        if (!(sellerDepots.length > 0)) return [3 /*break*/, 8];
+                        _h = (_g = myRelatedSellers).push;
+                        _j = {
+                            id: seller.id,
+                            createdAt: sellerDepots[0].createdAt.toISOString().slice(0, 10),
+                            seller: seller.name
+                        };
+                        return [4 /*yield*/, depot_schema_1.DepotModel.find({ $and: [{ "id": { $in: sellerDepots.map(function (sd) { return sd.depot_id; }) } }] }, { id: 1, name: 1 })];
+                    case 7:
+                        _h.apply(_g, [(_j.depots = _k.sent(),
+                                _j)]);
+                        _k.label = 8;
+                    case 8:
+                        ;
+                        _k.label = 9;
+                    case 9: return [3 /*break*/, 11];
+                    case 10:
+                        _d = true;
+                        return [7 /*endfinally*/];
+                    case 11: return [3 /*break*/, 3];
+                    case 12: return [3 /*break*/, 19];
+                    case 13:
+                        e_3_1 = _k.sent();
+                        e_3 = { error: e_3_1 };
+                        return [3 /*break*/, 19];
+                    case 14:
+                        _k.trys.push([14, , 17, 18]);
+                        if (!(!_d && !_a && (_b = _e.return))) return [3 /*break*/, 16];
+                        return [4 /*yield*/, _b.call(_e)];
+                    case 15:
+                        _k.sent();
+                        _k.label = 16;
+                    case 16: return [3 /*break*/, 18];
+                    case 17:
+                        if (e_3) throw e_3.error;
+                        return [7 /*endfinally*/];
+                    case 18: return [7 /*endfinally*/];
+                    case 19: return [2 /*return*/, myRelatedSellers];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.setInventoryStatus = function (seller_id, depots) {
+        var _a, depots_1, depots_1_1;
+        var _b, e_4, _c, _d;
+        return __awaiter(this, void 0, void 0, function () {
+            var depot, e_4_1;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
+                    case 0:
+                        _e.trys.push([0, 8, 9, 14]);
+                        _a = true, depots_1 = __asyncValues(depots);
+                        _e.label = 1;
+                    case 1: return [4 /*yield*/, depots_1.next()];
+                    case 2:
+                        if (!(depots_1_1 = _e.sent(), _b = depots_1_1.done, !_b)) return [3 /*break*/, 7];
+                        _d = depots_1_1.value;
+                        _a = false;
+                        _e.label = 3;
+                    case 3:
+                        _e.trys.push([3, , 5, 6]);
+                        depot = _d;
+                        return [4 /*yield*/, inventory_schema_1.InventoryModel.updateMany({
+                                $and: [
+                                    { seller_id: seller_id },
+                                    { depot_id: depot.id }
+                                ]
+                            }, {
+                                $set: {
+                                    status: depot.status
+                                }
+                            })];
+                    case 4:
+                        _e.sent();
+                        return [3 /*break*/, 6];
+                    case 5:
+                        _a = true;
+                        return [7 /*endfinally*/];
+                    case 6: return [3 /*break*/, 1];
+                    case 7: return [3 /*break*/, 14];
+                    case 8:
+                        e_4_1 = _e.sent();
+                        e_4 = { error: e_4_1 };
+                        return [3 /*break*/, 14];
+                    case 9:
+                        _e.trys.push([9, , 12, 13]);
+                        if (!(!_a && !_b && (_c = depots_1.return))) return [3 /*break*/, 11];
+                        return [4 /*yield*/, _c.call(depots_1)];
+                    case 10:
+                        _e.sent();
+                        _e.label = 11;
+                    case 11: return [3 /*break*/, 13];
+                    case 12:
+                        if (e_4) throw e_4.error;
+                        return [7 /*endfinally*/];
+                    case 13: return [7 /*endfinally*/];
+                    case 14: return [2 /*return*/, 200];
+                }
+            });
+        });
+    };
     MongoRepository.prototype.getRelatedDepots = function (seller_id) {
         return __awaiter(this, void 0, void 0, function () {
             var depotIds, relatedDepots;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, inventory_schema_1.InventoryModel.find({ seller_id: seller_id }, { depot_id: 1 })];
+                    case 0: return [4 /*yield*/, inventory_schema_1.InventoryModel.find({ $and: [{ seller_id: seller_id }, { status: "active" }] }, { depot_id: 1 })];
                     case 1:
                         depotIds = _a.sent();
                         return [4 /*yield*/, depot_schema_1.DepotModel.find({ $and: [{ "id": { $in: depotIds.map(function (depot) { return depot.depot_id; }) } }, { status: "active" }] })];
@@ -282,9 +418,9 @@ var MongoRepository = /** @class */ (function () {
         });
     };
     MongoRepository.prototype.getProducts = function (depot_id, seller_id) {
-        var _a, e_3, _b, _c;
+        var _a, e_5, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var invProducts, myProducts, _d, invProducts_1, invProducts_1_1, product, currentProduct, e_3_1;
+            var invProducts, myProducts, _d, invProducts_1, invProducts_1_1, product, currentProduct, e_5_1;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0: return [4 /*yield*/, inventory_schema_1.InventoryModel.find({ depot_id: depot_id, seller_id: seller_id }, { product_id: 1, quantity: 1 })];
@@ -326,8 +462,8 @@ var MongoRepository = /** @class */ (function () {
                     case 8: return [3 /*break*/, 3];
                     case 9: return [3 /*break*/, 16];
                     case 10:
-                        e_3_1 = _e.sent();
-                        e_3 = { error: e_3_1 };
+                        e_5_1 = _e.sent();
+                        e_5 = { error: e_5_1 };
                         return [3 /*break*/, 16];
                     case 11:
                         _e.trys.push([11, , 14, 15]);
@@ -338,7 +474,7 @@ var MongoRepository = /** @class */ (function () {
                         _e.label = 13;
                     case 13: return [3 /*break*/, 15];
                     case 14:
-                        if (e_3) throw e_3.error;
+                        if (e_5) throw e_5.error;
                         return [7 /*endfinally*/];
                     case 15: return [7 /*endfinally*/];
                     case 16: return [2 /*return*/, myProducts];
@@ -348,9 +484,9 @@ var MongoRepository = /** @class */ (function () {
     };
     MongoRepository.prototype.subtractAmount = function (product_ids, depot_id, date, transacction_type) {
         var _a, product_ids_1, product_ids_1_1;
-        var _b, e_4, _c, _d;
+        var _b, e_6, _c, _d;
         return __awaiter(this, void 0, void 0, function () {
-            var product, currentInventory, currentHistory, e_4_1;
+            var product, currentInventory, currentHistory, e_6_1;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -390,8 +526,8 @@ var MongoRepository = /** @class */ (function () {
                     case 7: return [3 /*break*/, 1];
                     case 8: return [3 /*break*/, 15];
                     case 9:
-                        e_4_1 = _e.sent();
-                        e_4 = { error: e_4_1 };
+                        e_6_1 = _e.sent();
+                        e_6 = { error: e_6_1 };
                         return [3 /*break*/, 15];
                     case 10:
                         _e.trys.push([10, , 13, 14]);
@@ -402,7 +538,7 @@ var MongoRepository = /** @class */ (function () {
                         _e.label = 12;
                     case 12: return [3 /*break*/, 14];
                     case 13:
-                        if (e_4) throw e_4.error;
+                        if (e_6) throw e_6.error;
                         return [7 /*endfinally*/];
                     case 14: return [7 /*endfinally*/];
                     case 15: return [2 /*return*/, 200];

@@ -5,6 +5,8 @@ export interface InventoryRepository {
     getInventory(): Promise<InventoryEntity[] | any | null>;
     editInventoryObj(inventoryObj: InventoryEntity, queryId: string): Promise<InventoryEntity[] | any | null>;
     getRelatedDepots(seller_id: string): Promise<InventoryEntity[] | any | null>;
+    getRelatedSellers(pag: number): Promise<InventoryEntity[] | any | null>;
+    setInventoryStatus(seller_id: string, depots: any): Promise<InventoryEntity[] | any | null>;
     getProducts(depot_id: string, seller_id: string): Promise<InventoryEntity[] | any | null>;
     subtractAmount(product_ids, depot_id, date, transacction_type): Promise<InventoryEntity[] | any | null>;
 }

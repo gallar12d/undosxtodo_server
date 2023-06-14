@@ -217,7 +217,7 @@ var MongoRepository = /** @class */ (function () {
                         _o.trys.push([5, , 12, 13]);
                         product = _c;
                         if (!(product.inventory_ids.length > 0)) return [3 /*break*/, 9];
-                        return [4 /*yield*/, inventory_schema_1.InventoryModel.find({ $and: [{ "id": { $in: product.inventory_ids.map(function (p) { return p; }) } }] })];
+                        return [4 /*yield*/, inventory_schema_1.InventoryModel.find({ $and: [{ "id": { $in: product.inventory_ids.map(function (p) { return p; }) } }, { status: "active" }] })];
                     case 6:
                         productInventories = (_o.sent());
                         return [4 /*yield*/, depot_schema_1.DepotModel.find({ $and: [{ "id": { $in: productInventories.map(function (pi) { return pi.depot_id; }) } }, { status: "active" }] }, { id: 1, name: 1 })];

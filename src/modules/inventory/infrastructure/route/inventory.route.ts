@@ -14,6 +14,8 @@ router.post(`/createInventoryObj`, authMiddleware, inventoryCtrl.createInventory
 router.get(`/getInventory`, authMiddleware, inventoryCtrl.getInventory);
 router.post(`/editInventoryObj`, authMiddleware, inventoryCtrl.editInventoryObj);
 router.post(`/getRelatedDepots`, authMiddleware, inventoryCtrl.getRelatedDepots);
+router.get(`/getRelatedSellers/:pag`, authMiddleware, inventoryCtrl.getRelatedSellers);
+router.put(`/setInventoryStatus`, authMiddleware, inventoryCtrl.setInventoryStatus);
 router.post(`/getProducts`, authMiddleware, inventoryCtrl.getProducts);
 router.post(`/subtractAmount`, authMiddleware, inventoryCtrl.subtractAmount);
 

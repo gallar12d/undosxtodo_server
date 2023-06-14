@@ -76,7 +76,7 @@ export class MongoRepository implements ProductRepository {
         for await (const product of result.docs) {
 
             if (product.inventory_ids.length > 0) {
-                const productInventories = (await InventoryModel.find({ $and: [{ "id": { $in: product.inventory_ids.map((p) => p) } }] }));
+                const productInventories = (await InventoryModel.find({ $and: [{ "id": { $in: product.inventory_ids.map((p) => p) } }, { status: "active" }] }));
                 const ultimilla_depots = await DepotModel.find({ $and: [{ "id": { $in: productInventories.map((pi) => pi.depot_id) } }, { status: "active" }] }, { id: 1, name: 1 })
 
                 myProducts.push({

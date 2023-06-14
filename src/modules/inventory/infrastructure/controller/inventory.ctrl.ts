@@ -9,8 +9,8 @@ export class InventoryController {
 
     public createInventoryObj = async ({ body }: Request, res: Response) => {
         try {
-            const { seller_id, product_id, quantity, location, depot_id, income_type, history } = body;
-            const myInventory: InventoryEntity = new InventoryValue({ seller_id, product_id, quantity, depot_id, income_type, history });
+            const { seller_id, product_id, quantity, depot_id, income_type, history, status } = body;
+            const myInventory: InventoryEntity = new InventoryValue({ seller_id, product_id, quantity, depot_id, income_type, history, status });
             res.status(200).send(await this.inventoryService.createInventoryObj(myInventory));
         } catch (err) {
             res.status(400).send(getErrorMessage(err));
@@ -19,8 +19,8 @@ export class InventoryController {
 
     public editInventoryObj = async ({ body }: Request, res: Response) => {
         try {
-            const { seller_id, product_id, quantity, location, depot_id, income_type, queryId } = body;
-            const inventoryObj: InventoryEntity = new InventoryValue({ seller_id, product_id, quantity, depot_id, income_type });
+            const { seller_id, product_id, quantity, depot_id, income_type, queryId, status } = body;
+            const inventoryObj: InventoryEntity = new InventoryValue({ seller_id, product_id, quantity, depot_id, income_type, status });
             res.status(200).send(await this.inventoryService.editInventoryObj(inventoryObj, queryId));
         } catch (err) {
             res.status(400).send(getErrorMessage(err));
@@ -32,6 +32,25 @@ export class InventoryController {
             res.status(200).send(await this.inventoryService.getInventory());
         } catch (err) {
             res.status(400).send(getErrorMessage(err));
+        }
+    }
+
+    public getRelatedSellers = async ({ params }: Request, res: Response) => {
+        try {
+            const { pag } = params;
+            res.status(200).json(await this.inventoryService.getRelatedSellers(parseInt(pag)));
+        } catch (err) {
+            res.status(400).json(getErrorMessage(err));
+        }
+    }
+
+    public setInventoryStatus = async ({ body }: Request, res: Response) => {
+        try {
+            const { seller_id, depots } = body;
+            const theDepots= JSON.parse(depots);
+            res.status(200).json(await this.inventoryService.setInventoryStatus(seller_id, theDepots));
+        } catch (err) {
+            res.status(400).json(getErrorMessage(err));
         }
     }
 
