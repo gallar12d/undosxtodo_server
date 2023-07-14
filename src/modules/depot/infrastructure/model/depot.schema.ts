@@ -9,15 +9,18 @@ const DepotSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'sellers',
     },
+    ruta99_id: { type: Number, required: false },
     state: { type: String },
     city: { type: String },
     name: { type: String },
+    latitude: { type: Number, required: false },
+    longitude: { type: Number, required: false },
     address: { type: String },
     status: { type: String }
   },
-  { timestamps: true }
+  { timestamps: { currentTime: () => new Date(Date.now() - 5 * 60 * 60 * 1000) } }
 );
 DepotSchema.plugin(paginate);
-interface DepotDocument extends mongoose.Document { seller_id, name }
+interface DepotDocument extends mongoose.Document { seller_id, name, ruta99_id }
 const DepotModel = mongoose.model<DepotDocument, mongoose.PaginateModel<DepotDocument>>('Depots', DepotSchema, 'depots');
 export { DepotModel };

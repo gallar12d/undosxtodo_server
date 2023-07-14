@@ -49,19 +49,71 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoRepository = void 0;
 var depot_schema_1 = require("../model/depot.schema");
 var seller_schema_1 = require("../../../seller/infrastructure/model/seller.schema");
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+// import bcrypt from "bcrypt";
 var mongoose_1 = __importDefault(require("mongoose"));
+var axios_1 = __importDefault(require("axios"));
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
     }
     MongoRepository.prototype.insertDepot = function (depot) {
         return __awaiter(this, void 0, void 0, function () {
-            var insertedDepot;
+            var token, decoded, currentTimestamp, token, resDepot, insertedDepot, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, depot_schema_1.DepotModel.create(depot)];
+                    case 0:
+                        _a.trys.push([0, 9, , 10]);
+                        if (!!this.tokenR99) return [3 /*break*/, 2];
+                        return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
+                                "grant_type": "client_credentials",
+                                "client_id": "1007",
+                                "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
+                            })];
                     case 1:
+                        token = _a.sent();
+                        this.tokenR99 = token.data.access_token;
+                        return [3 /*break*/, 4];
+                    case 2:
+                        decoded = jsonwebtoken_1.default.decode(this.tokenR99);
+                        if (!decoded || !decoded.exp) {
+                            return [2 /*return*/, true]; // El token no es válido o no tiene fecha de expiración
+                        }
+                        currentTimestamp = Math.floor(Date.now() / 1000);
+                        if (!(decoded.exp < currentTimestamp)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
+                                "grant_type": "client_credentials",
+                                "client_id": "1007",
+                                "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
+                            })];
+                    case 3:
+                        token = _a.sent();
+                        this.tokenR99 = token.data.access_token;
+                        _a.label = 4;
+                    case 4: return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/v1/depot", depot, {
+                            headers: {
+                                Authorization: "Bearer ".concat(this.tokenR99)
+                            }
+                        })];
+                    case 5:
+                        resDepot = _a.sent();
+                        if (!(resDepot.status === 201)) return [3 /*break*/, 7];
+                        depot.ruta99_id = resDepot.data.depot.id;
+                        return [4 /*yield*/, depot_schema_1.DepotModel.create(depot)];
+                    case 6:
                         insertedDepot = _a.sent();
+                        // const depots = await axios.get(`https://api.ruta99.co/v1/depot`, {
+                        //     headers: {
+                        //         Authorization: `Bearer ${this.tokenR99}`
+                        //     }
+                        // });
+                        // console.log(depots.data.data);
                         return [2 /*return*/, insertedDepot];
+                    case 7: return [2 /*return*/, 400];
+                    case 8: return [3 /*break*/, 10];
+                    case 9:
+                        error_1 = _a.sent();
+                        return [2 /*return*/, error_1];
+                    case 10: return [2 /*return*/];
                 }
             });
         });
@@ -99,15 +151,80 @@ var MongoRepository = /** @class */ (function () {
         });
     };
     MongoRepository.prototype.updateDepot = function (_a) {
-        var id = _a.id, seller_id = _a.seller_id, name = _a.name, state = _a.state, city = _a.city, address = _a.address, status = _a.status;
+        var id = _a.id, seller_id = _a.seller_id, name = _a.name, state = _a.state, city = _a.city, address = _a.address, status = _a.status, ruta99_id = _a.ruta99_id, latitude = _a.latitude, longitude = _a.longitude;
         return __awaiter(this, void 0, void 0, function () {
-            var updatedDepot;
+            var token, decoded, currentTimestamp, token, resDepot, updatedDepot, resDepot, updatedDepot, error_2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, depot_schema_1.DepotModel.updateOne({ "id": "".concat(id) }, { seller_id: seller_id, name: name, state: state, city: city, address: address, status: status })];
+                    case 0:
+                        _b.trys.push([0, 14, , 15]);
+                        if (!!this.tokenR99) return [3 /*break*/, 2];
+                        return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
+                                "grant_type": "client_credentials",
+                                "client_id": "1007",
+                                "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
+                            })];
                     case 1:
+                        token = _b.sent();
+                        this.tokenR99 = token.data.access_token;
+                        return [3 /*break*/, 4];
+                    case 2:
+                        decoded = jsonwebtoken_1.default.decode(this.tokenR99);
+                        if (!decoded || !decoded.exp) {
+                            return [2 /*return*/, true]; // El token no es válido o no tiene fecha de expiración
+                        }
+                        currentTimestamp = Math.floor(Date.now() / 1000);
+                        if (!(decoded.exp < currentTimestamp)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
+                                "grant_type": "client_credentials",
+                                "client_id": "1007",
+                                "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
+                            })];
+                    case 3:
+                        token = _b.sent();
+                        this.tokenR99 = token.data.access_token;
+                        _b.label = 4;
+                    case 4:
+                        if (!(status === "inactive")) return [3 /*break*/, 9];
+                        return [4 /*yield*/, axios_1.default.delete("https://api.ruta99.co/v1/depot/".concat(ruta99_id), {
+                                headers: {
+                                    Authorization: "Bearer ".concat(this.tokenR99)
+                                }
+                            })];
+                    case 5:
+                        resDepot = _b.sent();
+                        if (!(resDepot.status === 200)) return [3 /*break*/, 7];
+                        return [4 /*yield*/, depot_schema_1.DepotModel.updateOne({ "id": "".concat(id) }, { seller_id: seller_id, name: name, state: state, city: city, address: address, status: status, ruta99_id: ruta99_id, latitude: latitude, longitude: longitude })];
+                    case 6:
                         updatedDepot = _b.sent();
                         return [2 /*return*/, updatedDepot];
+                    case 7: return [2 /*return*/, 400];
+                    case 8: return [3 /*break*/, 13];
+                    case 9: return [4 /*yield*/, axios_1.default.put("https://api.ruta99.co/v1/depot/".concat(ruta99_id), {
+                            code: id,
+                            name: name,
+                            address: address,
+                            latitude: latitude,
+                            longitude: longitude
+                        }, {
+                            headers: {
+                                Authorization: "Bearer ".concat(this.tokenR99)
+                            }
+                        })];
+                    case 10:
+                        resDepot = _b.sent();
+                        if (!(resDepot.status === 200)) return [3 /*break*/, 12];
+                        return [4 /*yield*/, depot_schema_1.DepotModel.updateOne({ "id": "".concat(id) }, { seller_id: seller_id, name: name, state: state, city: city, address: address, status: status, ruta99_id: ruta99_id, latitude: latitude, longitude: longitude })];
+                    case 11:
+                        updatedDepot = _b.sent();
+                        return [2 /*return*/, updatedDepot];
+                    case 12: return [2 /*return*/, 400];
+                    case 13: return [3 /*break*/, 15];
+                    case 14:
+                        error_2 = _b.sent();
+                        console.log(error_2);
+                        return [3 /*break*/, 15];
+                    case 15: return [2 /*return*/];
                 }
             });
         });

@@ -131,11 +131,11 @@ var OrderController = /** @class */ (function () {
                         return [4 /*yield*/, this.orderService.registerOrder(req.body)];
                     case 1:
                         order = _a.sent();
-                        res.send(order);
+                        res.json(order);
                         return [3 /*break*/, 3];
                     case 2:
                         err_4 = _a.sent();
-                        res.status(400).send((0, handleErrors_1.default)(err_4));
+                        res.status(400).json((0, handleErrors_1.default)(err_4));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -347,6 +347,29 @@ var OrderController = /** @class */ (function () {
                         case 2:
                             err_13 = _d.sent();
                             res.status(400).send((0, handleErrors_1.default)(err_13));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.orderTraceability = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var code, status, _b, _c, err_14;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            code = body.code, status = body.status;
+                            _c = (_b = res.status(200)).json;
+                            return [4 /*yield*/, this.orderService.orderTraceability(code, status)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_14 = _d.sent();
+                            res.status(400).json((0, handleErrors_1.default)(err_14));
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
                     }

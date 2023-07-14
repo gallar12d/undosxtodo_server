@@ -49,9 +49,9 @@ export class OrderController {
   public registerOrder = async (req, res) => {
     try {
       const order = await this.orderService.registerOrder(req.body);
-      res.send(order);
+      res.json(order);
     } catch (err) {
-      res.status(400).send(getErrorMessage(err));
+      res.status(400).json(getErrorMessage(err));
     }
   }
 
@@ -151,6 +151,15 @@ export class OrderController {
       res.send(await this.orderService.recentOrders(rol, seller_id));
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
+    }
+  }
+
+  public orderTraceability = async ({ body }, res) => {
+    try {
+      const { code, status } = body;
+      res.status(200).json(await this.orderService.orderTraceability(code, status));
+    } catch (err) {
+      res.status(400).json(getErrorMessage(err));
     }
   }
 }

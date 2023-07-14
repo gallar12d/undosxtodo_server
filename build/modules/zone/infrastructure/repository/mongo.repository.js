@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoRepository = void 0;
 var zone_schema_1 = require("../model/zone.schema");
+var zone_value_1 = require("../../domain/zone.value");
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
     }
@@ -48,14 +49,15 @@ var MongoRepository = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         zonesToInsert = [
-                            { name: "Norte 1", codes: [760001, 760002, 760003, 760004, 760006, 760046, 760050], cityId: "1009" },
-                            { name: "Ladera 1", codes: [760044, 760045, 760009], cityId: "1009" },
-                            { name: "Ladera 2", codes: [760008], cityId: "1009" },
-                            { name: "Oriente 1", codes: [760010, 760011, 760012, 760013, 760014], cityId: "1009" },
-                            { name: "Oriente 2", codes: [760015, 760016, 760020, 760021, 760022, 760023, 760024, 760025], cityId: "1009" },
-                            { name: "Oriente 3", codes: [760026, 760007, 760030, 760031, 760032], cityId: "1009" },
-                            { name: "Oeste - Centro", codes: [760040, 760041, 760042, 760043], cityId: "1009" },
-                            { name: "Sur", codes: [760033, 760034, 760035, 760036], cityId: "1009" }
+                            new zone_value_1.ZoneValue({ name: "Norte 1", codes: [760001, 760002, 760003, 760004, 760006, 760046, 760050], cityId: "1009" }),
+                            new zone_value_1.ZoneValue({ name: "Norte 1", codes: [760001, 760002, 760003, 760004, 760006, 760046, 760050], cityId: "1009" }),
+                            new zone_value_1.ZoneValue({ name: "Ladera 1", codes: [760044, 760045, 760009], cityId: "1009" }),
+                            new zone_value_1.ZoneValue({ name: "Ladera 2", codes: [760008], cityId: "1009" }),
+                            new zone_value_1.ZoneValue({ name: "Oriente 1", codes: [760010, 760011, 760012, 760013, 760014], cityId: "1009" }),
+                            new zone_value_1.ZoneValue({ name: "Oriente 2", codes: [760015, 760016, 760020, 760021, 760022, 760023, 760024, 760025], cityId: "1009" }),
+                            new zone_value_1.ZoneValue({ name: "Oriente 3", codes: [760026, 760007, 760030, 760031, 760032], cityId: "1009" }),
+                            new zone_value_1.ZoneValue({ name: "Oeste - Centro", codes: [760040, 760041, 760042, 760043], cityId: "1009" }),
+                            new zone_value_1.ZoneValue({ name: "Sur", codes: [760033, 760034, 760035, 760036], cityId: "1009" })
                         ];
                         return [4 /*yield*/, zone_schema_1.ZoneModel.create(zonesToInsert)];
                     case 1:

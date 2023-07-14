@@ -3,30 +3,50 @@ import { DealerEntity } from "./dealer.entity";
 
 export class DealerValue implements DealerEntity {
     id: string;
+    ruta99_id?: number;
     name: string;
-    code: string;
-    capacity: number;
+    phone_number?: string;
     email: string;
-    depot_ids: [];
+    identification?: number;
+    role: string;
+    password: string;
+    rfc?: string;
+    driver_license?: string;
+    status: string;
 
     constructor({
+        ruta99_id,
         name,
-        code,
-        capacity,
+        phone_number,
         email,
-        depot_ids,
+        identification,
+        role,
+        password,
+        rfc,
+        driver_license,
+        status
     }: {
+        ruta99_id: number;
         name: string;
-        code: string;
-        capacity: number;
+        phone_number?: string;
         email: string;
-        depot_ids: [];
+        identification?: number;
+        role: string;
+        password: string;
+        rfc?: string;
+        driver_license?: string;
+        status: string;
     }) {
         this.id = uuid();
+        this.ruta99_id = ruta99_id;
         this.name = name;
-        this.code = code;
-        this.capacity = capacity;
+        this.phone_number = phone_number;
         this.email = email;
-        this.depot_ids = depot_ids;
+        this.identification = identification;
+        this.role = role;
+        this.password = password;
+        this.rfc = rfc;
+        this.driver_license = driver_license;
+        this.status = status;
     }
 }

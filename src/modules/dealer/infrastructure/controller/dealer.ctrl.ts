@@ -1,23 +1,38 @@
 import { Request, Response } from "express";
 import getErrorMessage from "../../../../infrastructure/utils/handleErrors";
 import { DealerService } from "../../application/DealerService";
+import { DealerValue } from "../../domain/dealer.value";
 
 export class DealerController {
     constructor(private dealerService: DealerService) { }
 
-    public createDealer = async (req: Request, res: Response) => {
+    public createDealer = async ({ body }: Request, res: Response) => {
         try {
-            res.status(200).send(await this.dealerService);
+            const { ruta99_id, name, phone_number, email, identification, role, password, rfc, driver_license, status } = body;
+            const newDealer = new DealerValue({
+                ruta99_id, name, phone_number, email, identification, role, password, rfc, driver_license, status
+            });
+            res.status(200).json(await this.dealerService.createDealer(newDealer));
         } catch (err) {
-            res.status(400).send(getErrorMessage(err));
+            err.message = err.response.data.errors;
+            res.status(400).json(getErrorMessage(err));
+        }
+    }
+
+    public changeStatus = async ({ body }: Request, res: Response) => {
+        try {
+            const { dealer_id, status } = body;
+            res.status(200).json(await this.dealerService.changeStatus(dealer_id, status));
+        } catch (err) {
+            res.status(400).json(getErrorMessage(err));
         }
     }
 
     public getDealers = async (req: Request, res: Response) => {
         try {
-            res.status(200).send(await this.dealerService.getDealers());
+            res.status(200).json(await this.dealerService.getDealers());
         } catch (err) {
-            res.status(400).send(getErrorMessage(err));
+            res.status(400).json(getErrorMessage(err));
         }
     }
 }

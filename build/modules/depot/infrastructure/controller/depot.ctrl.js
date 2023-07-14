@@ -45,16 +45,18 @@ var DepotController = /** @class */ (function () {
         this.insertDepot = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var seller_id, name, state, city, address, status, newDepot, insertedDepot;
+                var seller_id, name, state, city, latitude, longitude, address, status, newDepot, insertedDepot;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
-                            seller_id = body.seller_id, name = body.name, state = body.state, city = body.city, address = body.address, status = body.status;
+                            seller_id = body.seller_id, name = body.name, state = body.state, city = body.city, latitude = body.latitude, longitude = body.longitude, address = body.address, status = body.status;
                             newDepot = new depot_value_1.DepotValue({
                                 seller_id: seller_id,
                                 name: name,
                                 state: state,
                                 city: city,
+                                latitude: latitude,
+                                longitude: longitude,
                                 address: address,
                                 status: status
                             });

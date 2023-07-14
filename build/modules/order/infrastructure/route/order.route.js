@@ -25,3 +25,4 @@ router.post("/createScenario", auth_middleware_1.authMiddleware, orderCtrl.creat
 router.post("/deleteScenario", auth_middleware_1.authMiddleware, orderCtrl.deleteScenario);
 router.post("/orderReports", auth_middleware_1.authMiddleware, orderCtrl.orderReports);
 router.post("/recentOrders", auth_middleware_1.authMiddleware, orderCtrl.recentOrders);
+router.post("/orderTraceability", orderCtrl.orderTraceability);

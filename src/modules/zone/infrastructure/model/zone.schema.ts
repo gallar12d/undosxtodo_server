@@ -12,6 +12,6 @@ const ZoneSchema = new mongoose.Schema(
   //   { timestamps: true }
 );
 ZoneSchema.plugin(paginate);
-interface ZoneDocument extends mongoose.Document { }
+interface ZoneDocument extends mongoose.Document { codes, name }
 const ZoneModel = mongoose.model<ZoneDocument, mongoose.PaginateModel<ZoneDocument>>('Zones', ZoneSchema, 'zones');
 export { ZoneModel };

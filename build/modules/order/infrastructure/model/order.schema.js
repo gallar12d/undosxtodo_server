@@ -8,6 +8,8 @@ var mongoose_1 = __importDefault(require("mongoose"));
 var mongoose_paginate_v2_1 = __importDefault(require("mongoose-paginate-v2"));
 var OrderSchema = new mongoose_1.default.Schema({
     id: { type: String },
+    scenario_id: { type: String },
+    ruta99_id: { type: Number },
     depot_name: { type: String, required: false },
     depot_id: { type: String, required: false },
     guide: { type: Number, required: true },
@@ -24,7 +26,10 @@ var OrderSchema = new mongoose_1.default.Schema({
     //client information
     client_name: { type: String, required: false },
     client_surname: { type: String, required: false },
+    client_email: { type: String, required: false },
     client_address: { type: String, required: false },
+    latitude: { type: Number, required: false },
+    longitude: { type: Number, required: false },
     client_address_detail: { type: String, required: false },
     client_city: { type: String, required: false },
     client_state: { type: String, required: false },

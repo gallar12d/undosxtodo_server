@@ -1,8 +1,13 @@
 export interface DealerEntity {
     id: string;
+    ruta99_id?: number;
     name: string;
-    code: string;
-    capacity: number;
+    phone_number?: string;
     email: string;
-    depot_ids: [];
+    identification?: number;
+    role: string;
+    password: string;
+    rfc?: string;
+    driver_license?: string;
+    status: string;
 }

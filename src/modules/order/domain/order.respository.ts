@@ -2,7 +2,9 @@ import { OrderEntity } from "./order.entity";
 
 export interface OrderRepository {
   findOrder(id: string): Promise<OrderEntity | null>;
-  registerOrder(order: OrderEntity): Promise<OrderEntity>;
+  registerOrder(order: OrderEntity, postalCode: any): Promise<OrderEntity>;
+  registerSyncWay(order: OrderEntity, postalCode: any, zone: any, zoneFound: boolean): Promise<OrderEntity>;
+  onAvailableVehicles(order: OrderEntity, postalCode: any, zone: any): Promise<OrderEntity>;
   updateOrder(id: string, order: OrderEntity): Promise<OrderEntity>;
   allOrder(seller_id: any): Promise<OrderEntity[] | null>;
   getOrdersPage(seller_id: string, pag: number): Promise<OrderEntity[] | null>;
@@ -15,4 +17,5 @@ export interface OrderRepository {
   createScenario(): Promise<any | null>;
   orderReports(start: string, ending: string, seller_id: string, rol: string): Promise<any | null>;
   recentOrders(rol: string, seller_id: string): Promise<any | null>;
+  orderTraceability(code: string, status: string): Promise<any | null>;
 }

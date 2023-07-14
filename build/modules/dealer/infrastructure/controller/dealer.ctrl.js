@@ -41,43 +41,84 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DealerController = void 0;
 var handleErrors_1 = __importDefault(require("../../../../infrastructure/utils/handleErrors"));
+var dealer_value_1 = require("../../domain/dealer.value");
 var DealerController = /** @class */ (function () {
     function DealerController(dealerService) {
         var _this = this;
         this.dealerService = dealerService;
-        this.createDealer = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var _a, _b, err_1;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        _c.trys.push([0, 2, , 3]);
-                        _b = (_a = res.status(200)).send;
-                        return [4 /*yield*/, this.dealerService];
-                    case 1:
-                        _b.apply(_a, [_c.sent()]);
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_1 = _c.sent();
-                        res.status(400).send((0, handleErrors_1.default)(err_1));
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
+        this.createDealer = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var ruta99_id, name, phone_number, email, identification, role, password, rfc, driver_license, status, newDealer, _b, _c, err_1;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            ruta99_id = body.ruta99_id, name = body.name, phone_number = body.phone_number, email = body.email, identification = body.identification, role = body.role, password = body.password, rfc = body.rfc, driver_license = body.driver_license, status = body.status;
+                            newDealer = new dealer_value_1.DealerValue({
+                                ruta99_id: ruta99_id,
+                                name: name,
+                                phone_number: phone_number,
+                                email: email,
+                                identification: identification,
+                                role: role,
+                                password: password,
+                                rfc: rfc,
+                                driver_license: driver_license,
+                                status: status
+                            });
+                            _c = (_b = res.status(200)).json;
+                            return [4 /*yield*/, this.dealerService.createDealer(newDealer)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_1 = _d.sent();
+                            err_1.message = err_1.response.data.errors;
+                            res.status(400).json((0, handleErrors_1.default)(err_1));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
             });
-        }); };
+        };
+        this.changeStatus = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var dealer_id, status, _b, _c, err_2;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            dealer_id = body.dealer_id, status = body.status;
+                            _c = (_b = res.status(200)).json;
+                            return [4 /*yield*/, this.dealerService.changeStatus(dealer_id, status)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_2 = _d.sent();
+                            res.status(400).json((0, handleErrors_1.default)(err_2));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
         this.getDealers = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var _a, _b, err_2;
+            var _a, _b, err_3;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         _c.trys.push([0, 2, , 3]);
-                        _b = (_a = res.status(200)).send;
+                        _b = (_a = res.status(200)).json;
                         return [4 /*yield*/, this.dealerService.getDealers()];
                     case 1:
                         _b.apply(_a, [_c.sent()]);
                         return [3 /*break*/, 3];
                     case 2:
-                        err_2 = _c.sent();
-                        res.status(400).send((0, handleErrors_1.default)(err_2));
+                        err_3 = _c.sent();
+                        res.status(400).json((0, handleErrors_1.default)(err_3));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

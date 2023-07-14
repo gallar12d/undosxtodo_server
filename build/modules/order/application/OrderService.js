@@ -71,9 +71,9 @@ var OrderService = /** @class */ (function () {
         };
     }
     OrderService.prototype.registerOrder = function (_a) {
-        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_id = _a.seller_id, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_address_detail = _a.client_address_detail, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
+        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_id = _a.seller_id, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_email = _a.client_email, client_address = _a.client_address, latitude = _a.latitude, longitude = _a.longitude, client_address_detail = _a.client_address_detail, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect, postalCode = _a.postalCode;
         return __awaiter(this, void 0, void 0, function () {
-            var orderValue, exist, orderCreated, order_response;
+            var orderValue, orderCreated;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -94,7 +94,10 @@ var OrderService = /** @class */ (function () {
                             seller_email: seller_email,
                             client_name: client_name,
                             client_surname: client_surname,
+                            client_email: client_email,
                             client_address: client_address,
+                            latitude: latitude,
+                            longitude: longitude,
                             client_address_detail: client_address_detail,
                             client_city: client_city,
                             client_state: client_state,
@@ -103,24 +106,20 @@ var OrderService = /** @class */ (function () {
                             client_country: client_country,
                             value_to_collect: value_to_collect
                         });
-                        return [4 /*yield*/, this.orderExist(guide)];
+                        return [4 /*yield*/, this.orderRepository.registerOrder(orderValue, postalCode)];
                     case 1:
-                        exist = _b.sent();
-                        if (exist)
-                            throw new Error("Order guide already exist");
-                        return [4 /*yield*/, this.orderRepository.registerOrder(orderValue)];
-                    case 2:
                         orderCreated = _b.sent();
-                        order_response = {
-                            id: orderCreated.id,
-                        };
-                        return [2 /*return*/, order_response];
+                        // const order_response = {
+                        //   id: orderCreated.id,
+                        // };
+                        // return order_response;
+                        return [2 /*return*/, orderCreated];
                 }
             });
         });
     };
     OrderService.prototype.updateOrder = function (id, _a) {
-        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_id = _a.seller_id, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_address_detail = _a.client_address_detail, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
+        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_id = _a.seller_id, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_email = _a.client_email, client_address = _a.client_address, client_address_detail = _a.client_address_detail, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
         return __awaiter(this, void 0, void 0, function () {
             var old_order, orderValue, orderUpdated, order_response;
             return __generator(this, function (_b) {
@@ -148,6 +147,7 @@ var OrderService = /** @class */ (function () {
                             seller_email: seller_email,
                             client_name: client_name,
                             client_surname: client_surname,
+                            client_email: client_email,
                             client_address: client_address,
                             client_address_detail: client_address_detail,
                             client_city: client_city,
@@ -358,6 +358,13 @@ var OrderService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.orderRepository.recentOrders(rol, seller_id)];
+            });
+        });
+    };
+    OrderService.prototype.orderTraceability = function (code, status) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.orderRepository.orderTraceability(code, status)];
             });
         });
     };

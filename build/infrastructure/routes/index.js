@@ -12,6 +12,7 @@ var product_route_1 = require("../../modules/product/infrastructure/route/produc
 var zone_route_1 = require("../../modules/zone/infrastructure/route/zone.route");
 var dealer_route_1 = require("../../modules/dealer/infrastructure/route/dealer.route");
 var inventory_route_1 = require("../../modules/inventory/infrastructure/route/inventory.route");
+var vehicle_route_1 = require("../../modules/vehicle/infrastructure/route/vehicle.route");
 var router = (0, express_1.Router)();
 exports.router = router;
 router.use(user_route_1.router);
@@ -24,3 +25,4 @@ router.use(product_route_1.router);
 router.use(zone_route_1.router);
 router.use(dealer_route_1.router);
 router.use(inventory_route_1.router);
+router.use(vehicle_route_1.router);

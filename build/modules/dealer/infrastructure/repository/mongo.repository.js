@@ -35,22 +35,94 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoRepository = void 0;
+var dealer_schema_1 = require("../model/dealer.schema");
+var axios_1 = __importDefault(require("axios"));
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
     }
-    MongoRepository.prototype.createDealer = function (name, code, capacity, email, depot_ids) {
+    MongoRepository.prototype.createDealer = function (newDealer) {
         return __awaiter(this, void 0, void 0, function () {
+            var token, decoded, currentTimestamp, token, reqDealer, myNewDealer;
             return __generator(this, function (_a) {
-                return [2 /*return*/, 200];
+                switch (_a.label) {
+                    case 0:
+                        if (!!this.tokenR99) return [3 /*break*/, 2];
+                        return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
+                                "grant_type": "client_credentials",
+                                "client_id": "1007",
+                                "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
+                            })];
+                    case 1:
+                        token = _a.sent();
+                        this.tokenR99 = token.data.access_token;
+                        return [3 /*break*/, 4];
+                    case 2:
+                        decoded = jsonwebtoken_1.default.decode(this.tokenR99);
+                        if (!decoded || !decoded.exp) {
+                            return [2 /*return*/, true]; // El token no es válido o no tiene fecha de expiración
+                        }
+                        currentTimestamp = Math.floor(Date.now() / 1000);
+                        if (!(decoded.exp < currentTimestamp)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
+                                "grant_type": "client_credentials",
+                                "client_id": "1007",
+                                "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
+                            })];
+                    case 3:
+                        token = _a.sent();
+                        this.tokenR99 = token.data.access_token;
+                        _a.label = 4;
+                    case 4: return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/v1/user", newDealer, {
+                            headers: {
+                                Authorization: "Bearer ".concat(this.tokenR99)
+                            }
+                        })];
+                    case 5:
+                        reqDealer = _a.sent();
+                        if (!(reqDealer.status === 201)) return [3 /*break*/, 7];
+                        newDealer.ruta99_id = reqDealer.data.user.id;
+                        return [4 /*yield*/, dealer_schema_1.DealerModel.create(newDealer)];
+                    case 6:
+                        myNewDealer = _a.sent();
+                        return [2 /*return*/, myNewDealer];
+                    case 7: return [2 /*return*/, 400];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.changeStatus = function (dealer_id, newStatus) {
+        return __awaiter(this, void 0, void 0, function () {
+            var updatedDealer;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, dealer_schema_1.DealerModel.updateOne({ id: dealer_id }, {
+                            $set: {
+                                status: newStatus
+                            }
+                        })];
+                    case 1:
+                        updatedDealer = _a.sent();
+                        return [2 /*return*/, updatedDealer];
+                }
             });
         });
     };
     MongoRepository.prototype.getDealers = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var dealers;
             return __generator(this, function (_a) {
-                return [2 /*return*/, 200];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, dealer_schema_1.DealerModel.find({}, { id: 1, name: 1, identification: 1, phone_number: 1, status: 1 })];
+                    case 1:
+                        dealers = _a.sent();
+                        return [2 /*return*/, dealers];
+                }
             });
         });
     };

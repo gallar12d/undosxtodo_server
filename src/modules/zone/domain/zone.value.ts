@@ -4,7 +4,7 @@ import { ZoneEntity } from "./zone.entity";
 export class ZoneValue implements ZoneEntity {
     id: string;
     name: string;
-    codes: [];
+    codes: number[];
     cityId: string;
 
     constructor({
@@ -13,7 +13,7 @@ export class ZoneValue implements ZoneEntity {
         cityId
     }: {
         name: string,
-        codes: [],
+        codes: number[],
         cityId: string
     }) {
         this.id = uuid();

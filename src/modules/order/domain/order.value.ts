@@ -3,6 +3,8 @@ import { OrderEntity } from "./order.entity";
 
 export class OrderValue implements OrderEntity {
   id: string;
+  scenario_id?: string;
+  ruta99_id?: number;
   depot_id: string;
   depot_name: string;
   guide: number;
@@ -19,8 +21,11 @@ export class OrderValue implements OrderEntity {
   //client information
   client_name: string;
   client_surname: string;
+  client_email?: string;
   client_address: string;
-  client_address_detail:string;
+  latitude?: number;
+  longitude?: number;
+  client_address_detail: string;
   client_city: string;
   client_state: string;
   client_telephone: string;
@@ -29,6 +34,8 @@ export class OrderValue implements OrderEntity {
   value_to_collect: number;
 
   constructor({
+    scenario_id,
+    ruta99_id,
     depot_name,
     depot_id,
     guide,
@@ -44,7 +51,10 @@ export class OrderValue implements OrderEntity {
     seller_email,
     client_name,
     client_surname,
+    client_email,
     client_address,
+    latitude,
+    longitude,
     client_address_detail,
     client_city,
     client_state,
@@ -53,6 +63,8 @@ export class OrderValue implements OrderEntity {
     client_country,
     value_to_collect,
   }: {
+    scenario_id?: string,
+    ruta99_id?: number,
     depot_name: string;
     depot_id: string;
     guide: number;
@@ -69,7 +81,10 @@ export class OrderValue implements OrderEntity {
     //client information
     client_name: string;
     client_surname: string;
+    client_email?: string;
     client_address: string;
+    latitude?: number;
+    longitude?: number;
     client_address_detail: string;
     client_city: string;
     client_state: string;
@@ -79,11 +94,13 @@ export class OrderValue implements OrderEntity {
     value_to_collect: number;
   }) {
     this.id = uuid();
+    this.scenario_id = scenario_id;
+    this.ruta99_id = ruta99_id;
     this.depot_id = depot_id;
     this.depot_name = depot_name;
     this.guide = guide;
     this.guide_status = guide_status;
-    this.seller_id= seller_id;
+    this.seller_id = seller_id;
     this.seller_address = seller_address;
     this.seller_city = seller_city;
     this.seller_state = seller_state;
@@ -94,7 +111,10 @@ export class OrderValue implements OrderEntity {
     this.seller_email = seller_email
     this.client_name = client_name;
     this.client_surname = client_surname;
+    this.client_email = client_email;
     this.client_address = client_address;
+    this.latitude = latitude;
+    this.longitude = longitude;
     this.client_address_detail = client_address_detail;
     this.client_city = client_city;
     this.client_state = client_state;

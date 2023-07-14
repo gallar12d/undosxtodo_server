@@ -4,11 +4,13 @@ import paginate from 'mongoose-paginate-v2';
 const OrderSchema = new mongoose.Schema(
   {
     id: { type: String },
+    scenario_id: { type: String },
+    ruta99_id: { type: Number },
     depot_name: { type: String, required: false },
     depot_id: { type: String, required: false },
     guide: { type: Number, required: true },
     guide_status: { type: String, required: false },
-    seller_id:{ type: mongoose.Types.ObjectId },
+    seller_id: { type: mongoose.Types.ObjectId },
     seller_address: { type: String, required: false },
     seller_city: { type: String, required: false },
     seller_state: { type: String, required: false },
@@ -21,7 +23,10 @@ const OrderSchema = new mongoose.Schema(
     //client information
     client_name: { type: String, required: false },
     client_surname: { type: String, required: false },
+    client_email: { type: String, required: false },
     client_address: { type: String, required: false },
+    latitude: { type: Number, required: false },
+    longitude: { type: Number, required: false },
     client_address_detail: { type: String, required: false },
     client_city: { type: String, required: false },
     client_state: { type: String, required: false },
@@ -34,6 +39,6 @@ const OrderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 OrderSchema.plugin(paginate);
-interface OrderDocument extends mongoose.Document {guide_status,createdAt}
-const OrderModel = mongoose.model<OrderDocument,mongoose.PaginateModel<OrderDocument>>('Orders', OrderSchema, 'orders');
+interface OrderDocument extends mongoose.Document { guide_status, createdAt, scenario_id }
+const OrderModel = mongoose.model<OrderDocument, mongoose.PaginateModel<OrderDocument>>('Orders', OrderSchema, 'orders');
 export { OrderModel };

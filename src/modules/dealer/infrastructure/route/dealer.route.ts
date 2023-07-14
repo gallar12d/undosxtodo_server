@@ -12,5 +12,6 @@ const dealerCtrl = new DealerController(dealerService);
 
 router.get(`/getDealers`, authMiddleware, dealerCtrl.getDealers);
 router.post(`/createDealer`, authMiddleware, dealerCtrl.createDealer);
+router.post(`/changeStatus`, authMiddleware, dealerCtrl.changeStatus);
 
 export { router };

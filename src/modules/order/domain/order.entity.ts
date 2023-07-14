@@ -1,5 +1,7 @@
 export interface OrderEntity {
-  id: string; 
+  id: string;
+  scenario_id?: string;
+  ruta99_id?: number;
   depot_name?: string;
   depot_id?: string;
   guide: number;
@@ -16,7 +18,10 @@ export interface OrderEntity {
   //client information
   client_name?: string;
   client_surname?: string;
+  client_email?: string;
   client_address?: string;
+  latitude?: number;
+  longitude?: number;
   client_address_detail?:string;
   client_city?: string;
   client_state?: string;

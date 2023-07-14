@@ -1,6 +1,6 @@
 export interface ZoneEntity {
     id: string;
     name: string;
-    codes: [];
+    codes: number[];
     cityId: string;
 }

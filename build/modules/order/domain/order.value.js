@@ -4,8 +4,10 @@ exports.OrderValue = void 0;
 var uuid_1 = require("uuid");
 var OrderValue = /** @class */ (function () {
     function OrderValue(_a) {
-        var depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_id = _a.seller_id, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_address = _a.client_address, client_address_detail = _a.client_address_detail, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
+        var scenario_id = _a.scenario_id, ruta99_id = _a.ruta99_id, depot_name = _a.depot_name, depot_id = _a.depot_id, guide = _a.guide, guide_status = _a.guide_status, seller_id = _a.seller_id, seller_address = _a.seller_address, seller_city = _a.seller_city, seller_state = _a.seller_state, seller_telephone = _a.seller_telephone, seller_nit = _a.seller_nit, seller_postal_code = _a.seller_postal_code, seller_country = _a.seller_country, seller_email = _a.seller_email, client_name = _a.client_name, client_surname = _a.client_surname, client_email = _a.client_email, client_address = _a.client_address, latitude = _a.latitude, longitude = _a.longitude, client_address_detail = _a.client_address_detail, client_city = _a.client_city, client_state = _a.client_state, client_telephone = _a.client_telephone, products = _a.products, client_country = _a.client_country, value_to_collect = _a.value_to_collect;
         this.id = (0, uuid_1.v4)();
+        this.scenario_id = scenario_id;
+        this.ruta99_id = ruta99_id;
         this.depot_id = depot_id;
         this.depot_name = depot_name;
         this.guide = guide;
@@ -21,7 +23,10 @@ var OrderValue = /** @class */ (function () {
         this.seller_email = seller_email;
         this.client_name = client_name;
         this.client_surname = client_surname;
+        this.client_email = client_email;
         this.client_address = client_address;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.client_address_detail = client_address_detail;
         this.client_city = client_city;
         this.client_state = client_state;

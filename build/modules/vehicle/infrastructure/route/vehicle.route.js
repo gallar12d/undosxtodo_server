@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+var express_1 = require("express");
+var VehicleService_1 = require("../../application/VehicleService");
+var vehicle_ctrl_1 = require("../controller/vehicle.ctrl");
+var mongo_repository_1 = require("../repository/mongo.repository");
+var auth_middleware_1 = require("../../../../infrastructure/middleware/auth.middleware");
+var router = (0, express_1.Router)();
+exports.router = router;
+var mongoRepository = new mongo_repository_1.MongoRepository();
+var vehicleService = new VehicleService_1.VehicleService(mongoRepository);
+var vehicleCtrl = new vehicle_ctrl_1.VehicleController(vehicleService);
+router.get("/getVehicles", auth_middleware_1.authMiddleware, vehicleCtrl.getVehicles);
+router.post("/createVehicle", auth_middleware_1.authMiddleware, vehicleCtrl.createVehicle);
+router.post("/changeVehicleStatus", auth_middleware_1.authMiddleware, vehicleCtrl.changeVehicleStatus);

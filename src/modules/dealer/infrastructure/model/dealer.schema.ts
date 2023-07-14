@@ -4,17 +4,21 @@ import paginate from 'mongoose-paginate-v2';
 const DealerSchema = new mongoose.Schema(
     {
         id: { type: String },
+        ruta99_id: { type: Number, required: false },
         name: { type: String },
-        code: { type: String },
-        capacity: { type: Number },
+        phone_number: { type: String, required: false },
         email: { type: String },
-        depot_ids: { type: String }
-        // picture: { type: Buffer }
+        identification: { type: Number, required: false },
+        role: { type: String },
+        password: { type: String },
+        rfc: { type: String, required: false },
+        driver_license: { type: String, required: false },
+        status: { type: String }
     },
     { timestamps: { currentTime: () => new Date(Date.now() - 5 * 60 * 60 * 1000) } }
     //   { timestamps: true }
 );
 DealerSchema.plugin(paginate);
-interface DealerDocument extends mongoose.Document { }
+interface DealerDocument extends mongoose.Document { ruta99_id }
 const DealerModel = mongoose.model<DealerDocument, mongoose.PaginateModel<DealerDocument>>('Dealers', DealerSchema, 'dealers');
 export { DealerModel };

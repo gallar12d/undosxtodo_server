@@ -21,14 +21,18 @@ export class OrderService {
     seller_email,
     client_name,
     client_surname,
+    client_email,
     client_address,
+    latitude,
+    longitude,
     client_address_detail,
     client_city,
     client_state,
     client_telephone,
     products,
     client_country,
-    value_to_collect
+    value_to_collect,
+    postalCode
   }) {
     products = JSON.parse(products);
     const orderValue = new OrderValue({
@@ -47,7 +51,10 @@ export class OrderService {
       seller_email,
       client_name,
       client_surname,
+      client_email,
       client_address,
+      latitude,
+      longitude,
       client_address_detail,
       client_city,
       client_state,
@@ -57,14 +64,12 @@ export class OrderService {
       value_to_collect
     });
 
-    const exist = await this.orderExist(guide);
-    if (exist) throw new Error("Order guide already exist");
-
-    const orderCreated = await this.orderRepository.registerOrder(orderValue);
-    const order_response = {
-      id: orderCreated.id,
-    };
-    return order_response;
+    const orderCreated = await this.orderRepository.registerOrder(orderValue, postalCode);
+    // const order_response = {
+    //   id: orderCreated.id,
+    // };
+    // return order_response;
+    return orderCreated;
   }
 
   public async updateOrder(id: string, {
@@ -83,6 +88,7 @@ export class OrderService {
     seller_email,
     client_name,
     client_surname,
+    client_email,
     client_address,
     client_address_detail,
     client_city,
@@ -112,6 +118,7 @@ export class OrderService {
       seller_email,
       client_name,
       client_surname,
+      client_email,
       client_address,
       client_address_detail,
       client_city,
@@ -267,5 +274,9 @@ export class OrderService {
 
   public async recentOrders(rol: string, seller_id: string) {
     return this.orderRepository.recentOrders(rol, seller_id);
+  }
+
+  public async orderTraceability(code:string, status: string) {
+    return this.orderRepository.orderTraceability(code, status);
   }
 }

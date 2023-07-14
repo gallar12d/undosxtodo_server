@@ -13,3 +13,4 @@ var dealerService = new DealerService_1.DealerService(mongoRepository);
 var dealerCtrl = new dealer_ctrl_1.DealerController(dealerService);
 router.get("/getDealers", auth_middleware_1.authMiddleware, dealerCtrl.getDealers);
 router.post("/createDealer", auth_middleware_1.authMiddleware, dealerCtrl.createDealer);
+router.post("/changeStatus", auth_middleware_1.authMiddleware, dealerCtrl.changeStatus);

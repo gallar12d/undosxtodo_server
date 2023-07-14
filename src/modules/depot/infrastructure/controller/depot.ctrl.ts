@@ -6,10 +6,10 @@ export class DepotController {
   constructor(private depotService: DepotService) { }
 
   public insertDepot = async ({ body }, res) => {
-    const { seller_id, name, state, city, address, status } = body;
+    const { seller_id, name, state, city, latitude, longitude, address, status } = body;
 
     const newDepot = new DepotValue({
-      seller_id, name, state, city, address, status
+      seller_id, name, state, city, latitude, longitude, address, status
     })
 
     const insertedDepot = await this.depotService.insertDepot(newDepot);

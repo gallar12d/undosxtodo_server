@@ -44,14 +44,21 @@ var DealerService = /** @class */ (function () {
     DealerService.prototype.getDealers = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, 200];
+                return [2 /*return*/, this.zoneRepository.getDealers()];
             });
         });
     };
-    DealerService.prototype.createDealer = function (name, code, capacity, email, depot_ids) {
+    DealerService.prototype.changeStatus = function (dealer_id, newStatus) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, 200];
+                return [2 /*return*/, this.zoneRepository.changeStatus(dealer_id, newStatus)];
+            });
+        });
+    };
+    DealerService.prototype.createDealer = function (newDealer) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.zoneRepository.createDealer(newDealer)];
             });
         });
     };

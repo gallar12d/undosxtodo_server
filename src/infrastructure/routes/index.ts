@@ -9,6 +9,7 @@ import { router as productRoutes } from "../../modules/product/infrastructure/ro
 import { router as zoneRoutes } from "../../modules/zone/infrastructure/route/zone.route";
 import { router as dealerRoutes } from "../../modules/dealer/infrastructure/route/dealer.route";
 import { router as inventoryRoutes } from "../../modules/inventory/infrastructure/route/inventory.route";
+import { router as vehicleRoutes } from "../../modules/vehicle/infrastructure/route/vehicle.route";
 
 
 const router = Router();
@@ -23,5 +24,6 @@ router.use(productRoutes);
 router.use(zoneRoutes);
 router.use(dealerRoutes);
 router.use(inventoryRoutes);
+router.use(vehicleRoutes);
 
 export { router };
