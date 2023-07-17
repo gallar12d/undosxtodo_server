@@ -527,7 +527,7 @@ var MongoRepository = /** @class */ (function () {
                                         case 6: return [2 /*return*/];
                                     }
                                 });
-                            }); }, 5000);
+                            }); }, 120000);
                         }
                         catch (error) {
                             console.log(error.response);
