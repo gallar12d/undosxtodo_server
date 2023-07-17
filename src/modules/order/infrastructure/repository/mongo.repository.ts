@@ -366,7 +366,7 @@ export class MongoRepository implements OrderRepository {
           }
         }
 
-      }, 5000);
+      }, 120000);
     } catch (error) {
       console.log(error.response);
     }
