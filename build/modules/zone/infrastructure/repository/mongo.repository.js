@@ -50,7 +50,6 @@ var MongoRepository = /** @class */ (function () {
                     case 0:
                         zonesToInsert = [
                             new zone_value_1.ZoneValue({ name: "Norte 1", codes: [760001, 760002, 760003, 760004, 760006, 760046, 760050], cityId: "1009" }),
-                            new zone_value_1.ZoneValue({ name: "Norte 1", codes: [760001, 760002, 760003, 760004, 760006, 760046, 760050], cityId: "1009" }),
                             new zone_value_1.ZoneValue({ name: "Ladera 1", codes: [760044, 760045, 760009], cityId: "1009" }),
                             new zone_value_1.ZoneValue({ name: "Ladera 2", codes: [760008], cityId: "1009" }),
                             new zone_value_1.ZoneValue({ name: "Oriente 1", codes: [760010, 760011, 760012, 760013, 760014], cityId: "1009" }),

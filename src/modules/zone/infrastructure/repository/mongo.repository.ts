@@ -7,7 +7,6 @@ export class MongoRepository implements ZoneRepository {
     public async setDefaultZones(): Promise<any | null> {
         const zonesToInsert = [
             new ZoneValue({ name: "Norte 1", codes: [760001, 760002, 760003, 760004, 760006, 760046, 760050], cityId: "1009" }),
-            new ZoneValue({ name: "Norte 1", codes: [760001, 760002, 760003, 760004, 760006, 760046, 760050], cityId: "1009" }),
             new ZoneValue({ name: "Ladera 1", codes: [760044, 760045, 760009], cityId: "1009" }),
             new ZoneValue({ name: "Ladera 2", codes: [760008], cityId: "1009" }),
             new ZoneValue({ name: "Oriente 1", codes: [760010, 760011, 760012, 760013, 760014], cityId: "1009" }),
