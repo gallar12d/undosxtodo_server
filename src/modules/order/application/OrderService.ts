@@ -276,7 +276,14 @@ export class OrderService {
     return this.orderRepository.recentOrders(rol, seller_id);
   }
 
-  public async orderTraceability(code:string, status: string) {
+  public async orderTraceability(code: string, status: string) {
     return this.orderRepository.orderTraceability(code, status);
+  }
+
+  public async getSettings() {
+    return this.orderRepository.getSettings();
+  }
+  public async setSettings(hour, minutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments) {
+    return this.orderRepository.setSettings(hour, minutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments);
   }
 }

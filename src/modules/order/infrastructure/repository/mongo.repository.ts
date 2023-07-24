@@ -14,11 +14,16 @@ import { DepotModel } from "../../../depot/infrastructure/model/depot.schema";
 export class MongoRepository implements OrderRepository {
 
   private maxAmountPerZone: number = 500000;
-  private readonly orderLimitPerZone: number = 5;
+  private ordersLimitPerZone: number = 5;
   private pendingOrders: any[] = [];
   public tokenR99: string;
   private searchingAvailableVehicles: boolean;
   private myInterval: any;
+  // private zoneTime = 5400000;
+  private zoneTime = 5400000;
+  private limitHour = 17;
+  private limitMinutes = 0;
+  private limitShipments = 5;
 
   public async findOrder(id: string): Promise<any | null> {
     const user = await OrderModel.find({ id });
@@ -62,19 +67,21 @@ export class MongoRepository implements OrderRepository {
 
         const currentHour = new Date();
         const previousLimitHour = new Date();
-        const limitHour = new Date();
-        previousLimitHour.setHours(16, 0, 0, 0);
-        limitHour.setHours(17, 0, 0, 0);
+        const limitDate = new Date();
+        previousLimitHour.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
+        limitDate.setHours(this.limitHour, this.limitMinutes, 0, 0);
         // previousLimitHour.setHours(22, 0, 0, 0); // Horas de prueba
         // limitHour.setHours(23, 0, 0, 0);
 
         if (!this.pendingOrders.length) {
-          if (currentHour > previousLimitHour || currentHour > limitHour) {
-            // console.log('La hora actual es mayor a las 4 p.m.');
+          // if (currentHour > previousLimitHour || currentHour > limitDate) {
+          if (currentHour > limitDate) {
+            // console.log('La hora actual es mayor a limitDate');
             this.pendingOrders.push({ zone, orders: [order] });
+            await OrderModel.create(order);
             return order;
           } else {
-            // console.log('La hora actual es igual o anterior a las 4 p.m.');
+            // console.log('La hora actual es igual o anterior a limitDate');
             this.pendingOrders.push({ zone, orders: [order] });
             this.registerSyncWay(order, postalCode, zone, false);
           }
@@ -83,10 +90,12 @@ export class MongoRepository implements OrderRepository {
         } else {
 
           const findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
+          // if (findedIndex !== -1 || order.value_to_collect >= this.maxAmountPerZone) { // Para cuando una orden sea de 500 mil
           if (findedIndex !== -1) {
-            if (currentHour > limitHour) {
+            if (currentHour > limitDate) {
               // console.log('La hora actual es mayor a las 5 p.m.');
               this.pendingOrders[findedIndex].orders.push(order);// Queda pendiente la orden porque no se puede despachar porque ya es muy tarde.
+              await OrderModel.create(order);
               return order;
             }
             this.pendingOrders[findedIndex].orders.push(order);
@@ -95,10 +104,11 @@ export class MongoRepository implements OrderRepository {
             for (const orderToCount of this.pendingOrders[findedIndex].orders) {
               sumPerZone += orderToCount.value_to_collect;
             }
+
             //Casos para crear las ordenes a ruta99
-            if (this.pendingOrders[findedIndex].orders.length === this.orderLimitPerZone
-              || sumPerZone >= this.maxAmountPerZone
-              || (currentHour > previousLimitHour && this.pendingOrders[findedIndex].orders.length <= 5) // Hora actual mayor a la hora limite anterior y 5 ordenes
+            if ((this.pendingOrders[findedIndex].orders.length >= this.ordersLimitPerZone)
+              || (sumPerZone >= this.maxAmountPerZone)
+              || (currentHour > previousLimitHour && this.pendingOrders[findedIndex].orders.length <= this.limitShipments) // Hora actual mayor a la hora limite anterior y 5 ordenes
             ) {
               // Aqui se manda a ruta99
               let zoneVehicles = await VehicleModel.find({// Primera busqueda para vehiculos de la zona, activos y disponibles.
@@ -215,7 +225,7 @@ export class MongoRepository implements OrderRepository {
             }
           } else {
             // Else para cuando no se encontró la zona de la orden ingresada.
-            if (currentHour > limitHour) {
+            if (currentHour > limitDate) {
               // console.log('La hora actual es mayor a las 5 p.m.');
               this.pendingOrders.push({ zone, orders: [order] });// Queda pendiente la orden porque no se puede despachar porque ya es muy tarde.
               return order;
@@ -341,7 +351,7 @@ export class MongoRepository implements OrderRepository {
                   Authorization: `Bearer ${this.tokenR99}`
                 }
               }).then((res) => {
-                // console.log(res.data.message);
+                console.log(res.data.message);
                 let secondInterval;
                 secondInterval = setInterval(() => {
 
@@ -366,7 +376,7 @@ export class MongoRepository implements OrderRepository {
           }
         }
 
-      }, 120000);
+      }, this.zoneTime);
     } catch (error) {
       console.log(error.response);
     }
@@ -377,7 +387,7 @@ export class MongoRepository implements OrderRepository {
 
   public async onAvailableVehicles(order: OrderEntity, postalCode: any, zone: any): Promise<any> {
     if (this.searchingAvailableVehicles) return;
-    const mediaHora = 1800000;
+    // const mediaHora = 1800000;
 
     const findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
     if (findedIndex !== -1) {
@@ -385,11 +395,8 @@ export class MongoRepository implements OrderRepository {
       if (orderIndex === -1) return;// si orderIndex es -1 quiere decir que ya han sido despachadas las ordenes.
     }
 
-    // let myInterval: any;
-
     this.myInterval = setInterval(async () => {
       this.searchingAvailableVehicles = true;
-      // console.log("intentando");
 
       let zoneVehicles = await VehicleModel.find({// Primera busqueda para vehiculos de la zona, activos y disponibles.
         $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
@@ -401,7 +408,6 @@ export class MongoRepository implements OrderRepository {
 
       if (zoneVehicles.length > 0) {
         clearInterval(this.myInterval);
-        // console.log("creando");
 
         const depot = await DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 });
         const myDate = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString().slice(0, 16);
@@ -497,6 +503,30 @@ export class MongoRepository implements OrderRepository {
     }, 5000);
     await OrderModel.create(order);
     return order;
+  }
+
+  public getSettings(): any { // Getter para devolver las configuraciones
+    const theHours = this.limitHour < 10 ? `0${this.limitHour}` : this.limitHour;// Condicional para agregar un 0 o no.
+    const theMinutes = this.limitMinutes < 10 ? `0${this.limitMinutes}` : this.limitMinutes;// Condicional para agregar un 0 o no.
+    // console.log(this.zoneTime);
+    return {
+      hour: `${theHours}:${theMinutes}`,
+      maxAmountPerZone: this.maxAmountPerZone,
+      ordersLimitPerZone: this.ordersLimitPerZone,
+      zoneTime: this.zoneTime / 60000,
+      limitShipments: this.limitShipments
+    }
+  }
+
+  public setSettings(hour: number, minutes: number, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments): any { // Setter para establecer las configuraciones
+    this.limitHour = hour;
+    this.limitMinutes = minutes;
+    this.maxAmountPerZone = maxAmountPerZone;
+    this.ordersLimitPerZone = ordersLimitPerZone;
+    this.zoneTime = zoneTime;
+    this.limitShipments = limitShipments;
+
+    return true;
   }
 
   public async updateOrder(id: string, order: OrderEntity): Promise<any | null> {

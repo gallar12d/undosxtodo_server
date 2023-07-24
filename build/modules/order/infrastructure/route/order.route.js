@@ -26,3 +26,5 @@ router.post("/deleteScenario", auth_middleware_1.authMiddleware, orderCtrl.delet
 router.post("/orderReports", auth_middleware_1.authMiddleware, orderCtrl.orderReports);
 router.post("/recentOrders", auth_middleware_1.authMiddleware, orderCtrl.recentOrders);
 router.post("/orderTraceability", orderCtrl.orderTraceability);
+router.get("/getSettings", auth_middleware_1.authMiddleware, orderCtrl.getSettings);
+router.post("/setSettings", auth_middleware_1.authMiddleware, orderCtrl.setSettings);

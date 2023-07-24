@@ -368,6 +368,20 @@ var OrderService = /** @class */ (function () {
             });
         });
     };
+    OrderService.prototype.getSettings = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.orderRepository.getSettings()];
+            });
+        });
+    };
+    OrderService.prototype.setSettings = function (hour, minutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.orderRepository.setSettings(hour, minutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments)];
+            });
+        });
+    };
     return OrderService;
 }());
 exports.OrderService = OrderService;

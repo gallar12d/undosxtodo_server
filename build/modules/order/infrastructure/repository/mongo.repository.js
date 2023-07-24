@@ -59,8 +59,13 @@ var depot_schema_1 = require("../../../depot/infrastructure/model/depot.schema")
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
         this.maxAmountPerZone = 500000;
-        this.orderLimitPerZone = 5;
+        this.ordersLimitPerZone = 5;
         this.pendingOrders = [];
+        // private zoneTime = 5400000;
+        this.zoneTime = 5400000;
+        this.limitHour = 17;
+        this.limitMinutes = 0;
+        this.limitShipments = 5;
     }
     MongoRepository.prototype.findOrder = function (id) {
         return __awaiter(this, void 0, void 0, function () {
@@ -78,12 +83,12 @@ var MongoRepository = /** @class */ (function () {
     MongoRepository.prototype.registerOrder = function (order, postalCode) {
         var _a, e_1, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var token, decoded, currentTimestamp, token, zone_1, currentHour, previousLimitHour, limitHour, findedIndex, sumPerZone, _i, _d, orderToCount, zoneVehicles_1, depot, myDate, resScenario_1, _e, _f, _g, myOrder, resOrder, e_1_1, error_1;
+            var token, decoded, currentTimestamp, token, zone_1, currentHour, previousLimitHour, limitDate, findedIndex, sumPerZone, _i, _d, orderToCount, zoneVehicles_1, depot, myDate, resScenario_1, _e, _f, _g, myOrder, resOrder, e_1_1, error_1;
             var _this = this;
             return __generator(this, function (_h) {
                 switch (_h.label) {
                     case 0:
-                        _h.trys.push([0, 39, , 40]);
+                        _h.trys.push([0, 44, , 45]);
                         if (!!this.tokenR99) return [3 /*break*/, 2];
                         return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
                                 "grant_type": "client_credentials",
@@ -111,35 +116,40 @@ var MongoRepository = /** @class */ (function () {
                         this.tokenR99 = token.data.access_token;
                         _h.label = 4;
                     case 4:
-                        if (!!!postalCode) return [3 /*break*/, 37];
+                        if (!!!postalCode) return [3 /*break*/, 42];
                         return [4 /*yield*/, zone_schema_1.ZoneModel.findOne({ codes: parseInt(postalCode) })];
                     case 5:
                         zone_1 = _h.sent();
                         currentHour = new Date();
                         previousLimitHour = new Date();
-                        limitHour = new Date();
-                        previousLimitHour.setHours(16, 0, 0, 0);
-                        limitHour.setHours(17, 0, 0, 0);
-                        if (!!this.pendingOrders.length) return [3 /*break*/, 6];
-                        if (currentHour > previousLimitHour || currentHour > limitHour) {
-                            // console.log('La hora actual es mayor a las 4 p.m.');
-                            this.pendingOrders.push({ zone: zone_1, orders: [order] });
-                            return [2 /*return*/, order];
-                        }
-                        else {
-                            // console.log('La hora actual es igual o anterior a las 4 p.m.');
-                            this.pendingOrders.push({ zone: zone_1, orders: [order] });
-                            this.registerSyncWay(order, postalCode, zone_1, false);
-                        }
-                        return [2 /*return*/, order];
+                        limitDate = new Date();
+                        previousLimitHour.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
+                        limitDate.setHours(this.limitHour, this.limitMinutes, 0, 0);
+                        if (!!this.pendingOrders.length) return [3 /*break*/, 9];
+                        if (!(currentHour > limitDate)) return [3 /*break*/, 7];
+                        // console.log('La hora actual es mayor a limitDate');
+                        this.pendingOrders.push({ zone: zone_1, orders: [order] });
+                        return [4 /*yield*/, order_schema_1.OrderModel.create(order)];
                     case 6:
+                        _h.sent();
+                        return [2 /*return*/, order];
+                    case 7:
+                        // console.log('La hora actual es igual o anterior a limitDate');
+                        this.pendingOrders.push({ zone: zone_1, orders: [order] });
+                        this.registerSyncWay(order, postalCode, zone_1, false);
+                        _h.label = 8;
+                    case 8: return [2 /*return*/, order];
+                    case 9:
                         findedIndex = this.pendingOrders.findIndex(function (object) { return object.zone.id === zone_1.id; });
-                        if (!(findedIndex !== -1)) return [3 /*break*/, 35];
-                        if (currentHour > limitHour) {
-                            // console.log('La hora actual es mayor a las 5 p.m.');
-                            this.pendingOrders[findedIndex].orders.push(order); // Queda pendiente la orden porque no se puede despachar porque ya es muy tarde.
-                            return [2 /*return*/, order];
-                        }
+                        if (!(findedIndex !== -1)) return [3 /*break*/, 40];
+                        if (!(currentHour > limitDate)) return [3 /*break*/, 11];
+                        // console.log('La hora actual es mayor a las 5 p.m.');
+                        this.pendingOrders[findedIndex].orders.push(order); // Queda pendiente la orden porque no se puede despachar porque ya es muy tarde.
+                        return [4 /*yield*/, order_schema_1.OrderModel.create(order)];
+                    case 10:
+                        _h.sent();
+                        return [2 /*return*/, order];
+                    case 11:
                         this.pendingOrders[findedIndex].orders.push(order);
                         sumPerZone = 0;
                         // if (currentHour > limitHour) this.pendingOrders[findedIndex].orders.push(order);
@@ -147,26 +157,26 @@ var MongoRepository = /** @class */ (function () {
                             orderToCount = _d[_i];
                             sumPerZone += orderToCount.value_to_collect;
                         }
-                        if (!(this.pendingOrders[findedIndex].orders.length === this.orderLimitPerZone
-                            || sumPerZone >= this.maxAmountPerZone
-                            || (currentHour > previousLimitHour && this.pendingOrders[findedIndex].orders.length <= 5)) // Hora actual mayor a la hora limite anterior y 5 ordenes
-                        ) return [3 /*break*/, 33]; // Hora actual mayor a la hora limite anterior y 5 ordenes
+                        if (!((this.pendingOrders[findedIndex].orders.length >= this.ordersLimitPerZone)
+                            || (sumPerZone >= this.maxAmountPerZone)
+                            || (currentHour > previousLimitHour && this.pendingOrders[findedIndex].orders.length <= this.limitShipments)) // Hora actual mayor a la hora limite anterior y 5 ordenes
+                        ) return [3 /*break*/, 38]; // Hora actual mayor a la hora limite anterior y 5 ordenes
                         return [4 /*yield*/, vehicle_schema_1.VehicleModel.find({
                                 $and: [{ zone_id: zone_1.id }, { status: "active" }, { availability: "available" }]
                             })];
-                    case 7:
+                    case 12:
                         zoneVehicles_1 = _h.sent();
-                        if (!(zoneVehicles_1.length === 0)) return [3 /*break*/, 9];
+                        if (!(zoneVehicles_1.length === 0)) return [3 /*break*/, 14];
                         return [4 /*yield*/, vehicle_schema_1.VehicleModel.find({
                                 $and: [{ status: "active" }, { availability: "available" }]
                             })];
-                    case 8:
+                    case 13:
                         zoneVehicles_1 = _h.sent();
-                        _h.label = 9;
-                    case 9:
-                        if (!(zoneVehicles_1.length > 0)) return [3 /*break*/, 31];
+                        _h.label = 14;
+                    case 14:
+                        if (!(zoneVehicles_1.length > 0)) return [3 /*break*/, 36];
                         return [4 /*yield*/, depot_schema_1.DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 })];
-                    case 10:
+                    case 15:
                         depot = _h.sent();
                         myDate = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString().slice(0, 16);
                         return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/v1/scenario", {
@@ -182,22 +192,22 @@ var MongoRepository = /** @class */ (function () {
                                     Authorization: "Bearer ".concat(this.tokenR99)
                                 }
                             })];
-                    case 11:
+                    case 16:
                         resScenario_1 = _h.sent();
-                        if (!(resScenario_1.status === 201)) return [3 /*break*/, 30];
-                        _h.label = 12;
-                    case 12:
-                        _h.trys.push([12, 22, 23, 28]);
+                        if (!(resScenario_1.status === 201)) return [3 /*break*/, 35];
+                        _h.label = 17;
+                    case 17:
+                        _h.trys.push([17, 27, 28, 33]);
                         _e = true, _f = __asyncValues(this.pendingOrders[findedIndex].orders);
-                        _h.label = 13;
-                    case 13: return [4 /*yield*/, _f.next()];
-                    case 14:
-                        if (!(_g = _h.sent(), _a = _g.done, !_a)) return [3 /*break*/, 21];
+                        _h.label = 18;
+                    case 18: return [4 /*yield*/, _f.next()];
+                    case 19:
+                        if (!(_g = _h.sent(), _a = _g.done, !_a)) return [3 /*break*/, 26];
                         _c = _g.value;
                         _e = false;
-                        _h.label = 15;
-                    case 15:
-                        _h.trys.push([15, , 19, 20]);
+                        _h.label = 20;
+                    case 20:
+                        _h.trys.push([20, , 24, 25]);
                         myOrder = _c;
                         return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/v1/order", {
                                 scenario_id: resScenario_1.data.scenario.id,
@@ -234,38 +244,38 @@ var MongoRepository = /** @class */ (function () {
                                     Authorization: "Bearer ".concat(this.tokenR99)
                                 }
                             })];
-                    case 16:
+                    case 21:
                         resOrder = _h.sent();
-                        if (!(resOrder.status === 201)) return [3 /*break*/, 18];
+                        if (!(resOrder.status === 201)) return [3 /*break*/, 23];
                         myOrder.scenario_id = resScenario_1.data.scenario.id;
                         myOrder.ruta99_id = resOrder.data.order.id;
                         return [4 /*yield*/, order_schema_1.OrderModel.updateOne({ id: myOrder.id }, { $set: { ruta99_id: myOrder.ruta99_id, scenario_id: myOrder.scenario_id } })];
-                    case 17:
+                    case 22:
                         _h.sent();
-                        _h.label = 18;
-                    case 18: return [3 /*break*/, 20];
-                    case 19:
+                        _h.label = 23;
+                    case 23: return [3 /*break*/, 25];
+                    case 24:
                         _e = true;
                         return [7 /*endfinally*/];
-                    case 20: return [3 /*break*/, 13];
-                    case 21: return [3 /*break*/, 28];
-                    case 22:
+                    case 25: return [3 /*break*/, 18];
+                    case 26: return [3 /*break*/, 33];
+                    case 27:
                         e_1_1 = _h.sent();
                         e_1 = { error: e_1_1 };
-                        return [3 /*break*/, 28];
-                    case 23:
-                        _h.trys.push([23, , 26, 27]);
-                        if (!(!_e && !_a && (_b = _f.return))) return [3 /*break*/, 25];
+                        return [3 /*break*/, 33];
+                    case 28:
+                        _h.trys.push([28, , 31, 32]);
+                        if (!(!_e && !_a && (_b = _f.return))) return [3 /*break*/, 30];
                         return [4 /*yield*/, _b.call(_f)];
-                    case 24:
+                    case 29:
                         _h.sent();
-                        _h.label = 25;
-                    case 25: return [3 /*break*/, 27];
-                    case 26:
+                        _h.label = 30;
+                    case 30: return [3 /*break*/, 32];
+                    case 31:
                         if (e_1) throw e_1.error;
                         return [7 /*endfinally*/];
-                    case 27: return [7 /*endfinally*/];
-                    case 28:
+                    case 32: return [7 /*endfinally*/];
+                    case 33:
                         // console.log(this.pendingOrders);
                         this.pendingOrders[findedIndex].orders = [];
                         axios_1.default.post("https://api.ruta99.co/v1/scenario/".concat(resScenario_1.data.scenario.id, "/optimize"), {}, {
@@ -297,17 +307,17 @@ var MongoRepository = /** @class */ (function () {
                             }, 10000);
                         });
                         return [4 /*yield*/, order_schema_1.OrderModel.create(order)];
-                    case 29:
+                    case 34:
                         _h.sent();
                         return [2 /*return*/, order];
-                    case 30: return [3 /*break*/, 32];
-                    case 31:
+                    case 35: return [3 /*break*/, 37];
+                    case 36:
                         // Caso para cuando no hay vehículos disponibles
                         this.onAvailableVehicles(order, postalCode, zone_1);
                         console.log("onAvailable");
-                        _h.label = 32;
-                    case 32: return [3 /*break*/, 34];
-                    case 33:
+                        _h.label = 37;
+                    case 37: return [3 /*break*/, 39];
+                    case 38:
                         // Else para cuando no se cumplen las condiciones de que sean 10 órdenes y que no superan 500 mil pesos.
                         if (this.pendingOrders[findedIndex].orders.length === 1) { // cuando this.pendingOrders[findedIndex].orders.length es 1 es porque es la primera orden de la zona, ya que arriba se hace el primer push.
                             this.registerSyncWay(order, postalCode, zone_1, false);
@@ -315,11 +325,11 @@ var MongoRepository = /** @class */ (function () {
                         else {
                             this.registerSyncWay(order, postalCode, zone_1, true);
                         }
-                        _h.label = 34;
-                    case 34: return [3 /*break*/, 36];
-                    case 35:
+                        _h.label = 39;
+                    case 39: return [3 /*break*/, 41];
+                    case 40:
                         // Else para cuando no se encontró la zona de la orden ingresada.
-                        if (currentHour > limitHour) {
+                        if (currentHour > limitDate) {
                             // console.log('La hora actual es mayor a las 5 p.m.');
                             this.pendingOrders.push({ zone: zone_1, orders: [order] }); // Queda pendiente la orden porque no se puede despachar porque ya es muy tarde.
                             return [2 /*return*/, order];
@@ -329,17 +339,17 @@ var MongoRepository = /** @class */ (function () {
                         // return await OrderModel.create(order);
                         // console.log(this.pendingOrders);
                         return [2 /*return*/, order];
-                    case 36: return [3 /*break*/, 38];
-                    case 37: return [2 /*return*/, "No postal code"];
-                    case 38: 
+                    case 41: return [3 /*break*/, 43];
+                    case 42: return [2 /*return*/, "No postal code"];
+                    case 43: 
                     // console.log(this.pendingOrders);
                     // return this.orderCounter;
                     return [2 /*return*/, order];
-                    case 39:
+                    case 44:
                         error_1 = _h.sent();
                         console.log(error_1.response.data);
-                        return [3 /*break*/, 40];
-                    case 40: return [2 /*return*/];
+                        return [3 /*break*/, 45];
+                    case 45: return [2 /*return*/];
                 }
             });
         });
@@ -492,7 +502,7 @@ var MongoRepository = /** @class */ (function () {
                                                                     Authorization: "Bearer ".concat(this.tokenR99)
                                                                 }
                                                             }).then(function (res) {
-                                                                // console.log(res.data.message);
+                                                                console.log(res.data.message);
                                                                 var secondInterval;
                                                                 secondInterval = setInterval(function () {
                                                                     axios_1.default.get("https://api.ruta99.co/v1/scenario/".concat(resScenario.data.scenario.id, "/fetch-best-solution"), {
@@ -527,7 +537,7 @@ var MongoRepository = /** @class */ (function () {
                                         case 6: return [2 /*return*/];
                                     }
                                 });
-                            }); }, 120000);
+                            }); }, this.zoneTime);
                         }
                         catch (error) {
                             console.log(error.response);
@@ -542,21 +552,19 @@ var MongoRepository = /** @class */ (function () {
     };
     MongoRepository.prototype.onAvailableVehicles = function (order, postalCode, zone) {
         return __awaiter(this, void 0, void 0, function () {
-            var mediaHora, findedIndex, orderIndex;
+            var findedIndex, orderIndex;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (this.searchingAvailableVehicles)
                             return [2 /*return*/];
-                        mediaHora = 1800000;
                         findedIndex = this.pendingOrders.findIndex(function (object) { return object.zone.id === zone.id; });
                         if (findedIndex !== -1) {
                             orderIndex = this.pendingOrders[findedIndex].orders.findIndex(function (myOrder) { return myOrder.id === order.id; });
                             if (orderIndex === -1)
                                 return [2 /*return*/]; // si orderIndex es -1 quiere decir que ya han sido despachadas las ordenes.
                         }
-                        // let myInterval: any;
                         this.myInterval = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
                             var zoneVehicles, depot, myDate, resScenario_2, _a, _b, _c, myOrder, resOrder, e_3_1;
                             var _this = this;
@@ -726,6 +734,27 @@ var MongoRepository = /** @class */ (function () {
                 }
             });
         });
+    };
+    MongoRepository.prototype.getSettings = function () {
+        var theHours = this.limitHour < 10 ? "0".concat(this.limitHour) : this.limitHour; // Condicional para agregar un 0 o no.
+        var theMinutes = this.limitMinutes < 10 ? "0".concat(this.limitMinutes) : this.limitMinutes; // Condicional para agregar un 0 o no.
+        // console.log(this.zoneTime);
+        return {
+            hour: "".concat(theHours, ":").concat(theMinutes),
+            maxAmountPerZone: this.maxAmountPerZone,
+            ordersLimitPerZone: this.ordersLimitPerZone,
+            zoneTime: this.zoneTime / 60000,
+            limitShipments: this.limitShipments
+        };
+    };
+    MongoRepository.prototype.setSettings = function (hour, minutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments) {
+        this.limitHour = hour;
+        this.limitMinutes = minutes;
+        this.maxAmountPerZone = maxAmountPerZone;
+        this.ordersLimitPerZone = ordersLimitPerZone;
+        this.zoneTime = zoneTime;
+        this.limitShipments = limitShipments;
+        return true;
     };
     MongoRepository.prototype.updateOrder = function (id, order) {
         return __awaiter(this, void 0, void 0, function () {

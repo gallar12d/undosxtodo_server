@@ -25,6 +25,8 @@ router.post(`/deleteScenario`, authMiddleware, orderCtrl.deleteScenario);
 router.post(`/orderReports`,authMiddleware,orderCtrl.orderReports);
 router.post(`/recentOrders`,authMiddleware,orderCtrl.recentOrders);
 router.post(`/orderTraceability`,orderCtrl.orderTraceability);
+router.get(`/getSettings`, authMiddleware, orderCtrl.getSettings);
+router.post(`/setSettings`, authMiddleware, orderCtrl.setSettings);
 // router.post(`/createScenario`, authMiddleware, orderCtrl.createScenario);
 
 export { router };

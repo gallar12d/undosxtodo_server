@@ -55,6 +55,24 @@ export class OrderController {
     }
   }
 
+  public getSettings = async (req, res) => {
+    try {
+      const limitHour = await this.orderService.getSettings();
+      res.json(limitHour);
+    } catch (err) {
+      res.status(400).json(getErrorMessage(err));
+    }
+  }
+
+  public setSettings = async ({ body }, res) => {
+    try {
+      const { hour, minutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments } = body;
+      res.json(await this.orderService.setSettings(hour, minutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments));
+    } catch (err) {
+      res.status(400).json(getErrorMessage(err));
+    }
+  }
+
   public updateOrder = async (req, res) => {
     try {
 
