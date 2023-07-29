@@ -3,10 +3,12 @@ import { OrderEntity } from "./order.entity";
 export interface OrderRepository {
   findOrder(id: string): Promise<OrderEntity | null>;
   registerOrder(order: OrderEntity, postalCode: any): Promise<OrderEntity>;
-  registerSyncWay(order: OrderEntity, postalCode: any, zone: any, zoneFound: boolean): Promise<OrderEntity>;
+  sendScenario(order: OrderEntity, postalCode: any, zone: any): Promise<OrderEntity>;
+  registerSyncWay(order: OrderEntity, postalCode: any, zone: any, zoneFound: boolean, orderCreated: boolean): Promise<OrderEntity>;
   onAvailableVehicles(order: OrderEntity, postalCode: any, zone: any): Promise<OrderEntity>;
   getSettings(): any;
-  setSettings(hour: number, minutes: number, maxAmountPerZone: number, ordersLimitPerZone: number, zoneTime: number, limitShipments: number): any;
+  setSettings(limitHour: number, limitMinutes: number, maxAmountPerZone: number, ordersLimitPerZone: number, zoneTime: number, limitShipments: number,
+    openingHour: number, openingMinutes: number): Promise<any>;
   updateOrder(id: string, order: OrderEntity): Promise<OrderEntity>;
   allOrder(seller_id: any): Promise<OrderEntity[] | null>;
   getOrdersPage(seller_id: string, pag: number): Promise<OrderEntity[] | null>;

@@ -18,18 +18,16 @@
 
 {
   "compilerOptions": {
-      "target": "es5",
-      "lib": ["es6"],
-      "types": ["reflect-metadata"],
-      "moduleResolution": "node",
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "esModuleInterop": true ,
-      "typeRoots": ["src/@types", "./node_modules/@types"], 
-      "outDir": "build",                          /* Redirect output structure to the directory. */
-      "rootDir": "src",
-      
+    "target": "es6",
+    "lib": ["es6", "dom"],
+    "types": [],
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "typeRoots": ["src/@types"], 
+    "outDir": "build",
+    "rootDir": "src"
   },
-  "include": ["./src/*", "src/infrastructure/routes/routes.ts"],
-  
+  "include": ["src/**/*"]
 }

@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.cities = void 0;
-exports.cities = [
+export const cities = [
     {
         "id": "1",
         "state_id": "1",

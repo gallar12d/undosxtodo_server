@@ -283,7 +283,7 @@ export class OrderService {
   public async getSettings() {
     return this.orderRepository.getSettings();
   }
-  public async setSettings(hour, minutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments) {
-    return this.orderRepository.setSettings(hour, minutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments);
+  public async setSettings(limitHour, limitMinutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments, openingHour, openingMinutes) {
+    return this.orderRepository.setSettings(limitHour, limitMinutes, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments, openingHour, openingMinutes);
   }
 }

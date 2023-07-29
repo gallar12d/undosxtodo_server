@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var StateSchema = new mongoose_1.Schema({
+import { Schema, model } from "mongoose";
+const StateSchema = new Schema({
     id: { type: String },
     name: { type: String }
 }, { timestamps: true });
-var StateModel = (0, mongoose_1.model)("states", StateSchema);
-exports.default = StateModel;
+const StateModel = model("states", StateSchema);
+export default StateModel;

@@ -82,7 +82,8 @@ export class MongoRepository implements DepotRepository {
 
     public async getDepots(seller_id): Promise<DepotValue[] | null> {
         // const depots: DepotValue[] = await DepotModel.find({ "seller_id": seller_id }, { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1, status:1 });
-        const depots: DepotValue[] = await DepotModel.find({ $and: [{ "seller_id": seller_id }, { status: "active" }] }, { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1, status: 1 });
+        const depots: DepotValue[] = await DepotModel.find({ $and: [{ "seller_id": seller_id }, { status: "active" }] },
+        { _id: 1, id: 1, name: 1, city: 1, state: 1, address: 1, status: 1, ruta99_id: 1 });
         return depots;
     }
 
@@ -117,7 +118,7 @@ export class MongoRepository implements DepotRepository {
                     this.tokenR99 = token.data.access_token;
                 }
             }
-            
+
             if (status === "inactive") {
                 const resDepot = await axios.delete(`https://api.ruta99.co/v1/depot/${ruta99_id}`, {
                     headers: {

@@ -10,6 +10,9 @@ import { ZoneModel } from "../../../zone/infrastructure/model/zone.schema";
 import jwt from "jsonwebtoken";
 import { VehicleModel } from "../../../vehicle/infrastructure/model/vehicle.schema";
 import { DepotModel } from "../../../depot/infrastructure/model/depot.schema";
+import { OrderSettingModel } from "../../../order/infrastructure/model/orderSetting.schema";
+// import { Scheduler } from "timers/promises";
+import schedule from "node-schedule";
 
 export class MongoRepository implements OrderRepository {
 
@@ -24,6 +27,9 @@ export class MongoRepository implements OrderRepository {
   private limitHour = 17;
   private limitMinutes = 0;
   private limitShipments = 5;
+  private openingHour = 7;
+  private openingMinutes = 0;
+  private cancelRegisterZoneTime = false;
 
   public async findOrder(id: string): Promise<any | null> {
     const user = await OrderModel.find({ id });
@@ -32,9 +38,21 @@ export class MongoRepository implements OrderRepository {
 
 
   public async registerOrder(order: OrderEntity, postalCode: any): Promise<any | null> {
-    // const orderCreated = await OrderModel.create(order);
-    // return orderCreated;
     try {
+
+      const lastSetting = await OrderSettingModel.findOne().sort({ createdAt: -1 });
+      if (!!lastSetting) {
+        this.limitHour = lastSetting.limitHour;
+        this.limitMinutes = lastSetting.limitMinutes;
+        this.maxAmountPerZone = lastSetting.maxAmountPerZone;
+        this.ordersLimitPerZone = lastSetting.ordersLimitPerZone;
+        this.zoneTime = lastSetting.zoneTime;
+        this.limitShipments = lastSetting.limitShipments;
+        this.openingHour = lastSetting.openingHour;
+        this.openingMinutes = lastSetting.openingMinutes;
+      }
+
+      // return;
 
       if (!this.tokenR99) {
         const token = await axios.post(`https://api.ruta99.co/oauth/token`, {
@@ -70,179 +88,101 @@ export class MongoRepository implements OrderRepository {
         const limitDate = new Date();
         previousLimitHour.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
         limitDate.setHours(this.limitHour, this.limitMinutes, 0, 0);
-        // previousLimitHour.setHours(22, 0, 0, 0); // Horas de prueba
-        // limitHour.setHours(23, 0, 0, 0);
 
-        if (!this.pendingOrders.length) {
-          // if (currentHour > previousLimitHour || currentHour > limitDate) {
-          if (currentHour > limitDate) {
-            // console.log('La hora actual es mayor a limitDate');
-            this.pendingOrders.push({ zone, orders: [order] });
-            await OrderModel.create(order);
-            return order;
+        let findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
+
+        if (currentHour >= limitDate) {
+          this.cancelRegisterZoneTime = true;
+          // console.log('La hora actual es mayor o igual a limitDate');
+          findedIndex !== -1 ? this.pendingOrders[findedIndex].orders.push(order) : this.pendingOrders.push({ zone, orders: [order] });// Queda pendiente la orden porque no se puede despachar al ser tan tarde.
+          // Obtén la fecha y hora actual
+          const now = new Date();
+
+          // Calcula la fecha y hora para ejecutar la tarea el día siguiente
+          const nextDay = new Date(now);
+          nextDay.setDate(now.getDate() + 1);
+          // nextDay.setDate(now.getDate());
+          nextDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
+
+          if (findedIndex !== -1) {
+            // Programa la tarea para que se ejecute una sola vez en la fecha calculada
+            schedule.scheduleJob(nextDay, () => {
+              // Código que se ejecutará al día siguiente
+              this.cancelRegisterZoneTime = false;
+              console.log("asd1");
+              this.registerSyncWay(order, postalCode, zone, true, true);
+            });
           } else {
-            // console.log('La hora actual es igual o anterior a limitDate');
-            this.pendingOrders.push({ zone, orders: [order] });
-            this.registerSyncWay(order, postalCode, zone, false);
+            // Programa la tarea para que se ejecute una sola vez en la fecha calculada
+            schedule.scheduleJob(nextDay, () => {
+              // Código que se ejecutará al día siguiente
+              this.cancelRegisterZoneTime = false;
+              console.log("asd2");
+              this.registerSyncWay(order, postalCode, zone, false, true);
+            });
           }
 
+          await OrderModel.create(order);
           return order;
-        } else {
+        }
+        findedIndex !== -1 ? this.pendingOrders[findedIndex].orders.push(order) : this.pendingOrders.push({ zone, orders: [order] });
 
-          const findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
-          // if (findedIndex !== -1 || order.value_to_collect >= this.maxAmountPerZone) { // Para cuando una orden sea de 500 mil
-          if (findedIndex !== -1) {
-            if (currentHour > limitDate) {
-              // console.log('La hora actual es mayor a las 5 p.m.');
-              this.pendingOrders[findedIndex].orders.push(order);// Queda pendiente la orden porque no se puede despachar porque ya es muy tarde.
+        if (findedIndex !== -1) {
+
+          let sumPerZone = 0;
+          for (const orderToCount of this.pendingOrders[findedIndex].orders) {
+            sumPerZone += orderToCount.value_to_collect;
+          }
+
+          //Casos para crear las ordenes a ruta99
+          if ((this.pendingOrders[findedIndex].orders.length >= this.ordersLimitPerZone && currentHour < previousLimitHour)
+            || (sumPerZone >= this.maxAmountPerZone && currentHour < previousLimitHour)
+            || (currentHour >= previousLimitHour && this.pendingOrders[findedIndex].orders.length <= this.limitShipments) // Hora actual mayor a la hora limite anterior y 5 ordenes
+          ) {
+            // Aqui se manda a ruta99
+            this.sendScenario(order, postalCode, zone);
+          } else {
+            // Else para cuando no se cumplen las condiciones de arriba.
+            if (currentHour >= previousLimitHour && this.pendingOrders[findedIndex].orders.length > this.limitShipments) {
+              // If cuando se cumple que los pedidos dentro de la hora previa a la limite que sean mayores a limitShipments, queda para el otro dia
+              this.cancelRegisterZoneTime = true;
+              // Obtén la fecha y hora actual
+              const now = new Date();
+
+              // Calcula la fecha y hora para ejecutar la tarea el día siguiente
+              const nextDay = new Date(now);
+              nextDay.setDate(now.getDate() + 1);// Dia siguiente
+              // nextDay.setDate(now.getDate());// Mismo dia
+              nextDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
+
+              // Programa la tarea para que se ejecute una sola vez en la fecha calculada
+              schedule.scheduleJob(nextDay, () => {
+                // Código que se ejecutará al día siguiente
+                this.cancelRegisterZoneTime = false;
+                this.registerSyncWay(order, postalCode, zone, false, true);
+              });
+
               await OrderModel.create(order);
               return order;
-            }
-            this.pendingOrders[findedIndex].orders.push(order);
-            let sumPerZone = 0;
-            // if (currentHour > limitHour) this.pendingOrders[findedIndex].orders.push(order);
-            for (const orderToCount of this.pendingOrders[findedIndex].orders) {
-              sumPerZone += orderToCount.value_to_collect;
-            }
-
-            //Casos para crear las ordenes a ruta99
-            if ((this.pendingOrders[findedIndex].orders.length >= this.ordersLimitPerZone)
-              || (sumPerZone >= this.maxAmountPerZone)
-              || (currentHour > previousLimitHour && this.pendingOrders[findedIndex].orders.length <= this.limitShipments) // Hora actual mayor a la hora limite anterior y 5 ordenes
-            ) {
-              // Aqui se manda a ruta99
-              let zoneVehicles = await VehicleModel.find({// Primera busqueda para vehiculos de la zona, activos y disponibles.
-                $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
-              });
-
-              if (zoneVehicles.length === 0) zoneVehicles = await VehicleModel.find({// Segunda busqueda para vehiculos activos y disponibles.
-                $and: [{ status: "active" }, { availability: "available" }]
-              });
-
-              if (zoneVehicles.length > 0) {
-
-                const depot = await DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 });
-                const myDate = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString().slice(0, 16);
-
-                const resScenario = await axios.post(`https://api.ruta99.co/v1/scenario`, {
-                  date: myDate,
-                  name: `Escenario ${myDate}`,
-                  depot_id: depot.ruta99_id,
-                  vehicles: zoneVehicles.map((vehicle) => vehicle.ruta99_id),
-                  service_time: 10,
-                  start_time: "08:00",
-                  end_time: "20:00"
-                }, {
-                  headers: {
-                    Authorization: `Bearer ${this.tokenR99}`
-                  }
-                });
-
-                if (resScenario.status === 201) {
-                  // await VehicleModel.updateMany({ id: { $in: zoneVehicles.map((v) => v.id) } }, { $set: { availability: "busy" } });
-
-                  for await (const myOrder of this.pendingOrders[findedIndex].orders) {
-
-                    const resOrder = await axios.post(`https://api.ruta99.co/v1/order`, {
-                      scenario_id: resScenario.data.scenario.id,
-                      code: myOrder.guide,
-                      country: "Colombia",
-                      state: myOrder.client_state,
-                      city: myOrder.client_city,
-                      address: myOrder.client_address,
-                      reference: myOrder.client_address_detail,
-                      zip_code: postalCode,
-                      demand: 1,
-                      packages: 1,
-                      customer: {
-                        code: "545345345",
-                        name: myOrder.client_name + " " + myOrder.client_surname,
-                        email: myOrder.client_email,
-                        phone: myOrder.client_telephone
-                      },
-                      items: myOrder.products.map((product: any) => {
-                        return {
-                          quantity: product.quantity < 0 ? (product.quantity) * -1 : product.quantity,
-                          description: product.name,
-                          amount: product.price
-                        }
-                      }),
-                      window_start_time: "08:00",
-                      window_end_time: "18:00",
-                      cash_on_delivery: myOrder.value_to_collect === 0 ? false : true,
-                      cash_amount: myOrder.value_to_collect,
-                      cash_currency: "COP",
-                      type: "delivery"
-                    }, {
-                      headers: {
-                        Authorization: `Bearer ${this.tokenR99}`
-                      }
-                    });
-                    if (resOrder.status === 201) {
-                      myOrder.scenario_id = resScenario.data.scenario.id;
-                      myOrder.ruta99_id = resOrder.data.order.id;
-                      await OrderModel.updateOne({ id: myOrder.id }, { $set: { ruta99_id: myOrder.ruta99_id, scenario_id: myOrder.scenario_id } });
-                    }
-                  }
-                  // console.log(this.pendingOrders);
-                  this.pendingOrders[findedIndex].orders = [];
-                  axios.post(`https://api.ruta99.co/v1/scenario/${resScenario.data.scenario.id}/optimize`, {}, {
-                    headers: {
-                      Authorization: `Bearer ${this.tokenR99}`
-                    }
-                  }).then((res) => {
-                    console.log(res.data.message);
-                    let secondInterval;
-                    secondInterval = setInterval(() => {
-
-                      axios.get(`https://api.ruta99.co/v1/scenario/${resScenario.data.scenario.id}/fetch-best-solution`, {
-                        headers: {
-                          Authorization: `Bearer ${this.tokenR99}`
-                        }
-                      }).then(async (data) => {
-                        if (data.data.status === 'solved') {
-                          clearInterval(secondInterval);
-                          await VehicleModel.updateMany({ id: { $in: zoneVehicles.map((v) => v.id) } }, { $set: { availability: "busy" } });
-                        }
-                      });
-                    }, 10000);
-                  });
-                  await OrderModel.create(order);
-                  return order;
-                }
-
-              } else {
-                // Caso para cuando no hay vehículos disponibles
-                this.onAvailableVehicles(order, postalCode, zone);
-                console.log("onAvailable");
-              }
             } else {
-              // Else para cuando no se cumplen las condiciones de que sean 10 órdenes y que no superan 500 mil pesos.
 
               if (this.pendingOrders[findedIndex].orders.length === 1) {// cuando this.pendingOrders[findedIndex].orders.length es 1 es porque es la primera orden de la zona, ya que arriba se hace el primer push.
-                this.registerSyncWay(order, postalCode, zone, false)
-              } else { this.registerSyncWay(order, postalCode, zone, true); }
+                this.registerSyncWay(order, postalCode, zone, false, false)
+              } else { this.registerSyncWay(order, postalCode, zone, true, false); }
             }
-          } else {
-            // Else para cuando no se encontró la zona de la orden ingresada.
-            if (currentHour > limitDate) {
-              // console.log('La hora actual es mayor a las 5 p.m.');
-              this.pendingOrders.push({ zone, orders: [order] });// Queda pendiente la orden porque no se puede despachar porque ya es muy tarde.
-              return order;
-            }
-            this.pendingOrders.push({ zone, orders: [order] });
-            this.registerSyncWay(order, postalCode, zone, false);
 
-            // return await OrderModel.create(order);
-            // console.log(this.pendingOrders);
+          }
+        } else {
+          // Zona no encontrada (quiere decir que no hay ordenes en la zona)
+          if ((order.value_to_collect >= this.maxAmountPerZone)) {
+            this.sendScenario(order, postalCode, zone);
+          } else {
+            this.registerSyncWay(order, postalCode, zone, false, false);
             return order;
           }
         }
 
-        // console.log(this.pendingOrders);
       } else return "No postal code";
-      // console.log(this.pendingOrders);
-      // return this.orderCounter;
       return order;
     } catch (error) {
       console.log(error.response.data);
@@ -251,143 +191,244 @@ export class MongoRepository implements OrderRepository {
 
   }
 
-  public async registerSyncWay(order: OrderEntity, postalCode: any, zone: any, zoneFound: boolean): Promise<any> {
-    // const horaYmedia = 5400000;
-    const minuto = 60000;
-    // const dosminutos = 60000 * 2;
+  public async sendScenario(order: OrderEntity, postalCode: any, zone: any): Promise<any> {
+
+    const findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
+    let zoneVehicle = await VehicleModel.findOne({// Primera busqueda para vehiculos de la zona, activos y disponibles.
+      $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
+    });
+
+    if (!!zoneVehicle) zoneVehicle = await VehicleModel.findOne({// Segunda busqueda para vehiculos activos y disponibles.
+      $and: [{ status: "active" }, { availability: "available" }]
+    });
+
+    if (!!zoneVehicle) {
+
+      const depot = await DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 });
+      const myDate = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString().slice(0, 16);
+
+      const resScenario = await axios.post(`https://api.ruta99.co/v1/scenario`, {
+        date: myDate,
+        name: `Escenario ${myDate}`,
+        depot_id: depot.ruta99_id,
+        vehicles: [zoneVehicle.ruta99_id],
+        service_time: 10,
+        start_time: "08:00",
+        end_time: "20:00"
+      }, {
+        headers: {
+          Authorization: `Bearer ${this.tokenR99}`
+        }
+      });
+
+      if (resScenario.status === 201) {
+        await VehicleModel.updateOne({ id: zoneVehicle.id }, { $set: { availability: "busy" } });
+
+        for await (const myOrder of this.pendingOrders[findedIndex].orders) {
+
+          const resOrder = await axios.post(`https://api.ruta99.co/v1/order`, {
+            scenario_id: resScenario.data.scenario.id,
+            code: myOrder.guide,
+            country: "Colombia",
+            state: myOrder.client_state,
+            city: myOrder.client_city,
+            address: myOrder.client_address,
+            reference: myOrder.client_address_detail,
+            zip_code: postalCode,
+            demand: 1,
+            packages: 1,
+            customer: {
+              code: "545345345",
+              name: myOrder.client_name + " " + myOrder.client_surname,
+              email: myOrder.client_email,
+              phone: myOrder.client_telephone
+            },
+            items: myOrder.products.map((product: any) => {
+              return {
+                quantity: product.quantity < 0 ? (product.quantity) * -1 : product.quantity,
+                description: product.name,
+                amount: product.price
+              }
+            }),
+            window_start_time: "08:00",
+            window_end_time: "18:00",
+            cash_on_delivery: myOrder.value_to_collect === 0 ? false : true,
+            cash_amount: myOrder.value_to_collect,
+            cash_currency: "COP",
+            type: "delivery"
+          }, {
+            headers: {
+              Authorization: `Bearer ${this.tokenR99}`
+            }
+          });
+          if (resOrder.status === 201) {
+            myOrder.scenario_id = resScenario.data.scenario.id;
+            myOrder.ruta99_id = resOrder.data.order.id;
+            await OrderModel.updateOne({ id: myOrder.id }, { $set: { ruta99_id: myOrder.ruta99_id, scenario_id: myOrder.scenario_id } });
+          }
+        }
+        // console.log(this.pendingOrders);
+        this.pendingOrders[findedIndex].orders = [];
+        axios.post(`https://api.ruta99.co/v1/scenario/${resScenario.data.scenario.id}/optimize`, {}, {
+          headers: {
+            Authorization: `Bearer ${this.tokenR99}`
+          }
+        }).then((res) => {
+          console.log(res.data.message);
+          let secondInterval;
+          secondInterval = setInterval(() => {
+
+            axios.get(`https://api.ruta99.co/v1/scenario/${resScenario.data.scenario.id}/fetch-best-solution`, {
+              headers: {
+                Authorization: `Bearer ${this.tokenR99}`
+              }
+            }).then(async (data) => {
+              if (data.data.status === 'solved') clearInterval(secondInterval);
+            });
+          }, 10000);
+        });
+        await OrderModel.create(order);
+        return order;
+      }
+
+    } else {
+      // Caso para cuando no hay vehículos disponibles
+      this.onAvailableVehicles(order, postalCode, zone);
+      console.log("onAvailable");
+    }
+  }
+
+  public async registerSyncWay(order: OrderEntity, postalCode: any, zone: any, zoneFound: boolean, orderCreated: boolean): Promise<any> {
     console.log("Register sync way");
 
     try {
 
       setTimeout(async () => {
-        // Luego de que pase 1 hora y media de la creación de la orden
-        // console.log(zoneFound);
+
         if (!zoneFound) {
-          const findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
-          if (findedIndex !== -1) {
-            const orderIndex = this.pendingOrders[findedIndex].orders.findIndex((myOrder: OrderEntity) => myOrder.id === order.id);
-            // console.log(orderIndex);
-            if (orderIndex === -1) return;// si orderIndex es -1 quiere decir que ya han sido despachadas las ordenes.
-          }
-          let zoneVehicles = await VehicleModel.find({// Primera busqueda para vehiculos de la zona, activos y disponibles.
-            $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
-          });
-
-          if (zoneVehicles.length === 0) zoneVehicles = await VehicleModel.find({// Segunda busqueda para vehiculos activos y disponibles.
-            $and: [{ status: "active" }, { availability: "available" }]
-          });
-
-          if (zoneVehicles.length > 0) {
-            const depot = await DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 });
-            const myDate = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString().slice(0, 16);
-
-            const reqScenario = axios.post(`https://api.ruta99.co/v1/scenario`, {
-              date: myDate,
-              name: `Escenario ${myDate}`,
-              depot_id: depot.ruta99_id,
-              vehicles: zoneVehicles.map((vehicle) => vehicle.ruta99_id),
-              service_time: 10,
-              start_time: "08:00",
-              end_time: "20:00"
-            }, {
-              headers: {
-                Authorization: `Bearer ${this.tokenR99}`
-              }
+          if (!this.cancelRegisterZoneTime) {
+            const findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
+            if (findedIndex !== -1) {
+              const orderIndex = this.pendingOrders[findedIndex].orders.findIndex((myOrder: OrderEntity) => myOrder.id === order.id);
+              // console.log(orderIndex);
+              if (orderIndex === -1) return;// si orderIndex es -1 quiere decir que ya han sido despachadas las ordenes.
+            }
+            let zoneVehicle = await VehicleModel.findOne({// Primera busqueda para vehiculos de la zona, activos y disponibles.
+              $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
             });
 
-            reqScenario.then(async (resScenario) => {
+            if (!!zoneVehicle) zoneVehicle = await VehicleModel.findOne({// Segunda busqueda para vehiculos activos y disponibles.
+              $and: [{ status: "active" }, { availability: "available" }]
+            });
 
-              // await VehicleModel.updateMany({ id: { $in: zoneVehicles.map((v) => v.id) } }, { $set: { availability: "busy" } });
+            if (!!zoneVehicle) {
 
-              for await (const myOrder of this.pendingOrders[findedIndex].orders) {
+              const depot = await DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 });
+              const myDate = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString().slice(0, 16);
 
-                const reqOrder = await axios.post(`https://api.ruta99.co/v1/order`, {
-                  scenario_id: resScenario.data.scenario.id,
-                  code: myOrder.guide,
-                  country: "Colombia",
-                  state: myOrder.client_state,
-                  city: myOrder.client_city,
-                  address: myOrder.client_address,
-                  reference: myOrder.client_address_detail,
-                  zip_code: postalCode,
-                  demand: 1,
-                  packages: 1,
-                  customer: {
-                    code: "545345345",
-                    name: myOrder.client_name + " " + myOrder.client_surname,
-                    email: myOrder.client_email,
-                    phone: myOrder.client_telephone
-                  },
-                  items: myOrder.products.map((product: any) => {
-                    return {
-                      quantity: product.quantity < 0 ? (product.quantity) * -1 : product.quantity,
-                      description: product.name,
-                      amount: product.price
-                    }
-                  }),
-                  window_start_time: "08:00",
-                  window_end_time: "18:00",
-                  cash_on_delivery: myOrder.value_to_collect === 0 ? false : true,
-                  cash_amount: myOrder.value_to_collect,
-                  cash_currency: "COP",
-                  type: "delivery"
-                }, {
-                  headers: {
-                    Authorization: `Bearer ${this.tokenR99}`
-                  }
-                });
-
-                if (reqOrder.status === 201) {
-                  myOrder.scenario_id = resScenario.data.scenario.id;
-                  myOrder.ruta99_id = reqOrder.data.order.id;
-                  await OrderModel.updateOne({ id: myOrder.id }, { $set: { ruta99_id: myOrder.ruta99_id } });
-                }
-
-              }
-              this.pendingOrders[findedIndex].orders = [];
-
-              axios.post(`https://api.ruta99.co/v1/scenario/${resScenario.data.scenario.id}/optimize`, {}, {
+              const resScenario = await axios.post(`https://api.ruta99.co/v1/scenario`, {
+                date: myDate,
+                name: `Escenario ${myDate}`,
+                depot_id: depot.ruta99_id,
+                vehicles: [zoneVehicle.ruta99_id],
+                service_time: 10,
+                start_time: "08:00",
+                end_time: "20:00"
+              }, {
                 headers: {
                   Authorization: `Bearer ${this.tokenR99}`
                 }
-              }).then((res) => {
-                console.log(res.data.message);
-                let secondInterval;
-                secondInterval = setInterval(() => {
+              });
 
-                  axios.get(`https://api.ruta99.co/v1/scenario/${resScenario.data.scenario.id}/fetch-best-solution`, {
+              if (resScenario.status === 201) {
+                await VehicleModel.updateOne({ id: zoneVehicle.id }, { $set: { availability: "busy" } });
+                // console.log(this.pendingOrders[findedIndex].orders);
+
+                for await (const myOrder of this.pendingOrders[findedIndex].orders) {
+
+                  const resOrder = await axios.post(`https://api.ruta99.co/v1/order`, {
+                    scenario_id: resScenario.data.scenario.id,
+                    code: myOrder.guide,
+                    country: "Colombia",
+                    state: myOrder.client_state,
+                    city: myOrder.client_city,
+                    address: myOrder.client_address,
+                    reference: myOrder.client_address_detail,
+                    zip_code: postalCode,
+                    demand: 1,
+                    packages: 1,
+                    customer: {
+                      code: "545345345",
+                      name: myOrder.client_name + " " + myOrder.client_surname,
+                      email: myOrder.client_email,
+                      phone: myOrder.client_telephone
+                    },
+                    items: myOrder.products.map((product: any) => {
+                      return {
+                        quantity: product.quantity < 0 ? (product.quantity) * -1 : product.quantity,
+                        description: product.name,
+                        amount: product.price
+                      }
+                    }),
+                    window_start_time: "08:00",
+                    window_end_time: "18:00",
+                    cash_on_delivery: myOrder.value_to_collect === 0 ? false : true,
+                    cash_amount: myOrder.value_to_collect,
+                    cash_currency: "COP",
+                    type: "delivery"
+                  }, {
                     headers: {
                       Authorization: `Bearer ${this.tokenR99}`
                     }
-                  }).then(async (data) => {
-                    if (data.data.status === 'solved') {
-                      clearInterval(secondInterval);
-                      await VehicleModel.updateMany({ id: { $in: zoneVehicles.map((v) => v.id) } }, { $set: { availability: "busy" } });
-                    }
                   });
-                }, 10000);
-              });
-            });
-          } else {
-            //Else para cuando no hay vehiculos diponibles
-            this.onAvailableVehicles(order, postalCode, zone);
-            // console.log("onAvailable");
+                  if (resOrder.status === 201) {
+                    myOrder.scenario_id = resScenario.data.scenario.id;
+                    myOrder.ruta99_id = resOrder.data.order.id;
+                    await OrderModel.updateOne({ id: myOrder.id }, { $set: { ruta99_id: myOrder.ruta99_id, scenario_id: myOrder.scenario_id } });
+                  }
+                }
+                // console.log(this.pendingOrders);
+                this.pendingOrders[findedIndex].orders = [];
+                axios.post(`https://api.ruta99.co/v1/scenario/${resScenario.data.scenario.id}/optimize`, {}, {
+                  headers: {
+                    Authorization: `Bearer ${this.tokenR99}`
+                  }
+                }).then((res) => {
+                  console.log(res.data.message);
+                  let secondInterval;
+                  secondInterval = setInterval(() => {
 
+                    axios.get(`https://api.ruta99.co/v1/scenario/${resScenario.data.scenario.id}/fetch-best-solution`, {
+                      headers: {
+                        Authorization: `Bearer ${this.tokenR99}`
+                      }
+                    }).then(async (data) => {
+                      if (data.data.status === 'solved') clearInterval(secondInterval);
+                    });
+                  }, 10000);
+                });
+                // await OrderModel.create(order);
+                // return order;
+              }
+
+            } else {
+              // Caso para cuando no hay vehículos disponibles
+              this.onAvailableVehicles(order, postalCode, zone);
+              console.log("onAvailable");
+            }
           }
         }
 
-      }, this.zoneTime);
+      }, this.zoneTime);// zoneTime es el tiempo que se va a demorar en ejecutar
     } catch (error) {
-      console.log(error.response);
+      console.log(error.response.data.data);
     }
-
-    await OrderModel.create(order);
+    if (!orderCreated) await OrderModel.create(order);
     return order;
   }
 
   public async onAvailableVehicles(order: OrderEntity, postalCode: any, zone: any): Promise<any> {
     if (this.searchingAvailableVehicles) return;
-    // const mediaHora = 1800000;
 
     const findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
     if (findedIndex !== -1) {
@@ -397,16 +438,17 @@ export class MongoRepository implements OrderRepository {
 
     this.myInterval = setInterval(async () => {
       this.searchingAvailableVehicles = true;
+      console.log("intentando");
 
-      let zoneVehicles = await VehicleModel.find({// Primera busqueda para vehiculos de la zona, activos y disponibles.
+      let zoneVehicle = await VehicleModel.findOne({// Primera busqueda para encontrar un vehiculo de la zona, activo y disponible.
         $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
       });
 
-      if (zoneVehicles.length === 0) zoneVehicles = await VehicleModel.find({// Segunda busqueda para vehiculos activos y disponibles.
+      if (!!zoneVehicle) zoneVehicle = await VehicleModel.findOne({// Segunda busqueda para encontrar un vehiculo activo y disponible.
         $and: [{ status: "active" }, { availability: "available" }]
       });
 
-      if (zoneVehicles.length > 0) {
+      if (!!zoneVehicle) {
         clearInterval(this.myInterval);
 
         const depot = await DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 });
@@ -416,7 +458,7 @@ export class MongoRepository implements OrderRepository {
           date: myDate,
           name: `Escenario ${myDate}`,
           depot_id: depot.ruta99_id,
-          vehicles: zoneVehicles.map((vehicle) => vehicle.ruta99_id),
+          vehicles: [zoneVehicle.ruta99_id],
           service_time: 10,
           start_time: "08:00",
           end_time: "20:00"
@@ -427,7 +469,7 @@ export class MongoRepository implements OrderRepository {
         });
 
         if (resScenario.status === 201) {
-          await VehicleModel.updateMany({ id: { $in: zoneVehicles.map((v) => v.id) } }, { $set: { availability: "busy" } });
+          await VehicleModel.updateOne({ id: zoneVehicle.id }, { $set: { availability: "busy" } });
 
           for await (const myOrder of this.pendingOrders[findedIndex].orders) {
 
@@ -488,43 +530,64 @@ export class MongoRepository implements OrderRepository {
                   Authorization: `Bearer ${this.tokenR99}`
                 }
               }).then(async (data) => {
-                if (data.data.status === 'solved') {
-                  clearInterval(secondInterval);
-                  await VehicleModel.updateMany({ id: { $in: zoneVehicles.map((v) => v.id) } }, { $set: { availability: "busy" } });
-                }
+                if (data.data.status === 'solved') clearInterval(secondInterval);
               });
             }, 10000);
           });
 
-          // await OrderModel.create(order);
-          // return order;
         }
       }
     }, 5000);
-    await OrderModel.create(order);
-    return order;
+    // await OrderModel.create(order);
+    // return order;
   }
 
-  public getSettings(): any { // Getter para devolver las configuraciones
-    const theHours = this.limitHour < 10 ? `0${this.limitHour}` : this.limitHour;// Condicional para agregar un 0 o no.
-    const theMinutes = this.limitMinutes < 10 ? `0${this.limitMinutes}` : this.limitMinutes;// Condicional para agregar un 0 o no.
+  public async getSettings(): Promise<any> { // Getter para devolver las configuraciones
+    const lastSetting = await OrderSettingModel.findOne().sort({ createdAt: -1 });
+    if (!!lastSetting) {
+      this.limitHour = lastSetting.limitHour;
+      this.limitMinutes = lastSetting.limitMinutes;
+      this.maxAmountPerZone = lastSetting.maxAmountPerZone;
+      this.ordersLimitPerZone = lastSetting.ordersLimitPerZone;
+      this.zoneTime = lastSetting.zoneTime;
+      this.limitShipments = lastSetting.limitShipments;
+      this.openingHour = lastSetting.openingHour;
+      this.openingMinutes = lastSetting.openingMinutes;
+    }
+
+    const theLimitHour = this.limitHour < 10 ? `0${this.limitHour}` : this.limitHour;// Condicional para agregar un 0 o no.
+    const theLimitMinutes = this.limitMinutes < 10 ? `0${this.limitMinutes}` : this.limitMinutes;// Condicional para agregar un 0 o no.
+    const theOpHour = this.openingHour < 10 ? `0${this.openingHour}` : this.openingHour;
+    const theOpMinutes = this.openingMinutes < 10 ? `0${this.openingMinutes}` : this.openingMinutes;
     // console.log(this.zoneTime);
     return {
-      hour: `${theHours}:${theMinutes}`,
+      limitHour: `${theLimitHour}:${theLimitMinutes}`,
       maxAmountPerZone: this.maxAmountPerZone,
       ordersLimitPerZone: this.ordersLimitPerZone,
       zoneTime: this.zoneTime / 60000,
-      limitShipments: this.limitShipments
+      limitShipments: this.limitShipments,
+      openingHour: `${theOpHour}:${theOpMinutes}`,
     }
   }
 
-  public setSettings(hour: number, minutes: number, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments): any { // Setter para establecer las configuraciones
-    this.limitHour = hour;
-    this.limitMinutes = minutes;
+  public async setSettings(limitHour: number, limitMinutes: number, maxAmountPerZone, ordersLimitPerZone, zoneTime, limitShipments, openingHour, openingMinutes): Promise<any> { // Setter para establecer las configuraciones
+    this.limitHour = limitHour;
+    this.limitMinutes = limitMinutes;
     this.maxAmountPerZone = maxAmountPerZone;
     this.ordersLimitPerZone = ordersLimitPerZone;
     this.zoneTime = zoneTime;
     this.limitShipments = limitShipments;
+    this.openingHour = openingHour;
+    this.openingMinutes = openingMinutes;
+
+    await OrderSettingModel.create(
+      {
+        limitHour: this.limitHour, limitMinutes: this.limitMinutes, maxAmountPerZone: this.maxAmountPerZone, ordersLimitPerZone: this.ordersLimitPerZone,
+        zoneTime: this.zoneTime, limitShipments: this.limitShipments, openingHour: this.openingHour, openingMinutes: this.openingMinutes
+      }
+    );
+    // }
+
 
     return true;
   }
@@ -787,7 +850,7 @@ export class MongoRepository implements OrderRepository {
       });
 
     } catch (error) {
-      console.log(error.response);
+      console.log(error.response.data);
 
     }
 

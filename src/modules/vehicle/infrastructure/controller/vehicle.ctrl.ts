@@ -15,6 +15,7 @@ export class VehicleController {
             });
             res.status(200).json(await this.vehicleService.createVehicle(newVehicle));
         } catch (err) {
+            err.message = err.response.data.errors;
             res.status(400).json(getErrorMessage(err));
         }
     }
