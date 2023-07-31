@@ -1,4 +1,7 @@
-export const states = [
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.states = void 0;
+exports.states = [
     { id: 1, name: 'Antioquia' },
     { id: 2, name: 'Atlántico' },
     { id: 3, name: 'D. C. Santa Fe de Bogotá' },

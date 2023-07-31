@@ -1,7 +1,11 @@
-import { v4 as uuid } from "uuid";
-export class DealerValue {
-    constructor({ ruta99_id, name, phone_number, email, identification, role, password, rfc, driver_license, status }) {
-        this.id = uuid();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DealerValue = void 0;
+var uuid_1 = require("uuid");
+var DealerValue = /** @class */ (function () {
+    function DealerValue(_a) {
+        var ruta99_id = _a.ruta99_id, name = _a.name, phone_number = _a.phone_number, email = _a.email, identification = _a.identification, role = _a.role, password = _a.password, rfc = _a.rfc, driver_license = _a.driver_license, status = _a.status;
+        this.id = (0, uuid_1.v4)();
         this.ruta99_id = ruta99_id;
         this.name = name;
         this.phone_number = phone_number;
@@ -13,4 +17,6 @@ export class DealerValue {
         this.driver_license = driver_license;
         this.status = status;
     }
-}
+    return DealerValue;
+}());
+exports.DealerValue = DealerValue;

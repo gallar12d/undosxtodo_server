@@ -35,7 +35,7 @@
     "@types/inversify": "^2.0.33",
     "@types/jest": "^28.1.6",
     "@types/mongoose": "^5.11.97",
-    "@types/node": "^18.8.2",
+    "@types/node": "^20.4.5",
     "@types/reflect-metadata": "^0.1.0",
     "@types/uuid": "^8.3.4",
     "jest": "^28.1.3",

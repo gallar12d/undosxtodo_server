@@ -1,7 +1,9 @@
-import { Schema, model } from "mongoose";
-const StatusSchema = new Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var mongoose_1 = require("mongoose");
+var StatusSchema = new mongoose_1.Schema({
     id: { type: String },
     name: { type: String }
 }, { timestamps: true });
-const StatusModel = model("status", StatusSchema);
-export default StatusModel;
+var StatusModel = (0, mongoose_1.model)("status", StatusSchema);
+exports.default = StatusModel;

@@ -1,6 +1,12 @@
-import mongoose from "mongoose";
-import paginate from 'mongoose-paginate-v2';
-const ProductSchema = new mongoose.Schema({
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProductModel = void 0;
+var mongoose_1 = __importDefault(require("mongoose"));
+var mongoose_paginate_v2_1 = __importDefault(require("mongoose-paginate-v2"));
+var ProductSchema = new mongoose_1.default.Schema({
     id: { type: String },
     depots_ids: { type: [] },
     sku: { type: String },
@@ -9,6 +15,6 @@ const ProductSchema = new mongoose.Schema({
     status: { type: String },
     inventory_ids: { type: [], required: false }
 }, { timestamps: true });
-ProductSchema.plugin(paginate);
-const ProductModel = mongoose.model('Products', ProductSchema, 'products');
-export { ProductModel };
+ProductSchema.plugin(mongoose_paginate_v2_1.default);
+var ProductModel = mongoose_1.default.model('Products', ProductSchema, 'products');
+exports.ProductModel = ProductModel;

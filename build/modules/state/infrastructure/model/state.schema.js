@@ -1,7 +1,9 @@
-import { Schema, model } from "mongoose";
-const StateSchema = new Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var mongoose_1 = require("mongoose");
+var StateSchema = new mongoose_1.Schema({
     id: { type: String },
     name: { type: String }
 }, { timestamps: true });
-const StateModel = model("states", StateSchema);
-export default StateModel;
+var StateModel = (0, mongoose_1.model)("states", StateSchema);
+exports.default = StateModel;
