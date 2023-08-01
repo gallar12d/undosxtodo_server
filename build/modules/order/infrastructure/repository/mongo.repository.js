@@ -88,7 +88,7 @@ var MongoRepository = /** @class */ (function () {
     };
     MongoRepository.prototype.registerOrder = function (order, postalCode) {
         return __awaiter(this, void 0, void 0, function () {
-            var lastSetting, token, decoded, currentTimestamp, token, zone_1, currentHour, previousLimitHour, limitDate, findedIndex, now, nextDay, sumPerZone, _i, _a, orderToCount, now, nextDay, error_1;
+            var lastSetting, token, decoded, currentTimestamp, token, zone_1, currentHour, previousLimitHour, limitDate, findedIndex, now, theDay, openingDate, sumPerZone, _i, _a, orderToCount, now, theDay, openingDate, error_1;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -148,14 +148,22 @@ var MongoRepository = /** @class */ (function () {
                         this.cancelRegisterZoneTime = true;
                         // console.log('La hora actual es mayor o igual a limitDate');
                         findedIndex !== -1 ? this.pendingOrders[findedIndex].orders.push(order) : this.pendingOrders.push({ zone: zone_1, orders: [order] }); // Queda pendiente la orden porque no se puede despachar al ser tan tarde.
-                        now = new Date();
-                        nextDay = new Date(now);
-                        nextDay.setDate(now.getDate() + 1);
-                        // nextDay.setDate(now.getDate());
-                        nextDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
+                        now = new Date(Date.now() - 5 * 60 * 60 * 1000);
+                        theDay = new Date(now);
+                        openingDate = new Date(Date.now() - 5 * 60 * 60 * 1000);
+                        openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
+                        // openingDate.getDate();
+                        if (openingDate.getDay() != theDay.getDay()) {
+                            theDay.setDate(now.getDate() + 1);
+                        }
+                        else {
+                            theDay.setDate(now.getDate());
+                        }
+                        theDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
+                        // theDay.setHours(22, 20, 0, 0); // Establece la hora de apertura
                         if (findedIndex !== -1) {
                             // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-                            node_schedule_1.default.scheduleJob(nextDay, function () {
+                            node_schedule_1.default.scheduleJob(theDay, function () {
                                 // Código que se ejecutará al día siguiente
                                 _this.cancelRegisterZoneTime = false;
                                 console.log("asd1");
@@ -164,7 +172,7 @@ var MongoRepository = /** @class */ (function () {
                         }
                         else {
                             // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-                            node_schedule_1.default.scheduleJob(nextDay, function () {
+                            node_schedule_1.default.scheduleJob(theDay, function () {
                                 // Código que se ejecutará al día siguiente
                                 _this.cancelRegisterZoneTime = false;
                                 console.log("asd2");
@@ -194,13 +202,20 @@ var MongoRepository = /** @class */ (function () {
                         if (!(currentHour >= previousLimitHour && this.pendingOrders[findedIndex].orders.length > this.limitShipments)) return [3 /*break*/, 11];
                         // If cuando se cumple que los pedidos dentro de la hora previa a la limite que sean mayores a limitShipments, queda para el otro dia
                         this.cancelRegisterZoneTime = true;
-                        now = new Date();
-                        nextDay = new Date(now);
-                        nextDay.setDate(now.getDate() + 1); // Dia siguiente
-                        // nextDay.setDate(now.getDate());// Mismo dia
-                        nextDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
+                        now = new Date(Date.now() - 5 * 60 * 60 * 1000);
+                        theDay = new Date(now);
+                        openingDate = new Date(Date.now() - 5 * 60 * 60 * 1000);
+                        openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
+                        // openingDate.getDate();
+                        if (openingDate.getDay() != theDay.getDay()) {
+                            theDay.setDate(now.getDate() + 1);
+                        }
+                        else {
+                            theDay.setDate(now.getDate());
+                        }
+                        theDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
                         // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-                        node_schedule_1.default.scheduleJob(nextDay, function () {
+                        node_schedule_1.default.scheduleJob(theDay, function () {
                             // Código que se ejecutará al día siguiente
                             _this.cancelRegisterZoneTime = false;
                             _this.registerSyncWay(order, postalCode, zone_1, false, true);

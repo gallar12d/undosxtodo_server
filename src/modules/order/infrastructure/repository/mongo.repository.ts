@@ -96,17 +96,24 @@ export class MongoRepository implements OrderRepository {
           // console.log('La hora actual es mayor o igual a limitDate');
           findedIndex !== -1 ? this.pendingOrders[findedIndex].orders.push(order) : this.pendingOrders.push({ zone, orders: [order] });// Queda pendiente la orden porque no se puede despachar al ser tan tarde.
           // Obtén la fecha y hora actual
-          const now = new Date();
+          const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
 
           // Calcula la fecha y hora para ejecutar la tarea el día siguiente
-          const nextDay = new Date(now);
-          nextDay.setDate(now.getDate() + 1);
-          // nextDay.setDate(now.getDate());
-          nextDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
+          const theDay = new Date(now);
+          const openingDate: any = new Date(Date.now() - 5 * 60 * 60 * 1000);
+          openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
+          // openingDate.getDate();
+          if (openingDate.getDay() != theDay.getDay()) {
+            theDay.setDate(now.getDate() + 1);
+          } else {
+            theDay.setDate(now.getDate());
+          }
+          theDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
+          // theDay.setHours(22, 20, 0, 0); // Establece la hora de apertura
 
           if (findedIndex !== -1) {
             // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-            schedule.scheduleJob(nextDay, () => {
+            schedule.scheduleJob(theDay, () => {
               // Código que se ejecutará al día siguiente
               this.cancelRegisterZoneTime = false;
               console.log("asd1");
@@ -114,7 +121,7 @@ export class MongoRepository implements OrderRepository {
             });
           } else {
             // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-            schedule.scheduleJob(nextDay, () => {
+            schedule.scheduleJob(theDay, () => {
               // Código que se ejecutará al día siguiente
               this.cancelRegisterZoneTime = false;
               console.log("asd2");
@@ -147,16 +154,22 @@ export class MongoRepository implements OrderRepository {
               // If cuando se cumple que los pedidos dentro de la hora previa a la limite que sean mayores a limitShipments, queda para el otro dia
               this.cancelRegisterZoneTime = true;
               // Obtén la fecha y hora actual
-              const now = new Date();
+              const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
 
               // Calcula la fecha y hora para ejecutar la tarea el día siguiente
-              const nextDay = new Date(now);
-              nextDay.setDate(now.getDate() + 1);// Dia siguiente
-              // nextDay.setDate(now.getDate());// Mismo dia
-              nextDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
+              const theDay = new Date(now);
+              const openingDate: any = new Date(Date.now() - 5 * 60 * 60 * 1000);
+              openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
+              // openingDate.getDate();
+              if (openingDate.getDay() != theDay.getDay()) {
+                theDay.setDate(now.getDate() + 1);
+              } else {
+                theDay.setDate(now.getDate());
+              }
+              theDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
 
               // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-              schedule.scheduleJob(nextDay, () => {
+              schedule.scheduleJob(theDay, () => {
                 // Código que se ejecutará al día siguiente
                 this.cancelRegisterZoneTime = false;
                 this.registerSyncWay(order, postalCode, zone, false, true);
