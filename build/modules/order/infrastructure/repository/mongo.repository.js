@@ -88,7 +88,7 @@ var MongoRepository = /** @class */ (function () {
     };
     MongoRepository.prototype.registerOrder = function (order, postalCode) {
         return __awaiter(this, void 0, void 0, function () {
-            var lastSetting, token, decoded, currentTimestamp, token, zone_1, currentHour, previousLimitHour, limitDate, findedIndex, now, theDay, openingDate, sumPerZone, _i, _a, orderToCount, now, theDay, openingDate, error_1;
+            var lastSetting, token, decoded, currentTimestamp, token, zone_1, now, currentHour, previousLimitHour, limitDate, findedIndex, now_1, theDay, openingDate, sumPerZone, _i, _a, orderToCount, now_2, theDay, openingDate, error_1;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -138,9 +138,10 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, zone_schema_1.ZoneModel.findOne({ codes: parseInt(postalCode) })];
                     case 6:
                         zone_1 = _b.sent();
-                        currentHour = new Date();
-                        previousLimitHour = new Date();
-                        limitDate = new Date();
+                        now = new Date(Date.now() - 5 * 60 * 60 * 1000);
+                        currentHour = new Date(now);
+                        previousLimitHour = new Date(now);
+                        limitDate = new Date(now);
                         previousLimitHour.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
                         limitDate.setHours(this.limitHour, this.limitMinutes, 0, 0);
                         findedIndex = this.pendingOrders.findIndex(function (object) { return object.zone.id === zone_1.id; });
@@ -148,16 +149,16 @@ var MongoRepository = /** @class */ (function () {
                         this.cancelRegisterZoneTime = true;
                         // console.log('La hora actual es mayor o igual a limitDate');
                         findedIndex !== -1 ? this.pendingOrders[findedIndex].orders.push(order) : this.pendingOrders.push({ zone: zone_1, orders: [order] }); // Queda pendiente la orden porque no se puede despachar al ser tan tarde.
-                        now = new Date(Date.now() - 5 * 60 * 60 * 1000);
-                        theDay = new Date(now);
+                        now_1 = new Date(Date.now() - 5 * 60 * 60 * 1000);
+                        theDay = new Date(now_1);
                         openingDate = new Date(Date.now() - 5 * 60 * 60 * 1000);
                         openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
                         // openingDate.getDate();
                         if (openingDate.getDay() != theDay.getDay()) {
-                            theDay.setDate(now.getDate() + 1);
+                            theDay.setDate(now_1.getDate() + 1);
                         }
                         else {
-                            theDay.setDate(now.getDate());
+                            theDay.setDate(now_1.getDate());
                         }
                         theDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
                         // theDay.setHours(22, 20, 0, 0); // Establece la hora de apertura
@@ -202,16 +203,16 @@ var MongoRepository = /** @class */ (function () {
                         if (!(currentHour >= previousLimitHour && this.pendingOrders[findedIndex].orders.length > this.limitShipments)) return [3 /*break*/, 11];
                         // If cuando se cumple que los pedidos dentro de la hora previa a la limite que sean mayores a limitShipments, queda para el otro dia
                         this.cancelRegisterZoneTime = true;
-                        now = new Date(Date.now() - 5 * 60 * 60 * 1000);
-                        theDay = new Date(now);
+                        now_2 = new Date(Date.now() - 5 * 60 * 60 * 1000);
+                        theDay = new Date(now_2);
                         openingDate = new Date(Date.now() - 5 * 60 * 60 * 1000);
                         openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
                         // openingDate.getDate();
                         if (openingDate.getDay() != theDay.getDay()) {
-                            theDay.setDate(now.getDate() + 1);
+                            theDay.setDate(now_2.getDate() + 1);
                         }
                         else {
-                            theDay.setDate(now.getDate());
+                            theDay.setDate(now_2.getDate());
                         }
                         theDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
                         // Programa la tarea para que se ejecute una sola vez en la fecha calculada
@@ -1028,7 +1029,7 @@ var MongoRepository = /** @class */ (function () {
     MongoRepository.prototype.allOrders = function (pag) {
         var _a, e_6, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var options, result, orders, _d, _e, _f, order, _g, _h, fechaUtc, e_6_1;
+            var options, result, orders, _d, _e, _f, order, _g, _h, e_6_1;
             return __generator(this, function (_j) {
                 switch (_j.label) {
                     case 0:
@@ -1063,9 +1064,8 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, seller_schema_1.SellerModel.findOne({ _id: order.seller_id })];
                     case 7:
                         _h.seller = (_j.sent()).name;
-                        fechaUtc = new Date("" + order.createdAt);
                         order.equalDates = order.createdAt === order.updatedAt;
-                        order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
+                        order.createdAt = new Date().toISOString().slice(0, 10);
                         return [3 /*break*/, 9];
                     case 8:
                         _d = true;
@@ -1096,7 +1096,7 @@ var MongoRepository = /** @class */ (function () {
     MongoRepository.prototype.ordersDate = function (rol, date, seller_id) {
         var _a, e_7, _b, _c, _d, e_8, _e, _f;
         return __awaiter(this, void 0, void 0, function () {
-            var theDate, theYear, theMonth, theDay, ordersDate, _g, ordersDate_1, ordersDate_1_1, order, _h, fechaUtc, e_7_1, ordersDate, myOrders, _j, ordersDate_2, ordersDate_2_1, order, fechaUtc, _k, _l, e_8_1;
+            var theDate, theYear, theMonth, theDay, ordersDate, _g, ordersDate_1, ordersDate_1_1, order, _h, e_7_1, ordersDate, myOrders, _j, ordersDate_2, ordersDate_2_1, order, _k, _l, e_8_1;
             var _m;
             return __generator(this, function (_o) {
                 switch (_o.label) {
@@ -1136,8 +1136,7 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status })];
                     case 9:
                         _h.guide_status = (_o.sent()).name;
-                        fechaUtc = new Date("" + order.createdAt);
-                        order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
+                        order.createdAt = new Date().toISOString().slice(0, 10);
                         return [3 /*break*/, 11];
                     case 10:
                         _g = true;
@@ -1188,7 +1187,6 @@ var MongoRepository = /** @class */ (function () {
                     case 28:
                         _o.trys.push([28, , 30, 31]);
                         order = _f;
-                        fechaUtc = new Date("" + order.createdAt);
                         _l = (_k = myOrders).push;
                         _m = {
                             client_name: order.client_name,
@@ -1199,7 +1197,7 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status })];
                     case 29:
                         _l.apply(_k, [(_m.guide_status = (_o.sent()).name,
-                                _m.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10),
+                                _m.createdAt = new Date().toISOString().slice(0, 10),
                                 _m)]);
                         return [3 /*break*/, 31];
                     case 30:
@@ -1224,36 +1222,6 @@ var MongoRepository = /** @class */ (function () {
                         return [7 /*endfinally*/];
                     case 38: return [7 /*endfinally*/];
                     case 39: return [2 /*return*/, myOrders];
-                }
-            });
-        });
-    };
-    MongoRepository.prototype.authR99 = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                try {
-                }
-                catch (error) {
-                }
-                return [2 /*return*/, 200];
-            });
-        });
-    };
-    MongoRepository.prototype.createScenario = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var gmt5Now, vehicles;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        gmt5Now = new Date(new Date().getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
-                        return [4 /*yield*/, axios_1.default.get("https://api.ruta99.co/v1/vehicle", {
-                                headers: {
-                                    Authorization: "Bearer ".concat(this.tokenR99)
-                                }
-                            })];
-                    case 1:
-                        vehicles = _a.sent();
-                        return [2 /*return*/, vehicles.data.data];
                 }
             });
         });
@@ -1299,7 +1267,7 @@ var MongoRepository = /** @class */ (function () {
                         order = _c;
                         _f = (_e = ordersDateWithNames).push;
                         _h = {
-                            Fecha: new Date(new Date("" + order.createdAt).getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10),
+                            Fecha: new Date().toISOString().slice(0, 10),
                             Guia: order.guide,
                             Bodega: order.depot_name,
                             'Nombre cliente': order.client_name,

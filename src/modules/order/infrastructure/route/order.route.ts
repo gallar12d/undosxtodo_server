@@ -19,8 +19,6 @@ router.post(`/status`, authMiddleware, orderCtrl.insertStatus);
 router.put(`/status`, authMiddleware, orderCtrl.updateStatus);
 router.get(`/orders/:pag`, authMiddleware, orderCtrl.allOrders);
 router.post(`/ordersDate`, authMiddleware, orderCtrl.ordersDate);
-router.post(`/authR99`, authMiddleware, orderCtrl.authR99);
-router.post(`/createScenario`, authMiddleware, orderCtrl.createScenario);
 router.post(`/deleteScenario`, authMiddleware, orderCtrl.deleteScenario);
 router.post(`/orderReports`,authMiddleware,orderCtrl.orderReports);
 router.post(`/recentOrders`,authMiddleware,orderCtrl.recentOrders);

@@ -260,14 +260,6 @@ export class OrderService {
     return ordersDate;
   }
 
-  public async authR99() {
-    return this.orderRepository.authR99();
-  }
-
-  public async createScenario() {
-    return this.orderRepository.createScenario();
-  }
-
   public async orderReports(start: string, ending: string, seller_id: string, rol: string) {
     return this.orderRepository.orderReports(start, ending, seller_id, rol);
   }

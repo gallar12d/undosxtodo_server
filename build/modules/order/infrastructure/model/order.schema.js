@@ -37,9 +37,9 @@ var OrderSchema = new mongoose_1.default.Schema({
     products: { type: Array, required: false },
     client_country: { type: String, required: false },
     value_to_collect: { type: Number, required: false },
-}, 
-// { timestamps: { currentTime: () => new Date(Date.now() - 5 * 60 * 60 * 1000) } } //Comprobar si funciona
-{ timestamps: true });
+}, { timestamps: { currentTime: function () { return new Date(Date.now() - 5 * 60 * 60 * 1000); } } } //Comprobar si funciona
+// { timestamps: true }
+);
 OrderSchema.plugin(mongoose_paginate_v2_1.default);
 var OrderModel = mongoose_1.default.model('Orders', OrderSchema, 'orders');
 exports.OrderModel = OrderModel;

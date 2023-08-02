@@ -20,8 +20,6 @@ router.post("/status", auth_middleware_1.authMiddleware, orderCtrl.insertStatus)
 router.put("/status", auth_middleware_1.authMiddleware, orderCtrl.updateStatus);
 router.get("/orders/:pag", auth_middleware_1.authMiddleware, orderCtrl.allOrders);
 router.post("/ordersDate", auth_middleware_1.authMiddleware, orderCtrl.ordersDate);
-router.post("/authR99", auth_middleware_1.authMiddleware, orderCtrl.authR99);
-router.post("/createScenario", auth_middleware_1.authMiddleware, orderCtrl.createScenario);
 router.post("/deleteScenario", auth_middleware_1.authMiddleware, orderCtrl.deleteScenario);
 router.post("/orderReports", auth_middleware_1.authMiddleware, orderCtrl.orderReports);
 router.post("/recentOrders", auth_middleware_1.authMiddleware, orderCtrl.recentOrders);

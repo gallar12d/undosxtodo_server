@@ -82,10 +82,11 @@ export class MongoRepository implements OrderRepository {
 
       if (!!postalCode) {
         const zone = await ZoneModel.findOne({ codes: parseInt(postalCode) });
+        const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
 
-        const currentHour = new Date();
-        const previousLimitHour = new Date();
-        const limitDate = new Date();
+        const currentHour = new Date(now);
+        const previousLimitHour = new Date(now);
+        const limitDate = new Date(now);
         previousLimitHour.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
         limitDate.setHours(this.limitHour, this.limitMinutes, 0, 0);
 
@@ -677,9 +678,8 @@ export class MongoRepository implements OrderRepository {
     for await (const order of orders.docs) {
       order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
       order.seller = (await SellerModel.findOne({ _id: order.seller_id })).name
-      var fechaUtc = new Date("" + order.createdAt);
       order.equalDates = order.createdAt === order.updatedAt;
-      order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
+      order.createdAt = new Date().toISOString().slice(0, 10);
     }
 
     return orders;
@@ -703,8 +703,7 @@ export class MongoRepository implements OrderRepository {
       ordersDate = JSON.parse(JSON.stringify(ordersDate));
       for await (const order of ordersDate) {
         order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
-        var fechaUtc = new Date("" + order.createdAt);
-        order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
+        order.createdAt = new Date().toISOString().slice(0, 10);
       }
       return ordersDate;
     } else {
@@ -714,50 +713,20 @@ export class MongoRepository implements OrderRepository {
       } else {
         ordersDate = await OrderModel.find({ createdAt: { $gt: new Date(`${theYear}-${theMonth}-${theDay}`) }, seller_id: new mongoose.Types.ObjectId(seller_id) });
       }
-      // for await (const order of ordersDate) {
-      //   order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
-      //   var fechaUtc = new Date("" + order.createdAt);
-      //   order.createdAt = new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
-      // }
-      // console.log(ordersDate);
       let myOrders = [];
       for await (const order of ordersDate) {
-        var fechaUtc = new Date("" + order.createdAt);
         myOrders.push({
           client_name: order.client_name,
           client_surname: order.client_surname,
           products: order.products,
           value_to_collect: order.value_to_collect,
           guide_status: (await StatusModel.findOne({ id: order.guide_status })).name,
-          createdAt: new Date(fechaUtc.getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10)
+          createdAt: new Date().toISOString().slice(0, 10)
         });
       }
 
       return myOrders;
     }
-  }
-
-  public async authR99(): Promise<any | null> {
-    try {
-
-    } catch (error) {
-
-    }
-    return 200;
-  }
-
-
-
-  public async createScenario(): Promise<any | null> {
-    let gmt5Now = new Date(new Date().getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10);
-    const vehicles = await axios.get(`https://api.ruta99.co/v1/vehicle`, {
-      headers: {
-        Authorization: `Bearer ${this.tokenR99}`
-      }
-    });
-
-    return vehicles.data.data;
-    return 200;
   }
 
   public async orderReports(start: string, ending: string, seller_id: string, rol: string): Promise<any | null> {
@@ -778,7 +747,7 @@ export class MongoRepository implements OrderRepository {
 
     for await (const order of ordersDate) {
       ordersDateWithNames.push({
-        Fecha: new Date(new Date("" + order.createdAt).getTime() - (5 * 60 * 60 * 1000)).toISOString().slice(0, 10),
+        Fecha: new Date().toISOString().slice(0, 10),
         Guia: order.guide,
         Bodega: order.depot_name,
         'Nombre cliente': order.client_name,

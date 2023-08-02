@@ -128,23 +128,6 @@ export class OrderController {
     }
   }
 
-  public authR99 = async (req, res) => {
-    try {
-      res.json(await this.orderService.authR99())
-    } catch (err) {
-      res.status(400).send(getErrorMessage(err));
-    }
-  };
-
-  public createScenario = async (req, res) => {
-    try {
-      const newScenario = await this.orderService.createScenario();
-      res.json(newScenario);
-    } catch (err) {
-      res.status(400).send(getErrorMessage(err));
-    }
-  };
-
   public deleteScenario = async (req, res) => {
     try {
       // res.json(await this.orderService);

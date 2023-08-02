@@ -58,11 +58,10 @@ var MongoRepository = /** @class */ (function () {
     }
     MongoRepository.prototype.insertDepot = function (depot) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, decoded, currentTimestamp, token, resDepot, insertedDepot, error_1;
+            var token, decoded, currentTimestamp, token, resDepot, insertedDepot;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 9, , 10]);
                         if (!!this.tokenR99) return [3 /*break*/, 2];
                         return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
                                 "grant_type": "client_credentials",
@@ -101,19 +100,8 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, depot_schema_1.DepotModel.create(depot)];
                     case 6:
                         insertedDepot = _a.sent();
-                        // const depots = await axios.get(`https://api.ruta99.co/v1/depot`, {
-                        //     headers: {
-                        //         Authorization: `Bearer ${this.tokenR99}`
-                        //     }
-                        // });
-                        // console.log(depots.data.data);
                         return [2 /*return*/, insertedDepot];
                     case 7: return [2 /*return*/, 400];
-                    case 8: return [3 /*break*/, 10];
-                    case 9:
-                        error_1 = _a.sent();
-                        return [2 /*return*/, error_1];
-                    case 10: return [2 /*return*/];
                 }
             });
         });
@@ -153,11 +141,10 @@ var MongoRepository = /** @class */ (function () {
     MongoRepository.prototype.updateDepot = function (_a) {
         var id = _a.id, seller_id = _a.seller_id, name = _a.name, state = _a.state, city = _a.city, address = _a.address, status = _a.status, ruta99_id = _a.ruta99_id, latitude = _a.latitude, longitude = _a.longitude;
         return __awaiter(this, void 0, void 0, function () {
-            var token, decoded, currentTimestamp, token, resDepot, updatedDepot, resDepot, updatedDepot, error_2;
+            var token, decoded, currentTimestamp, token, resDepot, updatedDepot, resDepot, updatedDepot;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 14, , 15]);
                         if (!!this.tokenR99) return [3 /*break*/, 2];
                         return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
                                 "grant_type": "client_credentials",
@@ -219,12 +206,7 @@ var MongoRepository = /** @class */ (function () {
                         updatedDepot = _b.sent();
                         return [2 /*return*/, updatedDepot];
                     case 12: return [2 /*return*/, 400];
-                    case 13: return [3 /*break*/, 15];
-                    case 14:
-                        error_2 = _b.sent();
-                        console.log(error_2);
-                        return [3 /*break*/, 15];
-                    case 15: return [2 /*return*/];
+                    case 13: return [2 /*return*/];
                 }
             });
         });

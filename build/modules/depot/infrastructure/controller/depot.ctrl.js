@@ -35,9 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DepotController = void 0;
 var depot_value_1 = require("../../domain/depot.value");
+var handleErrors_1 = __importDefault(require("../../../../infrastructure/utils/handleErrors"));
 var DepotController = /** @class */ (function () {
     function DepotController(depotService) {
         var _this = this;
@@ -45,10 +49,11 @@ var DepotController = /** @class */ (function () {
         this.insertDepot = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var seller_id, name, state, city, latitude, longitude, address, status, newDepot, insertedDepot;
+                var seller_id, name, state, city, latitude, longitude, address, status, newDepot, insertedDepot, err_1;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
+                            _b.trys.push([0, 2, , 3]);
                             seller_id = body.seller_id, name = body.name, state = body.state, city = body.city, latitude = body.latitude, longitude = body.longitude, address = body.address, status = body.status;
                             newDepot = new depot_value_1.DepotValue({
                                 seller_id: seller_id,
@@ -64,7 +69,13 @@ var DepotController = /** @class */ (function () {
                         case 1:
                             insertedDepot = _b.sent();
                             res.send(insertedDepot);
-                            return [2 /*return*/];
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_1 = _b.sent();
+                            err_1.message = err_1.response.data.errors;
+                            res.status(400).json((0, handleErrors_1.default)(err_1));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
                     }
                 });
             });
@@ -106,29 +117,45 @@ var DepotController = /** @class */ (function () {
         this.updateDepot = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var updatedDepot;
+                var updatedDepot, err_2;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
-                        case 0: return [4 /*yield*/, this.depotService.updateDepot(body)];
+                        case 0:
+                            _b.trys.push([0, 2, , 3]);
+                            return [4 /*yield*/, this.depotService.updateDepot(body)];
                         case 1:
                             updatedDepot = _b.sent();
                             res.send(updatedDepot);
-                            return [2 /*return*/];
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_2 = _b.sent();
+                            // console.log(err.response.data);
+                            err_2.message = err_2.response.data.errors || err_2.response.data.message;
+                            res.status(400).json((0, handleErrors_1.default)(err_2));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
                     }
                 });
             });
         };
         this.deleteDepot = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var id, depotDeleted;
+            var id, depotDeleted, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        _a.trys.push([0, 2, , 3]);
                         id = req.params.id;
                         return [4 /*yield*/, this.depotService.deleteDepot(id)];
                     case 1:
                         depotDeleted = _a.sent();
                         res.send(depotDeleted);
-                        return [2 /*return*/];
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_3 = _a.sent();
+                        err_3.message = err_3.response.data.errors;
+                        res.status(400).json((0, handleErrors_1.default)(err_3));
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         }); };

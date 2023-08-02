@@ -7,8 +7,8 @@
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
       "esModuleInterop": true ,
-      // "typeRoots": ["src/@types", "./node_modules/@types"], 
-      "typeRoots": ["node_modules/@types", "custom_typings"],
+      "typeRoots": ["./node_modules/@types", "src/@types"],
+      // "typeRoots": ["src/@types", "./node_modules/@types"],
       "outDir": "build",                          /* Redirect output structure to the directory. */
       "rootDir": "src",
       

@@ -17,8 +17,6 @@ export interface OrderRepository {
   updateStatus(id: any, guide_status: any): Promise<any | null>;
   allOrders(pag: number): Promise<any | null>;
   ordersDate(rol: string, date: string, seller_id: string): Promise<any | null>;
-  authR99(): Promise<any | null>;
-  createScenario(): Promise<any | null>;
   orderReports(start: string, ending: string, seller_id: string, rol: string): Promise<any | null>;
   recentOrders(rol: string, seller_id: string): Promise<any | null>;
   orderTraceability(code: string, status: string): Promise<any | null>;

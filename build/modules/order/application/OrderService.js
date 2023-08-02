@@ -333,20 +333,6 @@ var OrderService = /** @class */ (function () {
             });
         });
     };
-    OrderService.prototype.authR99 = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, this.orderRepository.authR99()];
-            });
-        });
-    };
-    OrderService.prototype.createScenario = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, this.orderRepository.createScenario()];
-            });
-        });
-    };
     OrderService.prototype.orderReports = function (start, ending, seller_id, rol) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
