@@ -82,39 +82,27 @@ export class MongoRepository implements OrderRepository {
 
       if (!!postalCode) {
         const zone = await ZoneModel.findOne({ codes: parseInt(postalCode) });
-        const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
+        // const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
 
-        const currentHour = new Date(now);
-        const previousLimitHour = new Date(now);
-        const limitDate = new Date(now);
-        previousLimitHour.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
+        const currentDate = new Date();
+        const previousLimitDate = new Date();
+        const limitDate = new Date();
+        const openingDate: any = new Date();
+        previousLimitDate.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
         limitDate.setHours(this.limitHour, this.limitMinutes, 0, 0);
+        if (currentDate > openingDate) openingDate.setDate(currentDate.getDate() + 1);
+        openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
 
         let findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
 
-        if (currentHour >= limitDate) {
+        if ((currentDate >= limitDate && currentDate > openingDate) || (currentDate < limitDate && currentDate < openingDate)) {
           this.cancelRegisterZoneTime = true;
           // console.log('La hora actual es mayor o igual a limitDate');
           findedIndex !== -1 ? this.pendingOrders[findedIndex].orders.push(order) : this.pendingOrders.push({ zone, orders: [order] });// Queda pendiente la orden porque no se puede despachar al ser tan tarde.
-          // Obtén la fecha y hora actual
-          const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
-
-          // Calcula la fecha y hora para ejecutar la tarea el día siguiente
-          const theDay = new Date(now);
-          const openingDate: any = new Date(Date.now() - 5 * 60 * 60 * 1000);
-          openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
-          // openingDate.getDate();
-          if (openingDate.getDay() != theDay.getDay()) {
-            theDay.setDate(now.getDate() + 1);
-          } else {
-            theDay.setDate(now.getDate());
-          }
-          theDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
-          // theDay.setHours(22, 20, 0, 0); // Establece la hora de apertura
 
           if (findedIndex !== -1) {
             // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-            schedule.scheduleJob(theDay, () => {
+            schedule.scheduleJob(openingDate, () => {
               // Código que se ejecutará al día siguiente
               this.cancelRegisterZoneTime = false;
               console.log("asd1");
@@ -122,7 +110,7 @@ export class MongoRepository implements OrderRepository {
             });
           } else {
             // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-            schedule.scheduleJob(theDay, () => {
+            schedule.scheduleJob(openingDate, () => {
               // Código que se ejecutará al día siguiente
               this.cancelRegisterZoneTime = false;
               console.log("asd2");
@@ -143,34 +131,21 @@ export class MongoRepository implements OrderRepository {
           }
 
           //Casos para crear las ordenes a ruta99
-          if ((this.pendingOrders[findedIndex].orders.length >= this.ordersLimitPerZone && currentHour < previousLimitHour)
-            || (sumPerZone >= this.maxAmountPerZone && currentHour < previousLimitHour)
-            || (currentHour >= previousLimitHour && this.pendingOrders[findedIndex].orders.length <= this.limitShipments) // Hora actual mayor a la hora limite anterior y 5 ordenes
+          if ((this.pendingOrders[findedIndex].orders.length >= this.ordersLimitPerZone && currentDate < previousLimitDate)
+            || (sumPerZone >= this.maxAmountPerZone && currentDate < previousLimitDate)
+            || (currentDate >= previousLimitDate && this.pendingOrders[findedIndex].orders.length <= this.limitShipments) // Hora actual mayor a la hora limite anterior y 5 ordenes
           ) {
             // Aqui se manda a ruta99
             this.sendScenario(order, postalCode, zone);
           } else {
             // Else para cuando no se cumplen las condiciones de arriba.
-            if (currentHour >= previousLimitHour && this.pendingOrders[findedIndex].orders.length > this.limitShipments) {
+            if (currentDate >= previousLimitDate && this.pendingOrders[findedIndex].orders.length > this.limitShipments) {
               // If cuando se cumple que los pedidos dentro de la hora previa a la limite que sean mayores a limitShipments, queda para el otro dia
               this.cancelRegisterZoneTime = true;
               // Obtén la fecha y hora actual
-              const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
-
-              // Calcula la fecha y hora para ejecutar la tarea el día siguiente
-              const theDay = new Date(now);
-              const openingDate: any = new Date(Date.now() - 5 * 60 * 60 * 1000);
-              openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
-              // openingDate.getDate();
-              if (openingDate.getDay() != theDay.getDay()) {
-                theDay.setDate(now.getDate() + 1);
-              } else {
-                theDay.setDate(now.getDate());
-              }
-              theDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
 
               // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-              schedule.scheduleJob(theDay, () => {
+              schedule.scheduleJob(openingDate, () => {
                 // Código que se ejecutará al día siguiente
                 this.cancelRegisterZoneTime = false;
                 this.registerSyncWay(order, postalCode, zone, false, true);
@@ -551,7 +526,7 @@ export class MongoRepository implements OrderRepository {
 
         }
       }
-    }, 5000);
+    }, 20000);
     // await OrderModel.create(order);
     // return order;
   }

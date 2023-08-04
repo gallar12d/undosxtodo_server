@@ -88,7 +88,7 @@ var MongoRepository = /** @class */ (function () {
     };
     MongoRepository.prototype.registerOrder = function (order, postalCode) {
         return __awaiter(this, void 0, void 0, function () {
-            var lastSetting, token, decoded, currentTimestamp, token, zone_1, now, currentHour, previousLimitHour, limitDate, findedIndex, now_1, theDay, openingDate, sumPerZone, _i, _a, orderToCount, now_2, theDay, openingDate, error_1;
+            var lastSetting, token, decoded, currentTimestamp, token, zone_1, currentDate, previousLimitDate, limitDate, openingDate, findedIndex, sumPerZone, _i, _a, orderToCount, error_1;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -138,33 +138,23 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, zone_schema_1.ZoneModel.findOne({ codes: parseInt(postalCode) })];
                     case 6:
                         zone_1 = _b.sent();
-                        now = new Date(Date.now() - 5 * 60 * 60 * 1000);
-                        currentHour = new Date(now);
-                        previousLimitHour = new Date(now);
-                        limitDate = new Date(now);
-                        previousLimitHour.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
+                        currentDate = new Date();
+                        previousLimitDate = new Date();
+                        limitDate = new Date();
+                        openingDate = new Date();
+                        previousLimitDate.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
                         limitDate.setHours(this.limitHour, this.limitMinutes, 0, 0);
+                        if (currentDate > openingDate)
+                            openingDate.setDate(currentDate.getDate() + 1);
+                        openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
                         findedIndex = this.pendingOrders.findIndex(function (object) { return object.zone.id === zone_1.id; });
-                        if (!(currentHour >= limitDate)) return [3 /*break*/, 8];
+                        if (!((currentDate >= limitDate && currentDate > openingDate) || (currentDate < limitDate && currentDate < openingDate))) return [3 /*break*/, 8];
                         this.cancelRegisterZoneTime = true;
                         // console.log('La hora actual es mayor o igual a limitDate');
                         findedIndex !== -1 ? this.pendingOrders[findedIndex].orders.push(order) : this.pendingOrders.push({ zone: zone_1, orders: [order] }); // Queda pendiente la orden porque no se puede despachar al ser tan tarde.
-                        now_1 = new Date(Date.now() - 5 * 60 * 60 * 1000);
-                        theDay = new Date(now_1);
-                        openingDate = new Date(Date.now() - 5 * 60 * 60 * 1000);
-                        openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
-                        // openingDate.getDate();
-                        if (openingDate.getDay() != theDay.getDay()) {
-                            theDay.setDate(now_1.getDate() + 1);
-                        }
-                        else {
-                            theDay.setDate(now_1.getDate());
-                        }
-                        theDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
-                        // theDay.setHours(22, 20, 0, 0); // Establece la hora de apertura
                         if (findedIndex !== -1) {
                             // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-                            node_schedule_1.default.scheduleJob(theDay, function () {
+                            node_schedule_1.default.scheduleJob(openingDate, function () {
                                 // Código que se ejecutará al día siguiente
                                 _this.cancelRegisterZoneTime = false;
                                 console.log("asd1");
@@ -173,7 +163,7 @@ var MongoRepository = /** @class */ (function () {
                         }
                         else {
                             // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-                            node_schedule_1.default.scheduleJob(theDay, function () {
+                            node_schedule_1.default.scheduleJob(openingDate, function () {
                                 // Código que se ejecutará al día siguiente
                                 _this.cancelRegisterZoneTime = false;
                                 console.log("asd2");
@@ -192,31 +182,20 @@ var MongoRepository = /** @class */ (function () {
                             orderToCount = _a[_i];
                             sumPerZone += orderToCount.value_to_collect;
                         }
-                        if (!((this.pendingOrders[findedIndex].orders.length >= this.ordersLimitPerZone && currentHour < previousLimitHour)
-                            || (sumPerZone >= this.maxAmountPerZone && currentHour < previousLimitHour)
-                            || (currentHour >= previousLimitHour && this.pendingOrders[findedIndex].orders.length <= this.limitShipments)) // Hora actual mayor a la hora limite anterior y 5 ordenes
+                        if (!((this.pendingOrders[findedIndex].orders.length >= this.ordersLimitPerZone && currentDate < previousLimitDate)
+                            || (sumPerZone >= this.maxAmountPerZone && currentDate < previousLimitDate)
+                            || (currentDate >= previousLimitDate && this.pendingOrders[findedIndex].orders.length <= this.limitShipments)) // Hora actual mayor a la hora limite anterior y 5 ordenes
                         ) return [3 /*break*/, 9]; // Hora actual mayor a la hora limite anterior y 5 ordenes
                         // Aqui se manda a ruta99
                         this.sendScenario(order, postalCode, zone_1);
                         return [3 /*break*/, 12];
                     case 9:
-                        if (!(currentHour >= previousLimitHour && this.pendingOrders[findedIndex].orders.length > this.limitShipments)) return [3 /*break*/, 11];
+                        if (!(currentDate >= previousLimitDate && this.pendingOrders[findedIndex].orders.length > this.limitShipments)) return [3 /*break*/, 11];
                         // If cuando se cumple que los pedidos dentro de la hora previa a la limite que sean mayores a limitShipments, queda para el otro dia
                         this.cancelRegisterZoneTime = true;
-                        now_2 = new Date(Date.now() - 5 * 60 * 60 * 1000);
-                        theDay = new Date(now_2);
-                        openingDate = new Date(Date.now() - 5 * 60 * 60 * 1000);
-                        openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
-                        // openingDate.getDate();
-                        if (openingDate.getDay() != theDay.getDay()) {
-                            theDay.setDate(now_2.getDate() + 1);
-                        }
-                        else {
-                            theDay.setDate(now_2.getDate());
-                        }
-                        theDay.setHours(this.openingHour, this.openingMinutes, 0, 0); // Establece la hora de apertura
+                        // Obtén la fecha y hora actual
                         // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-                        node_schedule_1.default.scheduleJob(theDay, function () {
+                        node_schedule_1.default.scheduleJob(openingDate, function () {
                             // Código que se ejecutará al día siguiente
                             _this.cancelRegisterZoneTime = false;
                             _this.registerSyncWay(order, postalCode, zone_1, false, true);
@@ -779,7 +758,7 @@ var MongoRepository = /** @class */ (function () {
                             case 24: return [2 /*return*/];
                         }
                     });
-                }); }, 5000);
+                }); }, 20000);
                 return [2 /*return*/];
             });
         });
