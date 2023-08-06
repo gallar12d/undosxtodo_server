@@ -13,6 +13,7 @@ import { DepotModel } from "../../../depot/infrastructure/model/depot.schema";
 import { OrderSettingModel } from "../../../order/infrastructure/model/orderSetting.schema";
 // import { Scheduler } from "timers/promises";
 import schedule from "node-schedule";
+import { DateTime } from 'luxon';
 
 export class MongoRepository implements OrderRepository {
 
@@ -20,7 +21,7 @@ export class MongoRepository implements OrderRepository {
   private ordersLimitPerZone: number = 5;
   private pendingOrders: any[] = [];
   public tokenR99: string;
-  private searchingAvailableVehicles: boolean;
+  private searchingAvailableVehicles: boolean = false;
   private myInterval: any;
   // private zoneTime = 5400000;
   private zoneTime = 5400000;
@@ -84,14 +85,14 @@ export class MongoRepository implements OrderRepository {
         const zone = await ZoneModel.findOne({ codes: parseInt(postalCode) });
         // const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
 
-        const currentDate = new Date();
-        const previousLimitDate = new Date();
-        const limitDate = new Date();
-        const openingDate: any = new Date();
-        previousLimitDate.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
-        limitDate.setHours(this.limitHour, this.limitMinutes, 0, 0);
-        if (currentDate > openingDate) openingDate.setDate(currentDate.getDate() + 1);
-        openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
+        const currentDate = DateTime.now().setZone('America/Bogota');
+        const previousLimitDate = DateTime.now().setZone('America/Bogota').set({ hour: this.limitHour - 1, minute: this.limitMinutes });
+        const limitDate = DateTime.now().setZone('America/Bogota').set({ hour: this.limitHour, minute: this.limitMinutes });
+        const openingDate = DateTime.now().setZone('America/Bogota').set({ hour: this.openingHour, minute: this.openingMinutes });
+        // previousLimitDate.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
+        // limitDate.setHours(this.limitHour, this.limitMinutes, 0, 0);
+        // if (currentDate > openingDate) openingDate.setDate(currentDate.getDate() + 1);
+        // openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
 
         let findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
 
@@ -100,21 +101,28 @@ export class MongoRepository implements OrderRepository {
           // console.log('La hora actual es mayor o igual a limitDate');
           findedIndex !== -1 ? this.pendingOrders[findedIndex].orders.push(order) : this.pendingOrders.push({ zone, orders: [order] });// Queda pendiente la orden porque no se puede despachar al ser tan tarde.
 
+          const scheduleRule = new schedule.RecurrenceRule();
+          scheduleRule.hour = openingDate.hour;
+          scheduleRule.minute = openingDate.minute;
+          scheduleRule.tz = "America/Bogota";
           if (findedIndex !== -1) {
-            // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-            schedule.scheduleJob(openingDate, () => {
+            // Ttarea para que se ejecute una sola vez en la fecha calculada
+
+            const myJob = schedule.scheduleJob(scheduleRule, () => {
               // Código que se ejecutará al día siguiente
               this.cancelRegisterZoneTime = false;
               console.log("asd1");
               this.registerSyncWay(order, postalCode, zone, true, true);
+              myJob.cancel();
             });
           } else {
             // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-            schedule.scheduleJob(openingDate, () => {
+            const myJob = schedule.scheduleJob(scheduleRule, () => {
               // Código que se ejecutará al día siguiente
               this.cancelRegisterZoneTime = false;
               console.log("asd2");
               this.registerSyncWay(order, postalCode, zone, false, true);
+              myJob.cancel();
             });
           }
 
@@ -142,13 +150,18 @@ export class MongoRepository implements OrderRepository {
             if (currentDate >= previousLimitDate && this.pendingOrders[findedIndex].orders.length > this.limitShipments) {
               // If cuando se cumple que los pedidos dentro de la hora previa a la limite que sean mayores a limitShipments, queda para el otro dia
               this.cancelRegisterZoneTime = true;
-              // Obtén la fecha y hora actual
+
+              const scheduleRule = new schedule.RecurrenceRule();
+              scheduleRule.hour = openingDate.hour;
+              scheduleRule.minute = openingDate.minute;
+              scheduleRule.tz = "America/Bogota";
 
               // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-              schedule.scheduleJob(openingDate, () => {
+              const myJob = schedule.scheduleJob(scheduleRule, () => {
                 // Código que se ejecutará al día siguiente
                 this.cancelRegisterZoneTime = false;
                 this.registerSyncWay(order, postalCode, zone, false, true);
+                myJob.cancel();
               });
 
               await OrderModel.create(order);
@@ -156,16 +169,22 @@ export class MongoRepository implements OrderRepository {
             } else {
 
               if (this.pendingOrders[findedIndex].orders.length === 1) {// cuando this.pendingOrders[findedIndex].orders.length es 1 es porque es la primera orden de la zona, ya que arriba se hace el primer push.
+                this.cancelRegisterZoneTime = false;
                 this.registerSyncWay(order, postalCode, zone, false, false)
-              } else { this.registerSyncWay(order, postalCode, zone, true, false); }
+              } else {
+                this.cancelRegisterZoneTime = false;
+                this.registerSyncWay(order, postalCode, zone, true, false);
+              }
             }
 
           }
         } else {
           // Zona no encontrada (quiere decir que no hay ordenes en la zona)
           if ((order.value_to_collect >= this.maxAmountPerZone)) {
+            this.cancelRegisterZoneTime = false;
             this.sendScenario(order, postalCode, zone);
           } else {
+            this.cancelRegisterZoneTime = false;
             this.registerSyncWay(order, postalCode, zone, false, false);
             return order;
           }
@@ -283,6 +302,7 @@ export class MongoRepository implements OrderRepository {
     } else {
       // Caso para cuando no hay vehículos disponibles
       this.onAvailableVehicles(order, postalCode, zone);
+      await OrderModel.create(order);
       console.log("onAvailable");
     }
   }
@@ -296,6 +316,7 @@ export class MongoRepository implements OrderRepository {
 
         if (!zoneFound) {
           if (!this.cancelRegisterZoneTime) {
+            this.cancelRegisterZoneTime = true;
             const findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
             if (findedIndex !== -1) {
               const orderIndex = this.pendingOrders[findedIndex].orders.findIndex((myOrder: OrderEntity) => myOrder.id === order.id);
@@ -439,6 +460,7 @@ export class MongoRepository implements OrderRepository {
 
       if (!!zoneVehicle) {
         clearInterval(this.myInterval);
+        this.searchingAvailableVehicles = false;
 
         const depot = await DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 });
         const myDate = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString().slice(0, 16);
@@ -526,7 +548,7 @@ export class MongoRepository implements OrderRepository {
 
         }
       }
-    }, 20000);
+    }, 10000);
     // await OrderModel.create(order);
     // return order;
   }

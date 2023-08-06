@@ -59,11 +59,13 @@ var depot_schema_1 = require("../../../depot/infrastructure/model/depot.schema")
 var orderSetting_schema_1 = require("../../../order/infrastructure/model/orderSetting.schema");
 // import { Scheduler } from "timers/promises";
 var node_schedule_1 = __importDefault(require("node-schedule"));
+var luxon_1 = require("luxon");
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
         this.maxAmountPerZone = 500000;
         this.ordersLimitPerZone = 5;
         this.pendingOrders = [];
+        this.searchingAvailableVehicles = false;
         // private zoneTime = 5400000;
         this.zoneTime = 5400000;
         this.limitHour = 17;
@@ -88,7 +90,7 @@ var MongoRepository = /** @class */ (function () {
     };
     MongoRepository.prototype.registerOrder = function (order, postalCode) {
         return __awaiter(this, void 0, void 0, function () {
-            var lastSetting, token, decoded, currentTimestamp, token, zone_1, currentDate, previousLimitDate, limitDate, openingDate, findedIndex, sumPerZone, _i, _a, orderToCount, error_1;
+            var lastSetting, token, decoded, currentTimestamp, token, zone_1, currentDate, previousLimitDate, limitDate, openingDate, findedIndex, scheduleRule, myJob_1, myJob_2, sumPerZone, _i, _a, orderToCount, scheduleRule, myJob_3, error_1;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -138,36 +140,35 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, zone_schema_1.ZoneModel.findOne({ codes: parseInt(postalCode) })];
                     case 6:
                         zone_1 = _b.sent();
-                        currentDate = new Date();
-                        previousLimitDate = new Date();
-                        limitDate = new Date();
-                        openingDate = new Date();
-                        previousLimitDate.setHours(this.limitHour - 1, this.limitMinutes, 0, 0);
-                        limitDate.setHours(this.limitHour, this.limitMinutes, 0, 0);
-                        if (currentDate > openingDate)
-                            openingDate.setDate(currentDate.getDate() + 1);
-                        openingDate.setHours(this.openingHour, this.openingMinutes, 0, 0);
+                        currentDate = luxon_1.DateTime.now().setZone('America/Bogota');
+                        previousLimitDate = luxon_1.DateTime.now().setZone('America/Bogota').set({ hour: this.limitHour - 1, minute: this.limitMinutes });
+                        limitDate = luxon_1.DateTime.now().setZone('America/Bogota').set({ hour: this.limitHour, minute: this.limitMinutes });
+                        openingDate = luxon_1.DateTime.now().setZone('America/Bogota').set({ hour: this.openingHour, minute: this.openingMinutes });
                         findedIndex = this.pendingOrders.findIndex(function (object) { return object.zone.id === zone_1.id; });
                         if (!((currentDate >= limitDate && currentDate > openingDate) || (currentDate < limitDate && currentDate < openingDate))) return [3 /*break*/, 8];
                         this.cancelRegisterZoneTime = true;
                         // console.log('La hora actual es mayor o igual a limitDate');
                         findedIndex !== -1 ? this.pendingOrders[findedIndex].orders.push(order) : this.pendingOrders.push({ zone: zone_1, orders: [order] }); // Queda pendiente la orden porque no se puede despachar al ser tan tarde.
+                        scheduleRule = new node_schedule_1.default.RecurrenceRule();
+                        scheduleRule.hour = openingDate.hour;
+                        scheduleRule.minute = openingDate.minute;
+                        scheduleRule.tz = "America/Bogota";
                         if (findedIndex !== -1) {
-                            // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-                            node_schedule_1.default.scheduleJob(openingDate, function () {
+                            myJob_1 = node_schedule_1.default.scheduleJob(scheduleRule, function () {
                                 // Código que se ejecutará al día siguiente
                                 _this.cancelRegisterZoneTime = false;
                                 console.log("asd1");
                                 _this.registerSyncWay(order, postalCode, zone_1, true, true);
+                                myJob_1.cancel();
                             });
                         }
                         else {
-                            // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-                            node_schedule_1.default.scheduleJob(openingDate, function () {
+                            myJob_2 = node_schedule_1.default.scheduleJob(scheduleRule, function () {
                                 // Código que se ejecutará al día siguiente
                                 _this.cancelRegisterZoneTime = false;
                                 console.log("asd2");
                                 _this.registerSyncWay(order, postalCode, zone_1, false, true);
+                                myJob_2.cancel();
                             });
                         }
                         return [4 /*yield*/, order_schema_1.OrderModel.create(order)];
@@ -193,12 +194,15 @@ var MongoRepository = /** @class */ (function () {
                         if (!(currentDate >= previousLimitDate && this.pendingOrders[findedIndex].orders.length > this.limitShipments)) return [3 /*break*/, 11];
                         // If cuando se cumple que los pedidos dentro de la hora previa a la limite que sean mayores a limitShipments, queda para el otro dia
                         this.cancelRegisterZoneTime = true;
-                        // Obtén la fecha y hora actual
-                        // Programa la tarea para que se ejecute una sola vez en la fecha calculada
-                        node_schedule_1.default.scheduleJob(openingDate, function () {
+                        scheduleRule = new node_schedule_1.default.RecurrenceRule();
+                        scheduleRule.hour = openingDate.hour;
+                        scheduleRule.minute = openingDate.minute;
+                        scheduleRule.tz = "America/Bogota";
+                        myJob_3 = node_schedule_1.default.scheduleJob(scheduleRule, function () {
                             // Código que se ejecutará al día siguiente
                             _this.cancelRegisterZoneTime = false;
                             _this.registerSyncWay(order, postalCode, zone_1, false, true);
+                            myJob_3.cancel();
                         });
                         return [4 /*yield*/, order_schema_1.OrderModel.create(order)];
                     case 10:
@@ -206,9 +210,11 @@ var MongoRepository = /** @class */ (function () {
                         return [2 /*return*/, order];
                     case 11:
                         if (this.pendingOrders[findedIndex].orders.length === 1) { // cuando this.pendingOrders[findedIndex].orders.length es 1 es porque es la primera orden de la zona, ya que arriba se hace el primer push.
+                            this.cancelRegisterZoneTime = false;
                             this.registerSyncWay(order, postalCode, zone_1, false, false);
                         }
                         else {
+                            this.cancelRegisterZoneTime = false;
                             this.registerSyncWay(order, postalCode, zone_1, true, false);
                         }
                         _b.label = 12;
@@ -216,9 +222,11 @@ var MongoRepository = /** @class */ (function () {
                     case 13:
                         // Zona no encontrada (quiere decir que no hay ordenes en la zona)
                         if ((order.value_to_collect >= this.maxAmountPerZone)) {
+                            this.cancelRegisterZoneTime = false;
                             this.sendScenario(order, postalCode, zone_1);
                         }
                         else {
+                            this.cancelRegisterZoneTime = false;
                             this.registerSyncWay(order, postalCode, zone_1, false, false);
                             return [2 /*return*/, order];
                         }
@@ -389,13 +397,16 @@ var MongoRepository = /** @class */ (function () {
                     case 24:
                         _g.sent();
                         return [2 /*return*/, order];
-                    case 25: return [3 /*break*/, 27];
+                    case 25: return [3 /*break*/, 28];
                     case 26:
                         // Caso para cuando no hay vehículos disponibles
                         this.onAvailableVehicles(order, postalCode, zone);
+                        return [4 /*yield*/, order_schema_1.OrderModel.create(order)];
+                    case 27:
+                        _g.sent();
                         console.log("onAvailable");
-                        _g.label = 27;
-                    case 27: return [2 /*return*/];
+                        _g.label = 28;
+                    case 28: return [2 /*return*/];
                 }
             });
         });
@@ -417,6 +428,7 @@ var MongoRepository = /** @class */ (function () {
                                         case 0:
                                             if (!!zoneFound) return [3 /*break*/, 26];
                                             if (!!this.cancelRegisterZoneTime) return [3 /*break*/, 26];
+                                            this.cancelRegisterZoneTime = true;
                                             findedIndex = this.pendingOrders.findIndex(function (object) { return object.zone.id === zone.id; });
                                             if (findedIndex !== -1) {
                                                 orderIndex = this.pendingOrders[findedIndex].orders.findIndex(function (myOrder) { return myOrder.id === order.id; });
@@ -627,6 +639,7 @@ var MongoRepository = /** @class */ (function () {
                             case 3:
                                 if (!!!zoneVehicle) return [3 /*break*/, 24];
                                 clearInterval(this.myInterval);
+                                this.searchingAvailableVehicles = false;
                                 return [4 /*yield*/, depot_schema_1.DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 })];
                             case 4:
                                 depot = _g.sent();
@@ -758,7 +771,7 @@ var MongoRepository = /** @class */ (function () {
                             case 24: return [2 /*return*/];
                         }
                     });
-                }); }, 20000);
+                }); }, 10000);
                 return [2 /*return*/];
             });
         });
