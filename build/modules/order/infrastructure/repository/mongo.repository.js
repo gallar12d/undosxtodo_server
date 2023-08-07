@@ -258,7 +258,7 @@ var MongoRepository = /** @class */ (function () {
                             })];
                     case 1:
                         zoneVehicle = _g.sent();
-                        if (!!!zoneVehicle) return [3 /*break*/, 3];
+                        if (!!zoneVehicle) return [3 /*break*/, 3];
                         return [4 /*yield*/, vehicle_schema_1.VehicleModel.findOne({
                                 $and: [{ status: "active" }, { availability: "available" }]
                             })];
@@ -442,7 +442,7 @@ var MongoRepository = /** @class */ (function () {
                                                 })];
                                         case 1:
                                             zoneVehicle = _g.sent();
-                                            if (!!!zoneVehicle) return [3 /*break*/, 3];
+                                            if (!!zoneVehicle) return [3 /*break*/, 3];
                                             return [4 /*yield*/, vehicle_schema_1.VehicleModel.findOne({
                                                     $and: [{ status: "active" }, { availability: "available" }]
                                                 })];
@@ -630,7 +630,7 @@ var MongoRepository = /** @class */ (function () {
                                     })];
                             case 1:
                                 zoneVehicle = _g.sent();
-                                if (!!!zoneVehicle) return [3 /*break*/, 3];
+                                if (!!zoneVehicle) return [3 /*break*/, 3];
                                 return [4 /*yield*/, vehicle_schema_1.VehicleModel.findOne({
                                         $and: [{ status: "active" }, { availability: "available" }]
                                     })];

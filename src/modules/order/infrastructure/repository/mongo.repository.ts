@@ -202,11 +202,11 @@ export class MongoRepository implements OrderRepository {
   public async sendScenario(order: OrderEntity, postalCode: any, zone: any): Promise<any> {
 
     const findedIndex = this.pendingOrders.findIndex(object => object.zone.id === zone.id);
-    let zoneVehicle = await VehicleModel.findOne({// Primera busqueda para vehiculos de la zona, activos y disponibles.
+    let zoneVehicle = await VehicleModel.findOne({// Primera busqueda para encontrar un vehiculo de la zona, activo y disponible.
       $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
     });
-
-    if (!!zoneVehicle) zoneVehicle = await VehicleModel.findOne({// Segunda busqueda para vehiculos activos y disponibles.
+    
+    if (!zoneVehicle) zoneVehicle = await VehicleModel.findOne({// Segunda busqueda para encontrar un vehiculo activo y disponible.
       $and: [{ status: "active" }, { availability: "available" }]
     });
 
@@ -323,11 +323,11 @@ export class MongoRepository implements OrderRepository {
               // console.log(orderIndex);
               if (orderIndex === -1) return;// si orderIndex es -1 quiere decir que ya han sido despachadas las ordenes.
             }
-            let zoneVehicle = await VehicleModel.findOne({// Primera busqueda para vehiculos de la zona, activos y disponibles.
+            let zoneVehicle = await VehicleModel.findOne({// Primera busqueda para encontrar un vehiculo de la zona, activo y disponible.
               $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
             });
-
-            if (!!zoneVehicle) zoneVehicle = await VehicleModel.findOne({// Segunda busqueda para vehiculos activos y disponibles.
+            
+            if (!zoneVehicle) zoneVehicle = await VehicleModel.findOne({// Segunda busqueda para encontrar un vehiculo activo y disponible.
               $and: [{ status: "active" }, { availability: "available" }]
             });
 
@@ -453,8 +453,8 @@ export class MongoRepository implements OrderRepository {
       let zoneVehicle = await VehicleModel.findOne({// Primera busqueda para encontrar un vehiculo de la zona, activo y disponible.
         $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
       });
-
-      if (!!zoneVehicle) zoneVehicle = await VehicleModel.findOne({// Segunda busqueda para encontrar un vehiculo activo y disponible.
+      
+      if (!zoneVehicle) zoneVehicle = await VehicleModel.findOne({// Segunda busqueda para encontrar un vehiculo activo y disponible.
         $and: [{ status: "active" }, { availability: "available" }]
       });
 
