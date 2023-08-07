@@ -141,8 +141,6 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, zone_schema_1.ZoneModel.findOne({ codes: parseInt(postalCode) })];
                     case 6:
                         zone_1 = _b.sent();
-                        // const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
-                        console.log("Se hizo pedido");
                         currentDate = luxon_1.DateTime.now().setZone('America/Bogota');
                         previousLimitDate = luxon_1.DateTime.now().setZone('America/Bogota').set({ hour: this.limitHour - 1, minute: this.limitMinutes });
                         limitDate = luxon_1.DateTime.now().setZone('America/Bogota').set({ hour: this.limitHour, minute: this.limitMinutes });

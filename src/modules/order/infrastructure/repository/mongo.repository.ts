@@ -84,7 +84,6 @@ export class MongoRepository implements OrderRepository {
       if (!!postalCode) {
         const zone = await ZoneModel.findOne({ codes: parseInt(postalCode) });
         // const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
-        console.log("Se hizo pedido");
 
         const currentDate = DateTime.now().setZone('America/Bogota');
         const previousLimitDate = DateTime.now().setZone('America/Bogota').set({ hour: this.limitHour - 1, minute: this.limitMinutes });
