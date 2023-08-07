@@ -5,7 +5,7 @@ import { OrderModel } from "../model/order.schema";
 import StatusModel from '../model/status.schema';
 import { SellerModel } from "../../../seller/infrastructure/model/seller.schema";
 import axios from 'axios';
-import { OrderValue } from "../../domain/order.value";
+// import { OrderValue } from "../../domain/order.value";
 import { ZoneModel } from "../../../zone/infrastructure/model/zone.schema";
 import jwt from "jsonwebtoken";
 import { VehicleModel } from "../../../vehicle/infrastructure/model/vehicle.schema";
@@ -65,7 +65,7 @@ export class MongoRepository implements OrderRepository {
         this.tokenR99 = token.data.access_token;
 
       } else {
-        const decoded = jwt.decode(this.tokenR99);
+        const decoded: any = jwt.decode(this.tokenR99);
         if (!decoded || !decoded.exp) {
           return true; // El token no es válido o no tiene fecha de expiración
         }
@@ -84,6 +84,7 @@ export class MongoRepository implements OrderRepository {
       if (!!postalCode) {
         const zone = await ZoneModel.findOne({ codes: parseInt(postalCode) });
         // const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
+        console.log("Se hizo pedido");
 
         const currentDate = DateTime.now().setZone('America/Bogota');
         const previousLimitDate = DateTime.now().setZone('America/Bogota').set({ hour: this.limitHour - 1, minute: this.limitMinutes });
@@ -798,7 +799,7 @@ export class MongoRepository implements OrderRepository {
         this.tokenR99 = token.data.access_token;
 
       } else {
-        const decoded = jwt.decode(this.tokenR99);
+        const decoded: any = jwt.decode(this.tokenR99);
         if (!decoded || !decoded.exp) {
           return true; // El token no es válido o no tiene fecha de expiración
         }

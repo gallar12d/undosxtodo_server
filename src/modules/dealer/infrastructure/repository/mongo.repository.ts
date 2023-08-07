@@ -11,7 +11,22 @@ export class MongoRepository implements DealerRepository {
     public async createDealer(newDealer: DealerEntity): Promise<any | null> {
 
         // try {
-            if (!this.tokenR99) {
+        if (!this.tokenR99) {
+            const token = await axios.post(`https://api.ruta99.co/oauth/token`, {
+                "grant_type": "client_credentials",
+                "client_id": "1007",
+                "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
+            });
+
+            this.tokenR99 = token.data.access_token;
+
+        } else {
+            const decoded: any = jwt.decode(this.tokenR99);
+            if (!decoded || !decoded.exp) {
+                return true; // El token no es válido o no tiene fecha de expiración
+            }
+            const currentTimestamp = Math.floor(Date.now() / 1000);
+            if (decoded.exp < currentTimestamp) {
                 const token = await axios.post(`https://api.ruta99.co/oauth/token`, {
                     "grant_type": "client_credentials",
                     "client_id": "1007",
@@ -19,37 +34,22 @@ export class MongoRepository implements DealerRepository {
                 });
 
                 this.tokenR99 = token.data.access_token;
-
-            } else {
-                const decoded = jwt.decode(this.tokenR99);
-                if (!decoded || !decoded.exp) {
-                    return true; // El token no es válido o no tiene fecha de expiración
-                }
-                const currentTimestamp = Math.floor(Date.now() / 1000);
-                if (decoded.exp < currentTimestamp) {
-                    const token = await axios.post(`https://api.ruta99.co/oauth/token`, {
-                        "grant_type": "client_credentials",
-                        "client_id": "1007",
-                        "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
-                    });
-
-                    this.tokenR99 = token.data.access_token;
-                }
             }
+        }
 
-            const reqDealer = await axios.post(`https://api.ruta99.co/v1/user`, newDealer, {
-                headers: {
-                    Authorization: `Bearer ${this.tokenR99}`
-                }
-            });
-
-            if (reqDealer.status === 201) {
-                newDealer.ruta99_id = reqDealer.data.user.id;
-                const myNewDealer = await DealerModel.create(newDealer);
-                return myNewDealer;
-            } else {
-                return 400;
+        const reqDealer = await axios.post(`https://api.ruta99.co/v1/user`, newDealer, {
+            headers: {
+                Authorization: `Bearer ${this.tokenR99}`
             }
+        });
+
+        if (reqDealer.status === 201) {
+            newDealer.ruta99_id = reqDealer.data.user.id;
+            const myNewDealer = await DealerModel.create(newDealer);
+            return myNewDealer;
+        } else {
+            return 400;
+        }
 
         // } catch (error) {
         //     const message = error.response.data.errors;

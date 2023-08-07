@@ -22,7 +22,7 @@ export class MongoRepository implements VehicleRepository {
             this.tokenR99 = token.data.access_token;
 
         } else {
-            const decoded = jwt.decode(this.tokenR99);
+            const decoded: any = jwt.decode(this.tokenR99);
             if (!decoded || !decoded.exp) {
                 return true; // El token no es válido o no tiene fecha de expiración
             }

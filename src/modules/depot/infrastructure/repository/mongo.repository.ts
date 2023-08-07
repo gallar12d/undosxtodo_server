@@ -5,7 +5,7 @@ import { SellerModel } from '../../../seller/infrastructure/model/seller.schema'
 import jwt from "jsonwebtoken";
 // import bcrypt from "bcrypt";
 import mongoose from "mongoose";
-import axios from 'axios';
+import axios from "axios";
 
 export class MongoRepository implements DepotRepository {
 
@@ -23,7 +23,7 @@ export class MongoRepository implements DepotRepository {
             this.tokenR99 = token.data.access_token;
 
         } else {
-            const decoded = jwt.decode(this.tokenR99);
+            const decoded: any = jwt.decode(this.tokenR99);
             if (!decoded || !decoded.exp) {
                 return true; // El token no es válido o no tiene fecha de expiración
             }
@@ -90,7 +90,7 @@ export class MongoRepository implements DepotRepository {
             this.tokenR99 = token.data.access_token;
 
         } else {
-            const decoded = jwt.decode(this.tokenR99);
+            const decoded: any = jwt.decode(this.tokenR99);
             if (!decoded || !decoded.exp) {
                 return true; // El token no es válido o no tiene fecha de expiración
             }
@@ -158,6 +158,7 @@ export class MongoRepository implements DepotRepository {
         for await (var depot of depots.docs) {
             depot.seller = (await SellerModel.findOne({ _id: depot.seller_id })).name;
         }
+        console.log(depots);
 
         return depots;
     }

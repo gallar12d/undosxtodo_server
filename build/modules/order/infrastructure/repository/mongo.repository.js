@@ -52,6 +52,7 @@ var order_schema_1 = require("../model/order.schema");
 var status_schema_1 = __importDefault(require("../model/status.schema"));
 var seller_schema_1 = require("../../../seller/infrastructure/model/seller.schema");
 var axios_1 = __importDefault(require("axios"));
+// import { OrderValue } from "../../domain/order.value";
 var zone_schema_1 = require("../../../zone/infrastructure/model/zone.schema");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var vehicle_schema_1 = require("../../../vehicle/infrastructure/model/vehicle.schema");
@@ -140,6 +141,8 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, zone_schema_1.ZoneModel.findOne({ codes: parseInt(postalCode) })];
                     case 6:
                         zone_1 = _b.sent();
+                        // const now = new Date(Date.now() - 5 * 60 * 60 * 1000);
+                        console.log("Se hizo pedido");
                         currentDate = luxon_1.DateTime.now().setZone('America/Bogota');
                         previousLimitDate = luxon_1.DateTime.now().setZone('America/Bogota').set({ hour: this.limitHour - 1, minute: this.limitMinutes });
                         limitDate = luxon_1.DateTime.now().setZone('America/Bogota').set({ hour: this.limitHour, minute: this.limitMinutes });

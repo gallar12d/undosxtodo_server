@@ -42,11 +42,11 @@ var dbInit = function () { return __awaiter(void 0, void 0, void 0, function () 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                // await connect(`mongodb+srv://admin:admin@cluster0.rau7epe.mongodb.net/?retryWrites=true&w=majority`);
                 (0, mongoose_1.set)("strictQuery", false);
-                return [4 /*yield*/, (0, mongoose_1.connect)("".concat(DB_URI))];
+                return [4 /*yield*/, (0, mongoose_1.connect)("mongodb+srv://admin:admin@cluster0.rau7epe.mongodb.net/?retryWrites=true&w=majority")];
             case 1:
                 _a.sent();
+                // await connect(`${DB_URI}`);
                 console.log("Init DB");
                 return [2 /*return*/];
         }

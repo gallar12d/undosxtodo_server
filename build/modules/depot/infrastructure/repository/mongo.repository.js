@@ -280,7 +280,9 @@ var MongoRepository = /** @class */ (function () {
                         if (e_1) throw e_1.error;
                         return [7 /*endfinally*/];
                     case 15: return [7 /*endfinally*/];
-                    case 16: return [2 /*return*/, depots];
+                    case 16:
+                        console.log(depots);
+                        return [2 /*return*/, depots];
                 }
             });
         });
