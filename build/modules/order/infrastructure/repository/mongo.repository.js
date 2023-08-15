@@ -66,7 +66,6 @@ var MongoRepository = /** @class */ (function () {
         this.maxAmountPerZone = 500000;
         this.ordersLimitPerZone = 5;
         this.pendingOrders = [];
-        this.searchingAvailableVehicles = false;
         // private zoneTime = 5400000;
         this.zoneTime = 5400000;
         this.limitHour = 17;
@@ -74,7 +73,6 @@ var MongoRepository = /** @class */ (function () {
         this.limitShipments = 5;
         this.openingHour = 7;
         this.openingMinutes = 0;
-        this.cancelRegisterZoneTime = false;
     }
     MongoRepository.prototype.findOrder = function (id) {
         return __awaiter(this, void 0, void 0, function () {
@@ -91,13 +89,11 @@ var MongoRepository = /** @class */ (function () {
     };
     MongoRepository.prototype.registerOrder = function (order, postalCode) {
         return __awaiter(this, void 0, void 0, function () {
-            var lastSetting, token, decoded, currentTimestamp, token, zone_1, currentDate, previousLimitDate, limitDate, openingDate, findedIndex, scheduleRule, myJob_1, myJob_2, sumPerZone, _i, _a, orderToCount, scheduleRule, myJob_3, error_1;
+            var lastSetting, token, decoded, currentTimestamp, token, zone_1, currentDate, previousLimitDate, limitDate, openingDate, findedIndex, scheduleRule, myJob_1, myJob_2, sumPerZone, _i, _a, orderToCount, scheduleRule, myJob_3;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0:
-                        _b.trys.push([0, 17, , 18]);
-                        return [4 /*yield*/, orderSetting_schema_1.OrderSettingModel.findOne().sort({ createdAt: -1 })];
+                    case 0: return [4 /*yield*/, orderSetting_schema_1.OrderSettingModel.findOne().sort({ createdAt: -1 })];
                     case 1:
                         lastSetting = _b.sent();
                         if (!!lastSetting) {
@@ -147,7 +143,6 @@ var MongoRepository = /** @class */ (function () {
                         openingDate = luxon_1.DateTime.now().setZone('America/Bogota').set({ hour: this.openingHour, minute: this.openingMinutes });
                         findedIndex = this.pendingOrders.findIndex(function (object) { return object.zone.id === zone_1.id; });
                         if (!((currentDate >= limitDate && currentDate > openingDate) || (currentDate < limitDate && currentDate < openingDate))) return [3 /*break*/, 8];
-                        this.cancelRegisterZoneTime = true;
                         // console.log('La hora actual es mayor o igual a limitDate');
                         findedIndex !== -1 ? this.pendingOrders[findedIndex].orders.push(order) : this.pendingOrders.push({ zone: zone_1, orders: [order] }); // Queda pendiente la orden porque no se puede despachar al ser tan tarde.
                         scheduleRule = new node_schedule_1.default.RecurrenceRule();
@@ -157,18 +152,14 @@ var MongoRepository = /** @class */ (function () {
                         if (findedIndex !== -1) {
                             myJob_1 = node_schedule_1.default.scheduleJob(scheduleRule, function () {
                                 // Código que se ejecutará al día siguiente
-                                _this.cancelRegisterZoneTime = false;
-                                console.log("asd1");
-                                _this.registerSyncWay(order, postalCode, zone_1, true, true);
+                                _this.registerSyncWay(order, postalCode, zone_1, true, true, false);
                                 myJob_1.cancel();
                             });
                         }
                         else {
                             myJob_2 = node_schedule_1.default.scheduleJob(scheduleRule, function () {
                                 // Código que se ejecutará al día siguiente
-                                _this.cancelRegisterZoneTime = false;
-                                console.log("asd2");
-                                _this.registerSyncWay(order, postalCode, zone_1, false, true);
+                                _this.registerSyncWay(order, postalCode, zone_1, false, true, false);
                                 myJob_2.cancel();
                             });
                         }
@@ -193,16 +184,13 @@ var MongoRepository = /** @class */ (function () {
                         return [3 /*break*/, 12];
                     case 9:
                         if (!(currentDate >= previousLimitDate && this.pendingOrders[findedIndex].orders.length > this.limitShipments)) return [3 /*break*/, 11];
-                        // If cuando se cumple que los pedidos dentro de la hora previa a la limite que sean mayores a limitShipments, queda para el otro dia
-                        this.cancelRegisterZoneTime = true;
                         scheduleRule = new node_schedule_1.default.RecurrenceRule();
                         scheduleRule.hour = openingDate.hour;
                         scheduleRule.minute = openingDate.minute;
                         scheduleRule.tz = "America/Bogota";
                         myJob_3 = node_schedule_1.default.scheduleJob(scheduleRule, function () {
                             // Código que se ejecutará al día siguiente
-                            _this.cancelRegisterZoneTime = false;
-                            _this.registerSyncWay(order, postalCode, zone_1, false, true);
+                            _this.registerSyncWay(order, postalCode, zone_1, false, true, false);
                             myJob_3.cancel();
                         });
                         return [4 /*yield*/, order_schema_1.OrderModel.create(order)];
@@ -211,35 +199,26 @@ var MongoRepository = /** @class */ (function () {
                         return [2 /*return*/, order];
                     case 11:
                         if (this.pendingOrders[findedIndex].orders.length === 1) { // cuando this.pendingOrders[findedIndex].orders.length es 1 es porque es la primera orden de la zona, ya que arriba se hace el primer push.
-                            this.cancelRegisterZoneTime = false;
-                            this.registerSyncWay(order, postalCode, zone_1, false, false);
+                            this.registerSyncWay(order, postalCode, zone_1, false, false, false);
                         }
                         else {
-                            this.cancelRegisterZoneTime = false;
-                            this.registerSyncWay(order, postalCode, zone_1, true, false);
+                            this.registerSyncWay(order, postalCode, zone_1, true, false, true);
                         }
                         _b.label = 12;
                     case 12: return [3 /*break*/, 14];
                     case 13:
                         // Zona no encontrada (quiere decir que no hay ordenes en la zona)
                         if ((order.value_to_collect >= this.maxAmountPerZone)) {
-                            this.cancelRegisterZoneTime = false;
                             this.sendScenario(order, postalCode, zone_1);
                         }
                         else {
-                            this.cancelRegisterZoneTime = false;
-                            this.registerSyncWay(order, postalCode, zone_1, false, false);
+                            this.registerSyncWay(order, postalCode, zone_1, false, false, false);
                             return [2 /*return*/, order];
                         }
                         _b.label = 14;
                     case 14: return [3 /*break*/, 16];
                     case 15: return [2 /*return*/, "No postal code"];
                     case 16: return [2 /*return*/, order];
-                    case 17:
-                        error_1 = _b.sent();
-                        console.log(error_1.response.data);
-                        return [3 /*break*/, 18];
-                    case 18: return [2 /*return*/];
                 }
             });
         });
@@ -380,19 +359,25 @@ var MongoRepository = /** @class */ (function () {
                         }).then(function (res) {
                             console.log(res.data.message);
                             var secondInterval;
-                            secondInterval = setInterval(function () {
-                                axios_1.default.get("https://api.ruta99.co/v1/scenario/".concat(resScenario_1.data.scenario.id, "/fetch-best-solution"), {
-                                    headers: {
-                                        Authorization: "Bearer ".concat(_this.tokenR99)
+                            secondInterval = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                                var scenarioStatus;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, axios_1.default.get("https://api.ruta99.co/v1/scenario/".concat(resScenario_1.data.scenario.id, "/fetch-best-solution"), {
+                                                headers: {
+                                                    Authorization: "Bearer ".concat(this.tokenR99)
+                                                }
+                                            })];
+                                        case 1:
+                                            scenarioStatus = _a.sent();
+                                            if (scenarioStatus.status === 200) {
+                                                if (scenarioStatus.data.status === 'solved')
+                                                    clearInterval(secondInterval);
+                                            }
+                                            return [2 /*return*/];
                                     }
-                                }).then(function (data) { return __awaiter(_this, void 0, void 0, function () {
-                                    return __generator(this, function (_a) {
-                                        if (data.data.status === 'solved')
-                                            clearInterval(secondInterval);
-                                        return [2 /*return*/];
-                                    });
-                                }); });
-                            }, 10000);
+                                });
+                            }); }, 10000);
                         });
                         return [4 /*yield*/, order_schema_1.OrderModel.create(order)];
                     case 24:
@@ -412,187 +397,196 @@ var MongoRepository = /** @class */ (function () {
             });
         });
     };
-    MongoRepository.prototype.registerSyncWay = function (order, postalCode, zone, zoneFound, orderCreated) {
+    MongoRepository.prototype.registerSyncWay = function (order, postalCode, zone, zoneFound, orderCreated, cancelRegisterZoneTime) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         console.log("Register sync way");
-                        try {
-                            setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                                var findedIndex, orderIndex, zoneVehicle, depot, myDate, resScenario_2, _a, _b, _c, myOrder, resOrder, e_2_1;
-                                var _this = this;
-                                var _d, e_2, _e, _f;
-                                return __generator(this, function (_g) {
-                                    switch (_g.label) {
-                                        case 0:
-                                            if (!!zoneFound) return [3 /*break*/, 26];
-                                            if (!!this.cancelRegisterZoneTime) return [3 /*break*/, 26];
-                                            this.cancelRegisterZoneTime = true;
-                                            findedIndex = this.pendingOrders.findIndex(function (object) { return object.zone.id === zone.id; });
-                                            if (findedIndex !== -1) {
-                                                orderIndex = this.pendingOrders[findedIndex].orders.findIndex(function (myOrder) { return myOrder.id === order.id; });
-                                                // console.log(orderIndex);
-                                                if (orderIndex === -1)
-                                                    return [2 /*return*/]; // si orderIndex es -1 quiere decir que ya han sido despachadas las ordenes.
-                                            }
-                                            return [4 /*yield*/, vehicle_schema_1.VehicleModel.findOne({
-                                                    $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
-                                                })];
-                                        case 1:
-                                            zoneVehicle = _g.sent();
-                                            if (!!zoneVehicle) return [3 /*break*/, 3];
-                                            return [4 /*yield*/, vehicle_schema_1.VehicleModel.findOne({
-                                                    $and: [{ status: "active" }, { availability: "available" }]
-                                                })];
-                                        case 2:
-                                            zoneVehicle = _g.sent();
-                                            _g.label = 3;
-                                        case 3:
-                                            if (!!!zoneVehicle) return [3 /*break*/, 25];
-                                            return [4 /*yield*/, depot_schema_1.DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 })];
-                                        case 4:
-                                            depot = _g.sent();
-                                            myDate = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString().slice(0, 16);
-                                            return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/v1/scenario", {
-                                                    date: myDate,
-                                                    name: "Escenario ".concat(myDate),
-                                                    depot_id: depot.ruta99_id,
-                                                    vehicles: [zoneVehicle.ruta99_id],
-                                                    service_time: 10,
-                                                    start_time: "08:00",
-                                                    end_time: "20:00"
-                                                }, {
-                                                    headers: {
-                                                        Authorization: "Bearer ".concat(this.tokenR99)
-                                                    }
-                                                })];
-                                        case 5:
-                                            resScenario_2 = _g.sent();
-                                            if (!(resScenario_2.status === 201)) return [3 /*break*/, 24];
-                                            return [4 /*yield*/, vehicle_schema_1.VehicleModel.updateOne({ id: zoneVehicle.id }, { $set: { availability: "busy" } })];
-                                        case 6:
-                                            _g.sent();
-                                            _g.label = 7;
-                                        case 7:
-                                            _g.trys.push([7, 17, 18, 23]);
-                                            _a = true, _b = __asyncValues(this.pendingOrders[findedIndex].orders);
-                                            _g.label = 8;
-                                        case 8: return [4 /*yield*/, _b.next()];
-                                        case 9:
-                                            if (!(_c = _g.sent(), _d = _c.done, !_d)) return [3 /*break*/, 16];
-                                            _f = _c.value;
-                                            _a = false;
-                                            _g.label = 10;
-                                        case 10:
-                                            _g.trys.push([10, , 14, 15]);
-                                            myOrder = _f;
-                                            return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/v1/order", {
-                                                    scenario_id: resScenario_2.data.scenario.id,
-                                                    code: myOrder.guide,
-                                                    country: "Colombia",
-                                                    state: myOrder.client_state,
-                                                    city: myOrder.client_city,
-                                                    address: myOrder.client_address,
-                                                    reference: myOrder.client_address_detail,
-                                                    zip_code: postalCode,
-                                                    demand: 1,
-                                                    packages: 1,
-                                                    customer: {
-                                                        code: "545345345",
-                                                        name: myOrder.client_name + " " + myOrder.client_surname,
-                                                        email: myOrder.client_email,
-                                                        phone: myOrder.client_telephone
-                                                    },
-                                                    items: myOrder.products.map(function (product) {
-                                                        return {
-                                                            quantity: product.quantity < 0 ? (product.quantity) * -1 : product.quantity,
-                                                            description: product.name,
-                                                            amount: product.price
-                                                        };
-                                                    }),
-                                                    window_start_time: "08:00",
-                                                    window_end_time: "18:00",
-                                                    cash_on_delivery: myOrder.value_to_collect === 0 ? false : true,
-                                                    cash_amount: myOrder.value_to_collect,
-                                                    cash_currency: "COP",
-                                                    type: "delivery"
-                                                }, {
-                                                    headers: {
-                                                        Authorization: "Bearer ".concat(this.tokenR99)
-                                                    }
-                                                })];
-                                        case 11:
-                                            resOrder = _g.sent();
-                                            if (!(resOrder.status === 201)) return [3 /*break*/, 13];
-                                            myOrder.scenario_id = resScenario_2.data.scenario.id;
-                                            myOrder.ruta99_id = resOrder.data.order.id;
-                                            return [4 /*yield*/, order_schema_1.OrderModel.updateOne({ id: myOrder.id }, { $set: { ruta99_id: myOrder.ruta99_id, scenario_id: myOrder.scenario_id } })];
-                                        case 12:
-                                            _g.sent();
-                                            _g.label = 13;
-                                        case 13: return [3 /*break*/, 15];
-                                        case 14:
-                                            _a = true;
-                                            return [7 /*endfinally*/];
-                                        case 15: return [3 /*break*/, 8];
-                                        case 16: return [3 /*break*/, 23];
-                                        case 17:
-                                            e_2_1 = _g.sent();
-                                            e_2 = { error: e_2_1 };
-                                            return [3 /*break*/, 23];
-                                        case 18:
-                                            _g.trys.push([18, , 21, 22]);
-                                            if (!(!_a && !_d && (_e = _b.return))) return [3 /*break*/, 20];
-                                            return [4 /*yield*/, _e.call(_b)];
-                                        case 19:
-                                            _g.sent();
-                                            _g.label = 20;
-                                        case 20: return [3 /*break*/, 22];
-                                        case 21:
-                                            if (e_2) throw e_2.error;
-                                            return [7 /*endfinally*/];
-                                        case 22: return [7 /*endfinally*/];
-                                        case 23:
-                                            // console.log(this.pendingOrders);
-                                            this.pendingOrders[findedIndex].orders = [];
-                                            axios_1.default.post("https://api.ruta99.co/v1/scenario/".concat(resScenario_2.data.scenario.id, "/optimize"), {}, {
+                        // try {
+                        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                            var findedIndex, orderIndex, zoneVehicle, depot, myDate, resScenario_2, _a, _b, _c, myOrder, resOrder, error_1, e_2_1;
+                            var _this = this;
+                            var _d, e_2, _e, _f;
+                            return __generator(this, function (_g) {
+                                switch (_g.label) {
+                                    case 0:
+                                        if (!!zoneFound) return [3 /*break*/, 29];
+                                        if (!!cancelRegisterZoneTime) return [3 /*break*/, 29];
+                                        findedIndex = this.pendingOrders.findIndex(function (object) { return object.zone.id === zone.id; });
+                                        if (findedIndex !== -1) {
+                                            orderIndex = this.pendingOrders[findedIndex].orders.findIndex(function (myOrder) { return myOrder.id === order.id; });
+                                            // console.log(orderIndex);
+                                            if (orderIndex === -1)
+                                                return [2 /*return*/]; // si orderIndex es -1 quiere decir que ya han sido despachadas las ordenes.
+                                        }
+                                        return [4 /*yield*/, vehicle_schema_1.VehicleModel.findOne({
+                                                $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
+                                            })];
+                                    case 1:
+                                        zoneVehicle = _g.sent();
+                                        if (!!zoneVehicle) return [3 /*break*/, 3];
+                                        return [4 /*yield*/, vehicle_schema_1.VehicleModel.findOne({
+                                                $and: [{ status: "active" }, { availability: "available" }]
+                                            })];
+                                    case 2:
+                                        zoneVehicle = _g.sent();
+                                        _g.label = 3;
+                                    case 3:
+                                        if (!!!zoneVehicle) return [3 /*break*/, 28];
+                                        return [4 /*yield*/, depot_schema_1.DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 })];
+                                    case 4:
+                                        depot = _g.sent();
+                                        myDate = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString().slice(0, 16);
+                                        return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/v1/scenario", {
+                                                date: myDate,
+                                                name: "Escenario ".concat(myDate),
+                                                depot_id: depot.ruta99_id,
+                                                vehicles: [zoneVehicle.ruta99_id],
+                                                service_time: 10,
+                                                start_time: "08:00",
+                                                end_time: "20:00"
+                                            }, {
                                                 headers: {
                                                     Authorization: "Bearer ".concat(this.tokenR99)
                                                 }
-                                            }).then(function (res) {
-                                                console.log(res.data.message);
-                                                var secondInterval;
-                                                secondInterval = setInterval(function () {
-                                                    axios_1.default.get("https://api.ruta99.co/v1/scenario/".concat(resScenario_2.data.scenario.id, "/fetch-best-solution"), {
-                                                        headers: {
-                                                            Authorization: "Bearer ".concat(_this.tokenR99)
-                                                        }
-                                                    }).then(function (data) { return __awaiter(_this, void 0, void 0, function () {
-                                                        return __generator(this, function (_a) {
-                                                            if (data.data.status === 'solved')
-                                                                clearInterval(secondInterval);
+                                            })];
+                                    case 5:
+                                        resScenario_2 = _g.sent();
+                                        if (!(resScenario_2.status === 201)) return [3 /*break*/, 27];
+                                        return [4 /*yield*/, vehicle_schema_1.VehicleModel.updateOne({ id: zoneVehicle.id }, { $set: { availability: "busy" } })];
+                                    case 6:
+                                        _g.sent();
+                                        _g.label = 7;
+                                    case 7:
+                                        _g.trys.push([7, 20, 21, 26]);
+                                        _a = true, _b = __asyncValues(this.pendingOrders[findedIndex].orders);
+                                        _g.label = 8;
+                                    case 8: return [4 /*yield*/, _b.next()];
+                                    case 9:
+                                        if (!(_c = _g.sent(), _d = _c.done, !_d)) return [3 /*break*/, 19];
+                                        _f = _c.value;
+                                        _a = false;
+                                        _g.label = 10;
+                                    case 10:
+                                        _g.trys.push([10, , 17, 18]);
+                                        myOrder = _f;
+                                        _g.label = 11;
+                                    case 11:
+                                        _g.trys.push([11, 15, , 16]);
+                                        return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/v1/order", {
+                                                scenario_id: resScenario_2.data.scenario.id,
+                                                code: myOrder.guide,
+                                                country: "Colombia",
+                                                state: myOrder.client_state,
+                                                city: myOrder.client_city,
+                                                address: myOrder.client_address,
+                                                reference: myOrder.client_address_detail,
+                                                zip_code: postalCode,
+                                                demand: 1,
+                                                packages: 1,
+                                                customer: {
+                                                    code: "545345345",
+                                                    name: myOrder.client_name + " " + myOrder.client_surname,
+                                                    email: myOrder.client_email,
+                                                    phone: myOrder.client_telephone
+                                                },
+                                                items: myOrder.products.map(function (product) {
+                                                    return {
+                                                        quantity: product.quantity < 0 ? (product.quantity) * -1 : product.quantity,
+                                                        description: product.name,
+                                                        amount: product.price
+                                                    };
+                                                }),
+                                                window_start_time: "08:00",
+                                                window_end_time: "18:00",
+                                                cash_on_delivery: myOrder.value_to_collect === 0 ? false : true,
+                                                cash_amount: myOrder.value_to_collect,
+                                                cash_currency: "COP",
+                                                type: "delivery"
+                                            }, {
+                                                headers: {
+                                                    Authorization: "Bearer ".concat(this.tokenR99)
+                                                }
+                                            })];
+                                    case 12:
+                                        resOrder = _g.sent();
+                                        if (!(resOrder.status === 201)) return [3 /*break*/, 14];
+                                        myOrder.scenario_id = resScenario_2.data.scenario.id;
+                                        myOrder.ruta99_id = resOrder.data.order.id;
+                                        return [4 /*yield*/, order_schema_1.OrderModel.updateOne({ id: myOrder.id }, { $set: { ruta99_id: myOrder.ruta99_id, scenario_id: myOrder.scenario_id } })];
+                                    case 13:
+                                        _g.sent();
+                                        _g.label = 14;
+                                    case 14: return [3 /*break*/, 16];
+                                    case 15:
+                                        error_1 = _g.sent();
+                                        console.log(error_1.response.data);
+                                        return [3 /*break*/, 16];
+                                    case 16: return [3 /*break*/, 18];
+                                    case 17:
+                                        _a = true;
+                                        return [7 /*endfinally*/];
+                                    case 18: return [3 /*break*/, 8];
+                                    case 19: return [3 /*break*/, 26];
+                                    case 20:
+                                        e_2_1 = _g.sent();
+                                        e_2 = { error: e_2_1 };
+                                        return [3 /*break*/, 26];
+                                    case 21:
+                                        _g.trys.push([21, , 24, 25]);
+                                        if (!(!_a && !_d && (_e = _b.return))) return [3 /*break*/, 23];
+                                        return [4 /*yield*/, _e.call(_b)];
+                                    case 22:
+                                        _g.sent();
+                                        _g.label = 23;
+                                    case 23: return [3 /*break*/, 25];
+                                    case 24:
+                                        if (e_2) throw e_2.error;
+                                        return [7 /*endfinally*/];
+                                    case 25: return [7 /*endfinally*/];
+                                    case 26:
+                                        // console.log(this.pendingOrders);
+                                        this.pendingOrders[findedIndex].orders = [];
+                                        axios_1.default.post("https://api.ruta99.co/v1/scenario/".concat(resScenario_2.data.scenario.id, "/optimize"), {}, {
+                                            headers: {
+                                                Authorization: "Bearer ".concat(this.tokenR99)
+                                            }
+                                        }).then(function (res) {
+                                            console.log(res.data.message);
+                                            var secondInterval;
+                                            secondInterval = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                                                var scenarioStatus;
+                                                return __generator(this, function (_a) {
+                                                    switch (_a.label) {
+                                                        case 0: return [4 /*yield*/, axios_1.default.get("https://api.ruta99.co/v1/scenario/".concat(resScenario_2.data.scenario.id, "/fetch-best-solution"), {
+                                                                headers: {
+                                                                    Authorization: "Bearer ".concat(this.tokenR99)
+                                                                }
+                                                            })];
+                                                        case 1:
+                                                            scenarioStatus = _a.sent();
+                                                            if (scenarioStatus.status === 200) {
+                                                                if (scenarioStatus.data.status === 'solved')
+                                                                    clearInterval(secondInterval);
+                                                            }
                                                             return [2 /*return*/];
-                                                        });
-                                                    }); });
-                                                }, 10000);
-                                            });
-                                            _g.label = 24;
-                                        case 24: return [3 /*break*/, 26];
-                                        case 25:
-                                            // Caso para cuando no hay vehículos disponibles
-                                            this.onAvailableVehicles(order, postalCode, zone);
-                                            console.log("onAvailable");
-                                            _g.label = 26;
-                                        case 26: return [2 /*return*/];
-                                    }
-                                });
-                            }); }, this.zoneTime); // zoneTime es el tiempo que se va a demorar en ejecutar
-                        }
-                        catch (error) {
-                            console.log(error.response.data.data);
-                        }
+                                                    }
+                                                });
+                                            }); }, 10000);
+                                        });
+                                        _g.label = 27;
+                                    case 27: return [3 /*break*/, 29];
+                                    case 28:
+                                        // Caso para cuando no hay vehículos disponibles
+                                        this.onAvailableVehicles(order, postalCode, zone);
+                                        console.log("onAvailable");
+                                        _g.label = 29;
+                                    case 29: return [2 /*return*/];
+                                }
+                            });
+                        }); }, this.zoneTime); // zoneTime es el tiempo que se va a demorar en ejecutar
                         if (!!orderCreated) return [3 /*break*/, 2];
                         return [4 /*yield*/, order_schema_1.OrderModel.create(order)];
                     case 1:
@@ -605,25 +599,22 @@ var MongoRepository = /** @class */ (function () {
     };
     MongoRepository.prototype.onAvailableVehicles = function (order, postalCode, zone) {
         return __awaiter(this, void 0, void 0, function () {
-            var findedIndex, orderIndex;
+            var findedIndex, orderIndex, theInterval;
             var _this = this;
             return __generator(this, function (_a) {
-                if (this.searchingAvailableVehicles)
-                    return [2 /*return*/];
                 findedIndex = this.pendingOrders.findIndex(function (object) { return object.zone.id === zone.id; });
                 if (findedIndex !== -1) {
                     orderIndex = this.pendingOrders[findedIndex].orders.findIndex(function (myOrder) { return myOrder.id === order.id; });
                     if (orderIndex === -1)
                         return [2 /*return*/]; // si orderIndex es -1 quiere decir que ya han sido despachadas las ordenes.
                 }
-                this.myInterval = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                theInterval = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
                     var zoneVehicle, depot, myDate, resScenario_3, _a, _b, _c, myOrder, resOrder, e_3_1;
                     var _this = this;
                     var _d, e_3, _e, _f;
                     return __generator(this, function (_g) {
                         switch (_g.label) {
                             case 0:
-                                this.searchingAvailableVehicles = true;
                                 console.log("intentando");
                                 return [4 /*yield*/, vehicle_schema_1.VehicleModel.findOne({
                                         $and: [{ zone_id: zone.id }, { status: "active" }, { availability: "available" }]
@@ -639,8 +630,7 @@ var MongoRepository = /** @class */ (function () {
                                 _g.label = 3;
                             case 3:
                                 if (!!!zoneVehicle) return [3 /*break*/, 24];
-                                clearInterval(this.myInterval);
-                                this.searchingAvailableVehicles = false;
+                                clearInterval(theInterval);
                                 return [4 /*yield*/, depot_schema_1.DepotModel.findOne({ id: order.depot_id }, { ruta99_id: 1 })];
                             case 4:
                                 depot = _g.sent();
@@ -754,19 +744,25 @@ var MongoRepository = /** @class */ (function () {
                                 }).then(function (res) {
                                     console.log(res.data.message);
                                     var secondInterval;
-                                    secondInterval = setInterval(function () {
-                                        axios_1.default.get("https://api.ruta99.co/v1/scenario/".concat(resScenario_3.data.scenario.id, "/fetch-best-solution"), {
-                                            headers: {
-                                                Authorization: "Bearer ".concat(_this.tokenR99)
+                                    secondInterval = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                                        var scenarioStatus;
+                                        return __generator(this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0: return [4 /*yield*/, axios_1.default.get("https://api.ruta99.co/v1/scenario/".concat(resScenario_3.data.scenario.id, "/fetch-best-solution"), {
+                                                        headers: {
+                                                            Authorization: "Bearer ".concat(this.tokenR99)
+                                                        }
+                                                    })];
+                                                case 1:
+                                                    scenarioStatus = _a.sent();
+                                                    if (scenarioStatus.status === 200) {
+                                                        if (scenarioStatus.data.status === 'solved')
+                                                            clearInterval(secondInterval);
+                                                    }
+                                                    return [2 /*return*/];
                                             }
-                                        }).then(function (data) { return __awaiter(_this, void 0, void 0, function () {
-                                            return __generator(this, function (_a) {
-                                                if (data.data.status === 'solved')
-                                                    clearInterval(secondInterval);
-                                                return [2 /*return*/];
-                                            });
-                                        }); });
-                                    }, 10000);
+                                        });
+                                    }); }, 10000);
                                 });
                                 _g.label = 24;
                             case 24: return [2 /*return*/];

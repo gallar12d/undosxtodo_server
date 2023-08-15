@@ -135,6 +135,7 @@ var OrderController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         err_4 = _a.sent();
+                        err_4.message = err_4.response.data.errors;
                         res.status(400).json((0, handleErrors_1.default)(err_4));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];

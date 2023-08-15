@@ -4,7 +4,7 @@ export interface OrderRepository {
   findOrder(id: string): Promise<OrderEntity | null>;
   registerOrder(order: OrderEntity, postalCode: any): Promise<OrderEntity>;
   sendScenario(order: OrderEntity, postalCode: any, zone: any): Promise<OrderEntity>;
-  registerSyncWay(order: OrderEntity, postalCode: any, zone: any, zoneFound: boolean, orderCreated: boolean): Promise<OrderEntity>;
+  registerSyncWay(order: OrderEntity, postalCode: any, zone: any, zoneFound: boolean, orderCreated: boolean, cancelRegisterZoneTime: boolean): Promise<OrderEntity>;
   onAvailableVehicles(order: OrderEntity, postalCode: any, zone: any): Promise<OrderEntity>;
   getSettings(): any;
   setSettings(limitHour: number, limitMinutes: number, maxAmountPerZone: number, ordersLimitPerZone: number, zoneTime: number, limitShipments: number,

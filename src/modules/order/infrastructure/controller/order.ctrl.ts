@@ -51,6 +51,7 @@ export class OrderController {
       const order = await this.orderService.registerOrder(req.body);
       res.json(order);
     } catch (err) {
+      err.message = err.response.data.errors;
       res.status(400).json(getErrorMessage(err));
     }
   }
