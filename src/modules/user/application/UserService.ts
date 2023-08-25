@@ -10,15 +10,17 @@ export class UserService {
     name,
     email,
     password,
-    rol
+    rol,
+    type
   }: {
     seller_id: ObjectId
     name: string;
     email: string;
     password: string;
     rol: string;
+    type: string;
   }) {
-    const userValue = new UserValue({ seller_id, name, email, password, rol, status: "inactive" });
+    const userValue = new UserValue({ seller_id, name, email, password, rol, type, status: "inactive" });
     const encripted_password = await this.userRepository.encriptPassword(
       userValue.password
     );
@@ -65,6 +67,7 @@ export class UserService {
       email: user.email,
       token: this.createToken(user.id),
       rol: user.rol,
+      type: user.type,
       status: user.status
     };
     return user_response;

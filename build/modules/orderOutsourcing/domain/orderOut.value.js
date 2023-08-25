@@ -1,0 +1,47 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OrderValue = void 0;
+var uuid_1 = require("uuid");
+var OrderValue = /** @class */ (function () {
+    function OrderValue(_a) {
+        var orderNumber = _a.orderNumber, orderId = _a.orderId, customerName = _a.customerName, customerAddress = _a.customerAddress, city = _a.city, customerEmail = _a.customerEmail, customerPhoneNumber = _a.customerPhoneNumber, sellerId = _a.sellerId, sellerName = _a.sellerName, sellerAddress = _a.sellerAddress, sellerPhoneNumber = _a.sellerPhoneNumber, expectedDeliveryDate = _a.expectedDeliveryDate, expectedPickupTime = _a.expectedPickupTime, expectedDeliveryTime = _a.expectedDeliveryTime, pickupLatitude = _a.pickupLatitude, pickupLongitude = _a.pickupLongitude, deliveryLatitude = _a.deliveryLatitude, deliveryLongitude = _a.deliveryLongitude, orderItem = _a.orderItem, tips = _a.tips, tax = _a.tax, discountAmount = _a.discountAmount, deliveryFee = _a.deliveryFee, totalOrderCost = _a.totalOrderCost, pickupInstruction = _a.pickupInstruction, deliveryInstruction = _a.deliveryInstruction, orderSource = _a.orderSource, additionalId = _a.additionalId, clientId = _a.clientId, paymentMethod = _a.paymentMethod, creditCardType = _a.creditCardType, creditCardId = _a.creditCardId, pickup = _a.pickup, dropoff = _a.dropoff, orderState = _a.orderState;
+        this.id = (0, uuid_1.v4)();
+        this.orderNumber = orderNumber;
+        this.orderId = orderId;
+        this.customerName = customerName;
+        this.customerAddress = customerAddress;
+        this.city = city;
+        this.customerEmail = customerEmail;
+        this.customerPhoneNumber = customerPhoneNumber;
+        this.sellerId = sellerId;
+        this.sellerName = sellerName;
+        this.sellerAddress = sellerAddress;
+        this.sellerPhoneNumber = sellerPhoneNumber;
+        this.expectedDeliveryDate = expectedDeliveryDate;
+        this.expectedPickupTime = expectedPickupTime;
+        this.expectedDeliveryTime = expectedDeliveryTime;
+        this.pickupLatitude = pickupLatitude;
+        this.pickupLongitude = pickupLongitude;
+        this.deliveryLatitude = deliveryLatitude;
+        this.deliveryLongitude = deliveryLongitude;
+        this.orderItem = orderItem;
+        this.tips = tips;
+        this.tax = tax;
+        this.discountAmount = discountAmount;
+        this.deliveryFee = deliveryFee;
+        this.totalOrderCost = totalOrderCost;
+        this.pickupInstruction = pickupInstruction;
+        this.deliveryInstruction = deliveryInstruction;
+        this.orderSource = orderSource;
+        this.additionalId = additionalId;
+        this.clientId = clientId;
+        this.paymentMethod = paymentMethod;
+        this.creditCardType = creditCardType;
+        this.creditCardId = creditCardId;
+        this.pickup = pickup;
+        this.dropoff = dropoff;
+        this.orderState = orderState;
+    }
+    return OrderValue;
+}());
+exports.OrderValue = OrderValue;

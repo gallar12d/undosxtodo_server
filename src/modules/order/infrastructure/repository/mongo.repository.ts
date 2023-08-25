@@ -14,6 +14,7 @@ import { OrderSettingModel } from "../../../order/infrastructure/model/orderSett
 // import { Scheduler } from "timers/promises";
 import schedule from "node-schedule";
 import { DateTime } from 'luxon';
+import Shipday from 'shipday/integration';
 
 export class MongoRepository implements OrderRepository {
 
@@ -29,6 +30,11 @@ export class MongoRepository implements OrderRepository {
   private limitShipments = 5;
   private openingHour = 7;
   private openingMinutes = 0;
+  private shipdayClient: Shipday;
+
+  public constructor() {
+    this.shipdayClient = new Shipday('A9xc9Tk8QH.dcWOv1xxmMnXFwxti9HZ', 10000);
+  }
 
   public async findOrder(id: string): Promise<any | null> {
     const user = await OrderModel.find({ id });

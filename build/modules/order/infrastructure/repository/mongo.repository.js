@@ -61,6 +61,7 @@ var orderSetting_schema_1 = require("../../../order/infrastructure/model/orderSe
 // import { Scheduler } from "timers/promises";
 var node_schedule_1 = __importDefault(require("node-schedule"));
 var luxon_1 = require("luxon");
+var integration_1 = __importDefault(require("shipday/integration"));
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
         this.maxAmountPerZone = 500000;
@@ -73,6 +74,7 @@ var MongoRepository = /** @class */ (function () {
         this.limitShipments = 5;
         this.openingHour = 7;
         this.openingMinutes = 0;
+        this.shipdayClient = new integration_1.default('A9xc9Tk8QH.dcWOv1xxmMnXFwxti9HZ', 10000);
     }
     MongoRepository.prototype.findOrder = function (id) {
         return __awaiter(this, void 0, void 0, function () {

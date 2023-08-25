@@ -11,6 +11,7 @@ const UserSchema = new Schema(
     email: String,
     password: String,
     rol: String,
+    type: String,
     status: String
   },
   { timestamps: true }

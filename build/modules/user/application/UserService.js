@@ -48,13 +48,13 @@ var UserService = /** @class */ (function () {
         };
     }
     UserService.prototype.registerUser = function (_a) {
-        var seller_id = _a.seller_id, name = _a.name, email = _a.email, password = _a.password, rol = _a.rol;
+        var seller_id = _a.seller_id, name = _a.name, email = _a.email, password = _a.password, rol = _a.rol, type = _a.type;
         return __awaiter(this, void 0, void 0, function () {
             var userValue, encripted_password, userCreated, user_response;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        userValue = new user_value_1.UserValue({ seller_id: seller_id, name: name, email: email, password: password, rol: rol, status: "inactive" });
+                        userValue = new user_value_1.UserValue({ seller_id: seller_id, name: name, email: email, password: password, rol: rol, type: type, status: "inactive" });
                         return [4 /*yield*/, this.userRepository.encriptPassword(userValue.password)];
                     case 1:
                         encripted_password = _b.sent();
@@ -130,6 +130,7 @@ var UserService = /** @class */ (function () {
                             email: user.email,
                             token: this.createToken(user.id),
                             rol: user.rol,
+                            type: user.type,
                             status: user.status
                         };
                         return [2 /*return*/, user_response];

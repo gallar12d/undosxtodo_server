@@ -34,6 +34,7 @@ var UserSchema = new mongoose_1.Schema({
     email: String,
     password: String,
     rol: String,
+    type: String,
     status: String
 }, { timestamps: true });
 var UserModel = (0, mongoose_1.model)("users", UserSchema);

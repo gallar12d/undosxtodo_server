@@ -7,6 +7,7 @@ export interface UserEntity {
     email: string;
     password: string;
     rol: string;
+    type: string;
     token?: string;
     status?: string;
 }
