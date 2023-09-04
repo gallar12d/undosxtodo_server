@@ -160,17 +160,226 @@ var MongoRepository = /** @class */ (function () {
             });
         });
     };
+    MongoRepository.prototype.getOrderOutDate = function (body) {
+        var _a, e_2, _b, _c, _d, e_3, _e, _f;
+        return __awaiter(this, void 0, void 0, function () {
+            var theDate, theYear, theMonth, theDay, ordersDate_3, _g, ordersDate_1, ordersDate_1_1, order, e_2_1, ordersDate, _h, ordersDate_2, ordersDate_2_1, order, e_3_1;
+            return __generator(this, function (_j) {
+                switch (_j.label) {
+                    case 0:
+                        theDate = body.date.split('-');
+                        theYear = parseInt(theDate[0]);
+                        theMonth = parseInt(theDate[1]);
+                        theDay = parseInt(theDate[2]);
+                        if (!(body.rol === 'superuser')) return [3 /*break*/, 17];
+                        ordersDate_3 = [];
+                        if (!Number.isNaN(theDay)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.find({ createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-01")), $lt: new Date("".concat(theYear, "-").concat(theMonth + 1, "-01")) } })];
+                    case 1:
+                        ordersDate_3 = _j.sent();
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.find({ createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-").concat(theDay)) } })];
+                    case 3:
+                        ordersDate_3 = _j.sent();
+                        _j.label = 4;
+                    case 4:
+                        ordersDate_3 = JSON.parse(JSON.stringify(ordersDate_3));
+                        _j.label = 5;
+                    case 5:
+                        _j.trys.push([5, 10, 11, 16]);
+                        _g = true, ordersDate_1 = __asyncValues(ordersDate_3);
+                        _j.label = 6;
+                    case 6: return [4 /*yield*/, ordersDate_1.next()];
+                    case 7:
+                        if (!(ordersDate_1_1 = _j.sent(), _a = ordersDate_1_1.done, !_a)) return [3 /*break*/, 9];
+                        _c = ordersDate_1_1.value;
+                        _g = false;
+                        try {
+                            order = _c;
+                            order.createdAt = new Date(order.createdAt).toISOString().slice(0, 10);
+                        }
+                        finally {
+                            _g = true;
+                        }
+                        _j.label = 8;
+                    case 8: return [3 /*break*/, 6];
+                    case 9: return [3 /*break*/, 16];
+                    case 10:
+                        e_2_1 = _j.sent();
+                        e_2 = { error: e_2_1 };
+                        return [3 /*break*/, 16];
+                    case 11:
+                        _j.trys.push([11, , 14, 15]);
+                        if (!(!_g && !_a && (_b = ordersDate_1.return))) return [3 /*break*/, 13];
+                        return [4 /*yield*/, _b.call(ordersDate_1)];
+                    case 12:
+                        _j.sent();
+                        _j.label = 13;
+                    case 13: return [3 /*break*/, 15];
+                    case 14:
+                        if (e_2) throw e_2.error;
+                        return [7 /*endfinally*/];
+                    case 15: return [7 /*endfinally*/];
+                    case 16: return [2 /*return*/, ordersDate_3];
+                    case 17:
+                        ordersDate = [];
+                        if (!Number.isNaN(theDay)) return [3 /*break*/, 19];
+                        return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.find({ createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-01")), $lt: new Date("".concat(theYear, "-").concat(theMonth + 1, "-01")) }, sellerId: new mongoose_1.default.Types.ObjectId(body.seller_id) })];
+                    case 18:
+                        ordersDate = _j.sent();
+                        return [3 /*break*/, 21];
+                    case 19: return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.find({ createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-").concat(theDay)) }, sellerId: new mongoose_1.default.Types.ObjectId(body.seller_id) })];
+                    case 20:
+                        ordersDate = _j.sent();
+                        _j.label = 21;
+                    case 21:
+                        ordersDate = JSON.parse(JSON.stringify(ordersDate));
+                        _j.label = 22;
+                    case 22:
+                        _j.trys.push([22, 27, 28, 33]);
+                        _h = true, ordersDate_2 = __asyncValues(ordersDate);
+                        _j.label = 23;
+                    case 23: return [4 /*yield*/, ordersDate_2.next()];
+                    case 24:
+                        if (!(ordersDate_2_1 = _j.sent(), _d = ordersDate_2_1.done, !_d)) return [3 /*break*/, 26];
+                        _f = ordersDate_2_1.value;
+                        _h = false;
+                        try {
+                            order = _f;
+                            order.createdAt = new Date(order.createdAt).toISOString().slice(0, 10);
+                        }
+                        finally {
+                            _h = true;
+                        }
+                        _j.label = 25;
+                    case 25: return [3 /*break*/, 23];
+                    case 26: return [3 /*break*/, 33];
+                    case 27:
+                        e_3_1 = _j.sent();
+                        e_3 = { error: e_3_1 };
+                        return [3 /*break*/, 33];
+                    case 28:
+                        _j.trys.push([28, , 31, 32]);
+                        if (!(!_h && !_d && (_e = ordersDate_2.return))) return [3 /*break*/, 30];
+                        return [4 /*yield*/, _e.call(ordersDate_2)];
+                    case 29:
+                        _j.sent();
+                        _j.label = 30;
+                    case 30: return [3 /*break*/, 32];
+                    case 31:
+                        if (e_3) throw e_3.error;
+                        return [7 /*endfinally*/];
+                    case 32: return [7 /*endfinally*/];
+                    case 33: return [2 /*return*/, ordersDate];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.recentOutOrders = function (body) {
+        return __awaiter(this, void 0, void 0, function () {
+            var options, recentOrders;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        options = {
+                            page: 1,
+                            limit: 10,
+                            sort: { createdAt: -1 },
+                            // select: { client_name: 1, client_surname: 1, products: 1, value_to_collect: 1, guide_status: 1 }
+                        };
+                        recentOrders = [];
+                        return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.paginate({ sellerId: new mongoose_1.default.Types.ObjectId(body.seller_id) }, { options: options })];
+                    case 1:
+                        recentOrders = _a.sent();
+                        return [2 /*return*/, recentOrders];
+                }
+            });
+        });
+    };
     MongoRepository.prototype.setOrderStatus = function (event) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: 
-                    // console.log(event.order);
-                    return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.updateOne({ orderId: event.order.id }, { $set: { orderState: event.order_status } })];
+                    case 0:
+                        // El token brindado a Shipday para el cambio de estado caduca dentro de 10 años y fue creado en el 2023
+                        console.log(event);
+                        console.log();
+                        return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.updateOne({ orderId: event.order.id }, { $set: { orderState: event.order_status } })];
                     case 1:
-                        // console.log(event.order);
                         _a.sent();
                         return [2 /*return*/, event];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.allOutOrders = function (pag) {
+        var _a, e_4, _b, _c;
+        return __awaiter(this, void 0, void 0, function () {
+            var options, result, orders, _d, _e, _f, order, e_4_1;
+            return __generator(this, function (_g) {
+                switch (_g.label) {
+                    case 0:
+                        options = {
+                            page: pag,
+                            limit: 7,
+                            sort: { createdAt: -1 }
+                        };
+                        return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.paginate({}, options)];
+                    case 1:
+                        result = _g.sent();
+                        orders = JSON.parse(JSON.stringify(result));
+                        _g.label = 2;
+                    case 2:
+                        _g.trys.push([2, 7, 8, 13]);
+                        _d = true, _e = __asyncValues(orders.docs);
+                        _g.label = 3;
+                    case 3: return [4 /*yield*/, _e.next()];
+                    case 4:
+                        if (!(_f = _g.sent(), _a = _f.done, !_a)) return [3 /*break*/, 6];
+                        _c = _f.value;
+                        _d = false;
+                        try {
+                            order = _c;
+                            order.seller = order.sellerName;
+                            order.equalDates = order.createdAt === order.updatedAt;
+                            order.createdAt = new Date(order.createdAt).toISOString().slice(0, 10);
+                        }
+                        finally {
+                            _d = true;
+                        }
+                        _g.label = 5;
+                    case 5: return [3 /*break*/, 3];
+                    case 6: return [3 /*break*/, 13];
+                    case 7:
+                        e_4_1 = _g.sent();
+                        e_4 = { error: e_4_1 };
+                        return [3 /*break*/, 13];
+                    case 8:
+                        _g.trys.push([8, , 11, 12]);
+                        if (!(!_d && !_a && (_b = _e.return))) return [3 /*break*/, 10];
+                        return [4 /*yield*/, _b.call(_e)];
+                    case 9:
+                        _g.sent();
+                        _g.label = 10;
+                    case 10: return [3 /*break*/, 12];
+                    case 11:
+                        if (e_4) throw e_4.error;
+                        return [7 /*endfinally*/];
+                    case 12: return [7 /*endfinally*/];
+                    case 13: return [2 /*return*/, orders];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.getOrderOutsourcing = function (order) {
+        return __awaiter(this, void 0, void 0, function () {
+            var myOrder;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.shipdayClient.orderService.getOrderDetails(order.orderNumber)];
+                    case 1:
+                        myOrder = _a.sent();
+                        return [2 /*return*/, myOrder];
                 }
             });
         });

@@ -88,7 +88,7 @@ var MongoRepository = /** @class */ (function () {
     MongoRepository.prototype.createToken = function (id) {
         var token = jsonwebtoken_1.default.sign({ id: id }, process.env.SECRET_KEY || "secret@123", {
             // const token = jwt.sign({ id }, "secret@123", {
-            expiresIn: "50m",
+            expiresIn: "59m",
         });
         return token;
     };

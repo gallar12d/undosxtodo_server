@@ -64,11 +64,51 @@ var OrderService = /** @class */ (function () {
             });
         });
     };
+    OrderService.prototype.allOutOrders = function (pag) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.allOutOrders(pag)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    OrderService.prototype.getOrderOutDate = function (body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.getOrderOutDate(body)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    OrderService.prototype.recentOutOrders = function (body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.recentOutOrders(body)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     OrderService.prototype.setOrderStatus = function (event) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.orderRepository.setOrderStatus(event)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    OrderService.prototype.getOrderOutsourcing = function (order) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.getOrderOutsourcing(order)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

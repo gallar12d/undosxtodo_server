@@ -22,7 +22,7 @@ export class MongoRepository implements UserRepository {
   public createToken(id: string): string {
     const token = jwt.sign({ id }, process.env.SECRET_KEY || "secret@123", {
       // const token = jwt.sign({ id }, "secret@123", {
-      expiresIn: "50m",
+      expiresIn: "59m",
     });
     return token;
   }

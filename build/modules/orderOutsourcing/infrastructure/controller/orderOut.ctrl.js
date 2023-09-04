@@ -97,10 +97,79 @@ var OrderController = /** @class */ (function () {
                 });
             });
         };
-        this.setOrderStatus = function (_a, res) {
+        this.getOrderOutDate = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
                 var _b, _c, err_3;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            _c = (_b = res).json;
+                            return [4 /*yield*/, this.orderService.getOrderOutDate(body)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_3 = _d.sent();
+                            err_3.message = err_3.response.data.errors;
+                            res.status(400).json((0, handleErrors_1.default)(err_3));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.recentOutOrders = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var _b, _c, err_4;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            _c = (_b = res).json;
+                            return [4 /*yield*/, this.orderService.recentOutOrders(body)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_4 = _d.sent();
+                            err_4.message = err_4.response.data.errors;
+                            res.status(400).json((0, handleErrors_1.default)(err_4));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.allOutOrders = function (_a, res) {
+            var params = _a.params;
+            return __awaiter(_this, void 0, void 0, function () {
+                var _b, _c, err_5;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            _c = (_b = res).json;
+                            return [4 /*yield*/, this.orderService.allOutOrders(params.pag)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_5 = _d.sent();
+                            err_5.message = err_5.response.data.errors;
+                            res.status(400).json((0, handleErrors_1.default)(err_5));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.setOrderStatus = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var _b, _c, err_6;
                 return __generator(this, function (_d) {
                     switch (_d.label) {
                         case 0:
@@ -111,9 +180,32 @@ var OrderController = /** @class */ (function () {
                             _c.apply(_b, [_d.sent()]);
                             return [3 /*break*/, 3];
                         case 2:
-                            err_3 = _d.sent();
-                            err_3.message = err_3.response.data.errors;
-                            res.status(400).json((0, handleErrors_1.default)(err_3));
+                            err_6 = _d.sent();
+                            err_6.message = err_6.response.data.errors;
+                            res.status(400).json((0, handleErrors_1.default)(err_6));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        this.getOrderOutsourcing = function (_a, res) {
+            var body = _a.body;
+            return __awaiter(_this, void 0, void 0, function () {
+                var _b, _c, err_7;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _d.trys.push([0, 2, , 3]);
+                            _c = (_b = res).json;
+                            return [4 /*yield*/, this.orderService.getOrderOutsourcing(body)];
+                        case 1:
+                            _c.apply(_b, [_d.sent()]);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            err_7 = _d.sent();
+                            err_7.message = err_7.response.data.errors;
+                            res.status(400).json((0, handleErrors_1.default)(err_7));
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
                     }

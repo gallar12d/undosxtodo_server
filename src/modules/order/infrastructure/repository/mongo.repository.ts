@@ -22,19 +22,14 @@ export class MongoRepository implements OrderRepository {
   private ordersLimitPerZone: number = 5;
   private pendingOrders: any[] = [];
   public tokenR99: string;
-  private myInterval: any;
-  // private zoneTime = 5400000;
   private zoneTime = 5400000;
   private limitHour = 17;
   private limitMinutes = 0;
   private limitShipments = 5;
   private openingHour = 7;
   private openingMinutes = 0;
-  private shipdayClient: Shipday;
 
-  public constructor() {
-    this.shipdayClient = new Shipday('A9xc9Tk8QH.dcWOv1xxmMnXFwxti9HZ', 10000);
-  }
+  public constructor() {}
 
   public async findOrder(id: string): Promise<any | null> {
     const user = await OrderModel.find({ id });
@@ -700,7 +695,7 @@ export class MongoRepository implements OrderRepository {
       ordersDate = JSON.parse(JSON.stringify(ordersDate));
       for await (const order of ordersDate) {
         order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
-        order.createdAt = new Date().toISOString().slice(0, 10);
+        order.createdAt = new Date(order.createdAt).toISOString().slice(0, 10);
       }
       return ordersDate;
     } else {
@@ -718,7 +713,7 @@ export class MongoRepository implements OrderRepository {
           products: order.products,
           value_to_collect: order.value_to_collect,
           guide_status: (await StatusModel.findOne({ id: order.guide_status })).name,
-          createdAt: new Date().toISOString().slice(0, 10)
+          createdAt: new Date(order.createdAt).toISOString().slice(0, 10)
         });
       }
 
@@ -744,7 +739,7 @@ export class MongoRepository implements OrderRepository {
 
     for await (const order of ordersDate) {
       ordersDateWithNames.push({
-        Fecha: new Date().toISOString().slice(0, 10),
+        Fecha: new Date(order.createdAt).toISOString().slice(0, 10),
         Guia: order.guide,
         Bodega: order.depot_name,
         'Nombre cliente': order.client_name,

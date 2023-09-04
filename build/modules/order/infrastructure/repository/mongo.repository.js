@@ -61,20 +61,17 @@ var orderSetting_schema_1 = require("../../../order/infrastructure/model/orderSe
 // import { Scheduler } from "timers/promises";
 var node_schedule_1 = __importDefault(require("node-schedule"));
 var luxon_1 = require("luxon");
-var integration_1 = __importDefault(require("shipday/integration"));
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
         this.maxAmountPerZone = 500000;
         this.ordersLimitPerZone = 5;
         this.pendingOrders = [];
-        // private zoneTime = 5400000;
         this.zoneTime = 5400000;
         this.limitHour = 17;
         this.limitMinutes = 0;
         this.limitShipments = 5;
         this.openingHour = 7;
         this.openingMinutes = 0;
-        this.shipdayClient = new integration_1.default('A9xc9Tk8QH.dcWOv1xxmMnXFwxti9HZ', 10000);
     }
     MongoRepository.prototype.findOrder = function (id) {
         return __awaiter(this, void 0, void 0, function () {
@@ -1127,7 +1124,7 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status })];
                     case 9:
                         _h.guide_status = (_o.sent()).name;
-                        order.createdAt = new Date().toISOString().slice(0, 10);
+                        order.createdAt = new Date(order.createdAt).toISOString().slice(0, 10);
                         return [3 /*break*/, 11];
                     case 10:
                         _g = true;
@@ -1188,7 +1185,7 @@ var MongoRepository = /** @class */ (function () {
                         return [4 /*yield*/, status_schema_1.default.findOne({ id: order.guide_status })];
                     case 29:
                         _l.apply(_k, [(_m.guide_status = (_o.sent()).name,
-                                _m.createdAt = new Date().toISOString().slice(0, 10),
+                                _m.createdAt = new Date(order.createdAt).toISOString().slice(0, 10),
                                 _m)]);
                         return [3 /*break*/, 31];
                     case 30:
@@ -1258,7 +1255,7 @@ var MongoRepository = /** @class */ (function () {
                         order = _c;
                         _f = (_e = ordersDateWithNames).push;
                         _h = {
-                            Fecha: new Date().toISOString().slice(0, 10),
+                            Fecha: new Date(order.createdAt).toISOString().slice(0, 10),
                             Guia: order.guide,
                             Bodega: order.depot_name,
                             'Nombre cliente': order.client_name,

@@ -13,7 +13,23 @@ export class OrderService {
     return await this.orderRepository.getOrdersPage(seller_id, pag);
   }
 
+  public async allOutOrders(pag: any) {
+    return await this.orderRepository.allOutOrders(pag);
+  }
+
+  public async getOrderOutDate(body) {
+    return await this.orderRepository.getOrderOutDate(body);
+  }
+
+  public async recentOutOrders(body) {
+    return await this.orderRepository.recentOutOrders(body);
+  }
+
   public async setOrderStatus(event: any) {
     return await this.orderRepository.setOrderStatus(event);
+  }
+
+  public async getOrderOutsourcing(order: any) {
+    return await this.orderRepository.getOrderOutsourcing(order);
   }
 }

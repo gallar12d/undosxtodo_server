@@ -28,9 +28,45 @@ export class OrderController {
     }
   }
 
+  public getOrderOutDate = async ({ body }, res) => {
+    try {
+      res.json(await this.orderService.getOrderOutDate(body));
+    } catch (err) {
+      err.message = err.response.data.errors;
+      res.status(400).json(getErrorMessage(err));
+    }
+  }
+
+  public recentOutOrders = async ({ body }, res) => {
+    try {
+      res.json(await this.orderService.recentOutOrders(body));
+    } catch (err) {
+      err.message = err.response.data.errors;
+      res.status(400).json(getErrorMessage(err));
+    }
+  }
+
+  public allOutOrders = async ({ params }, res) => {
+    try {
+      res.json(await this.orderService.allOutOrders(params.pag));
+    } catch (err) {
+      err.message = err.response.data.errors;
+      res.status(400).json(getErrorMessage(err));
+    }
+  }
+
   public setOrderStatus = async ({ body }, res) => {
     try {
       res.json(await this.orderService.setOrderStatus(body));
+    } catch (err) {
+      err.message = err.response.data.errors;
+      res.status(400).json(getErrorMessage(err));
+    }
+  }
+
+  public getOrderOutsourcing = async ({ body }, res) => {
+    try {
+      res.json(await this.orderService.getOrderOutsourcing(body));
     } catch (err) {
       err.message = err.response.data.errors;
       res.status(400).json(getErrorMessage(err));

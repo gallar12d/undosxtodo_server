@@ -92,10 +92,83 @@ export class MongoRepository implements OrderRepository {
     return orders;
   }
 
+  public async getOrderOutDate(body: any): Promise<any | null> {
+    const theDate = body.date.split('-');
+    const theYear = parseInt(theDate[0]);
+    const theMonth = parseInt(theDate[1]);
+    const theDay = parseInt(theDate[2]);
+
+    if (body.rol === 'superuser') {
+      let ordersDate = [];
+      if (Number.isNaN(theDay)) {
+        ordersDate = await OrderOutsourcingModel.find({ createdAt: { $gt: new Date(`${theYear}-${theMonth}-01`), $lt: new Date(`${theYear}-${theMonth + 1}-01`) } });
+      } else {
+        ordersDate = await OrderOutsourcingModel.find({ createdAt: { $gt: new Date(`${theYear}-${theMonth}-${theDay}`) } });
+      }
+      ordersDate = JSON.parse(JSON.stringify(ordersDate));
+      for await (const order of ordersDate) {
+        order.createdAt = new Date(order.createdAt).toISOString().slice(0, 10);
+      }
+      return ordersDate;
+    }
+
+    let ordersDate = [];
+    if (Number.isNaN(theDay)) {
+      ordersDate = await OrderOutsourcingModel.find({ createdAt: { $gt: new Date(`${theYear}-${theMonth}-01`), $lt: new Date(`${theYear}-${theMonth + 1}-01`) }, sellerId: new mongoose.Types.ObjectId(body.seller_id) });
+    } else {
+      ordersDate = await OrderOutsourcingModel.find({ createdAt: { $gt: new Date(`${theYear}-${theMonth}-${theDay}`) }, sellerId: new mongoose.Types.ObjectId(body.seller_id) });
+    }
+    ordersDate = JSON.parse(JSON.stringify(ordersDate));
+    for await (const order of ordersDate) {
+      order.createdAt = new Date(order.createdAt).toISOString().slice(0, 10);
+    }
+
+    return ordersDate;
+  }
+
+  public async recentOutOrders(body: any): Promise<any | null> {
+    const options = {
+      page: 1,
+      limit: 10,
+      sort: { createdAt: -1 },
+      // select: { client_name: 1, client_surname: 1, products: 1, value_to_collect: 1, guide_status: 1 }
+    }
+
+    let recentOrders: any = [];
+    recentOrders = await OrderOutsourcingModel.paginate({ sellerId: new mongoose.Types.ObjectId(body.seller_id) }, { options });
+
+    return recentOrders;
+  }
+
   public async setOrderStatus(event: any): Promise<any | null> {
-    // console.log(event.order);
+    // El token brindado a Shipday para el cambio de estado caduca dentro de 10 años y fue creado en el 2023
+    console.log(event);
+    console.log();
     await OrderOutsourcingModel.updateOne({ orderId: event.order.id }, { $set: { orderState: event.order_status } });
     return event;
+  }
+
+  public async allOutOrders(pag: any): Promise<any | null> {
+    const options = {
+      page: pag,
+      limit: 7,
+      sort: { createdAt: -1 }
+    }
+
+    var result = await OrderOutsourcingModel.paginate({}, options);
+    const orders = JSON.parse(JSON.stringify(result));
+    for await (const order of orders.docs) {
+      order.seller = order.sellerName;
+      order.equalDates = order.createdAt === order.updatedAt;
+      order.createdAt = new Date(order.createdAt).toISOString().slice(0, 10);
+    }
+
+    return orders;
+  }
+
+  public async getOrderOutsourcing(order: any): Promise<any | null> {
+    const myOrder = await this.shipdayClient.orderService.getOrderDetails(order.orderNumber);
+    return myOrder;
   }
 
 }
