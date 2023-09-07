@@ -9,9 +9,10 @@ export class OrderController {
   public registerOrder = async ({ body }, res) => {
     try {
       body.orderItem = JSON.parse(body.orderItem);
+      const carrierId = body.carrierId;
+      delete body.carrierId;
       const orderOutsourcingValue = new OrderValue(body);
-      // const order = await this.orderService.registerOrder(orderOutsourcingValue);
-      res.json(await this.orderService.registerOrder(orderOutsourcingValue));
+      res.json(await this.orderService.registerOrder(orderOutsourcingValue, carrierId));
     } catch (err) {
       err.message = err.response.data.errors;
       res.status(400).json(getErrorMessage(err));
@@ -67,6 +68,15 @@ export class OrderController {
   public getOrderOutsourcing = async ({ body }, res) => {
     try {
       res.json(await this.orderService.getOrderOutsourcing(body));
+    } catch (err) {
+      err.message = err.response.data.errors;
+      res.status(400).json(getErrorMessage(err));
+    }
+  }
+
+  public getOutDrivers = async (req, res) => {
+    try {
+      res.json(await this.orderService.getOutDrivers());
     } catch (err) {
       err.message = err.response.data.errors;
       res.status(400).json(getErrorMessage(err));

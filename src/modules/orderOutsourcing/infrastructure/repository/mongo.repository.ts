@@ -22,11 +22,11 @@ export class MongoRepository implements OrderRepository {
 
   public constructor() {
     this.shipdayClient = new Shipday('A9xc9Tk8QH.dcWOv1xxmMnXFwxti9HZ', 10000);
-    // this.shipdayClient.orderService.getOrders().then( (d)=> console.log(d) )
   }
 
-  public async registerOrder(order: OrderOutsourcingEntity): Promise<any | null> {
+  public async registerOrder(order: OrderOutsourcingEntity, carrierId: number): Promise<any | null> {
     try {
+
       let res: any;
       const orderInfoRequest = new OrderInfoRequest(
         order.orderNumber,
@@ -64,6 +64,7 @@ export class MongoRepository implements OrderRepository {
 
       const res2 = await this.shipdayClient.orderService.insertOrder(orderInfoRequest);
       if (res2.success === true) {
+        this.shipdayClient.orderService.assignOrder(res2.orderId, carrierId);
         order.orderId = res2.orderId;
         res = await OrderOutsourcingModel.create(order);
       }
@@ -142,8 +143,10 @@ export class MongoRepository implements OrderRepository {
 
   public async setOrderStatus(event: any): Promise<any | null> {
     // El token brindado a Shipday para el cambio de estado caduca dentro de 10 años y fue creado en el 2023
-    console.log(event);
-    console.log();
+    if (event.event === "ORDER_REJECT") {
+
+    }
+
     await OrderOutsourcingModel.updateOne({ orderId: event.order.id }, { $set: { orderState: event.order_status } });
     return event;
   }
@@ -169,6 +172,11 @@ export class MongoRepository implements OrderRepository {
   public async getOrderOutsourcing(order: any): Promise<any | null> {
     const myOrder = await this.shipdayClient.orderService.getOrderDetails(order.orderNumber);
     return myOrder;
+  }
+
+  public async getOutDrivers(): Promise<any | null> {
+    const carriers = await this.shipdayClient.carrierService.getCarriers();
+    return carriers;
   }
 
 }

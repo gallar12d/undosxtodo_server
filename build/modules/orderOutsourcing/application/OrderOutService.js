@@ -41,12 +41,12 @@ var OrderService = /** @class */ (function () {
     function OrderService(orderRepository) {
         this.orderRepository = orderRepository;
     }
-    OrderService.prototype.registerOrder = function (order) {
+    OrderService.prototype.registerOrder = function (order, carrierId) {
         return __awaiter(this, void 0, void 0, function () {
             var orderCreated;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.orderRepository.registerOrder(order)];
+                    case 0: return [4 /*yield*/, this.orderRepository.registerOrder(order, carrierId)];
                     case 1:
                         orderCreated = _a.sent();
                         return [2 /*return*/, orderCreated];
@@ -109,6 +109,16 @@ var OrderService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.orderRepository.getOrderOutsourcing(order)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    OrderService.prototype.getOutDrivers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.orderRepository.getOutDrivers()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

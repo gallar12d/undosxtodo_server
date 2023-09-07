@@ -18,3 +18,4 @@ router.post("/getOrderOutDate", auth_middleware_1.authMiddleware, orderCtrl.getO
 router.post("/recentOutOrders", auth_middleware_1.authMiddleware, orderCtrl.recentOutOrders);
 router.post("/setOrderStatus", orderCtrl.setOrderStatus);
 router.post("/getOrderOutsourcing", auth_middleware_1.authMiddleware, orderCtrl.getOrderOutsourcing);
+router.get("/getOutDrivers", auth_middleware_1.authMiddleware, orderCtrl.getOutDrivers);

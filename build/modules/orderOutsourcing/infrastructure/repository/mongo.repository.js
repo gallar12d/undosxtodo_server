@@ -55,9 +55,8 @@ var order_item_1 = __importDefault(require("shipday/integration/order/request/or
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
         this.shipdayClient = new integration_1.default('A9xc9Tk8QH.dcWOv1xxmMnXFwxti9HZ', 10000);
-        // this.shipdayClient.orderService.getOrders().then( (d)=> console.log(d) )
     }
-    MongoRepository.prototype.registerOrder = function (order) {
+    MongoRepository.prototype.registerOrder = function (order, carrierId) {
         return __awaiter(this, void 0, void 0, function () {
             var res, orderInfoRequest, itemsArr_1, res2, error_1;
             return __generator(this, function (_a) {
@@ -86,6 +85,7 @@ var MongoRepository = /** @class */ (function () {
                     case 1:
                         res2 = _a.sent();
                         if (!(res2.success === true)) return [3 /*break*/, 3];
+                        this.shipdayClient.orderService.assignOrder(res2.orderId, carrierId);
                         order.orderId = res2.orderId;
                         return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.create(order)];
                     case 2:
@@ -302,8 +302,8 @@ var MongoRepository = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         // El token brindado a Shipday para el cambio de estado caduca dentro de 10 años y fue creado en el 2023
-                        console.log(event);
-                        console.log();
+                        if (event.event === "ORDER_REJECT") {
+                        }
                         return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.updateOne({ orderId: event.order.id }, { $set: { orderState: event.order_status } })];
                     case 1:
                         _a.sent();
@@ -380,6 +380,19 @@ var MongoRepository = /** @class */ (function () {
                     case 1:
                         myOrder = _a.sent();
                         return [2 /*return*/, myOrder];
+                }
+            });
+        });
+    };
+    MongoRepository.prototype.getOutDrivers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var carriers;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.shipdayClient.carrierService.getCarriers()];
+                    case 1:
+                        carriers = _a.sent();
+                        return [2 /*return*/, carriers];
                 }
             });
         });

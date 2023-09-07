@@ -5,6 +5,7 @@ const DealerSchema = new mongoose.Schema(
     {
         id: { type: String },
         ruta99_id: { type: Number, required: false },
+        shipday_id: { type: Number, required: false },
         name: { type: String },
         phone_number: { type: String, required: false },
         email: { type: String },
@@ -13,7 +14,8 @@ const DealerSchema = new mongoose.Schema(
         password: { type: String },
         rfc: { type: String, required: false },
         driver_license: { type: String, required: false },
-        status: { type: String }
+        status: { type: String },
+        platform: { type: String },
     },
     { timestamps: { currentTime: () => new Date(Date.now() - 5 * 60 * 60 * 1000) } }
     //   { timestamps: true }

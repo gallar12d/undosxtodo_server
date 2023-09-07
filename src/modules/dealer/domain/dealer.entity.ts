@@ -1,6 +1,7 @@
 export interface DealerEntity {
     id: string;
     ruta99_id?: number;
+    shipday_id?: number;
     name: string;
     phone_number?: string;
     email: string;
@@ -10,4 +11,5 @@ export interface DealerEntity {
     rfc?: string;
     driver_license?: string;
     status: string;
+    platform: string;
 }

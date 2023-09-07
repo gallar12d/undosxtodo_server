@@ -9,6 +9,7 @@ var mongoose_paginate_v2_1 = __importDefault(require("mongoose-paginate-v2"));
 var DealerSchema = new mongoose_1.default.Schema({
     id: { type: String },
     ruta99_id: { type: Number, required: false },
+    shipday_id: { type: Number, required: false },
     name: { type: String },
     phone_number: { type: String, required: false },
     email: { type: String },
@@ -17,7 +18,8 @@ var DealerSchema = new mongoose_1.default.Schema({
     password: { type: String },
     rfc: { type: String, required: false },
     driver_license: { type: String, required: false },
-    status: { type: String }
+    status: { type: String },
+    platform: { type: String },
 }, { timestamps: { currentTime: function () { return new Date(Date.now() - 5 * 60 * 60 * 1000); } } }
 //   { timestamps: true }
 );

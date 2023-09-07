@@ -4,8 +4,8 @@ import { OrderValue } from "../domain/orderOut.value";
 export class OrderService {
   constructor(private readonly orderRepository: OrderRepository) { }
 
-  public async registerOrder(order: any) {
-    const orderCreated = await this.orderRepository.registerOrder(order);
+  public async registerOrder(order: any, carrierId: number) {
+    const orderCreated = await this.orderRepository.registerOrder(order, carrierId);
     return orderCreated;
   }
 
@@ -31,5 +31,9 @@ export class OrderService {
 
   public async getOrderOutsourcing(order: any) {
     return await this.orderRepository.getOrderOutsourcing(order);
+  }
+
+  public async getOutDrivers() {
+    return await this.orderRepository.getOutDrivers();
   }
 }

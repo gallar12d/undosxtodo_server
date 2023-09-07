@@ -43,55 +43,74 @@ exports.MongoRepository = void 0;
 var dealer_schema_1 = require("../model/dealer.schema");
 var axios_1 = __importDefault(require("axios"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var integration_1 = __importDefault(require("shipday/integration"));
+var carrier_request_1 = __importDefault(require("shipday/integration/carrier/carrier.request"));
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
+        this.shipdayClient = new integration_1.default('A9xc9Tk8QH.dcWOv1xxmMnXFwxti9HZ', 10000);
     }
     MongoRepository.prototype.createDealer = function (newDealer) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, decoded, currentTimestamp, token, reqDealer, myNewDealer;
+            var carrierInfo, carrierReq, carriers, token, decoded, currentTimestamp, token, reqDealer, myNewDealer;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!!this.tokenR99) return [3 /*break*/, 2];
+                        if (!(newDealer.platform === 'Shipday')) return [3 /*break*/, 5];
+                        carrierInfo = new carrier_request_1.default(newDealer.name, newDealer.email, '+57' + newDealer.phone_number);
+                        return [4 /*yield*/, this.shipdayClient.carrierService.addCarrier(carrierInfo)];
+                    case 1:
+                        carrierReq = _a.sent();
+                        if (!!!carrierReq) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.shipdayClient.carrierService.getCarriers()];
+                    case 2:
+                        carriers = _a.sent();
+                        // const carrierIndex = carriers.findIndex((carrier: any) => carrier.name === newDealer.name);
+                        newDealer.shipday_id = carriers[carriers.length - 1].id;
+                        return [4 /*yield*/, dealer_schema_1.DealerModel.create(newDealer)];
+                    case 3: return [2 /*return*/, _a.sent()];
+                    case 4: return [3 /*break*/, 13];
+                    case 5:
+                        if (!!this.tokenR99) return [3 /*break*/, 7];
                         return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
                                 "grant_type": "client_credentials",
                                 "client_id": "1007",
                                 "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
                             })];
-                    case 1:
+                    case 6:
                         token = _a.sent();
                         this.tokenR99 = token.data.access_token;
-                        return [3 /*break*/, 4];
-                    case 2:
+                        return [3 /*break*/, 9];
+                    case 7:
                         decoded = jsonwebtoken_1.default.decode(this.tokenR99);
                         if (!decoded || !decoded.exp) {
                             return [2 /*return*/, true]; // El token no es válido o no tiene fecha de expiración
                         }
                         currentTimestamp = Math.floor(Date.now() / 1000);
-                        if (!(decoded.exp < currentTimestamp)) return [3 /*break*/, 4];
+                        if (!(decoded.exp < currentTimestamp)) return [3 /*break*/, 9];
                         return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/oauth/token", {
                                 "grant_type": "client_credentials",
                                 "client_id": "1007",
                                 "client_secret": "qIlmA870AUYT114iTCki7XscawDWrA7NOzpMVCnv"
                             })];
-                    case 3:
+                    case 8:
                         token = _a.sent();
                         this.tokenR99 = token.data.access_token;
-                        _a.label = 4;
-                    case 4: return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/v1/user", newDealer, {
+                        _a.label = 9;
+                    case 9: return [4 /*yield*/, axios_1.default.post("https://api.ruta99.co/v1/user", newDealer, {
                             headers: {
                                 Authorization: "Bearer ".concat(this.tokenR99)
                             }
                         })];
-                    case 5:
+                    case 10:
                         reqDealer = _a.sent();
-                        if (!(reqDealer.status === 201)) return [3 /*break*/, 7];
+                        if (!(reqDealer.status === 201)) return [3 /*break*/, 12];
                         newDealer.ruta99_id = reqDealer.data.user.id;
                         return [4 /*yield*/, dealer_schema_1.DealerModel.create(newDealer)];
-                    case 6:
+                    case 11:
                         myNewDealer = _a.sent();
                         return [2 /*return*/, myNewDealer];
-                    case 7: return [2 /*return*/, 400];
+                    case 12: return [2 /*return*/, 400];
+                    case 13: return [2 /*return*/];
                 }
             });
         });
@@ -118,7 +137,7 @@ var MongoRepository = /** @class */ (function () {
             var dealers;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, dealer_schema_1.DealerModel.find({}, { id: 1, name: 1, identification: 1, phone_number: 1, status: 1 })];
+                    case 0: return [4 /*yield*/, dealer_schema_1.DealerModel.find({}, { id: 1, name: 1, identification: 1, phone_number: 1, status: 1, platform: 1 })];
                     case 1:
                         dealers = _a.sent();
                         return [2 /*return*/, dealers];

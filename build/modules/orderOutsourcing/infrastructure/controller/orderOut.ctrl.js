@@ -49,18 +49,18 @@ var OrderController = /** @class */ (function () {
         this.registerOrder = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var orderOutsourcingValue, _b, _c, err_1;
+                var carrierId, orderOutsourcingValue, _b, _c, err_1;
                 return __generator(this, function (_d) {
                     switch (_d.label) {
                         case 0:
                             _d.trys.push([0, 2, , 3]);
                             body.orderItem = JSON.parse(body.orderItem);
+                            carrierId = body.carrierId;
+                            delete body.carrierId;
                             orderOutsourcingValue = new orderOut_value_1.OrderValue(body);
-                            // const order = await this.orderService.registerOrder(orderOutsourcingValue);
                             _c = (_b = res).json;
-                            return [4 /*yield*/, this.orderService.registerOrder(orderOutsourcingValue)];
+                            return [4 /*yield*/, this.orderService.registerOrder(orderOutsourcingValue, carrierId)];
                         case 1:
-                            // const order = await this.orderService.registerOrder(orderOutsourcingValue);
                             _c.apply(_b, [_d.sent()]);
                             return [3 /*break*/, 3];
                         case 2:
@@ -212,6 +212,26 @@ var OrderController = /** @class */ (function () {
                 });
             });
         };
+        this.getOutDrivers = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var _a, _b, err_8;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _c.trys.push([0, 2, , 3]);
+                        _b = (_a = res).json;
+                        return [4 /*yield*/, this.orderService.getOutDrivers()];
+                    case 1:
+                        _b.apply(_a, [_c.sent()]);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_8 = _c.sent();
+                        err_8.message = err_8.response.data.errors;
+                        res.status(400).json((0, handleErrors_1.default)(err_8));
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
     }
     return OrderController;
 }());
