@@ -8,6 +8,7 @@ var mongoose_1 = __importDefault(require("mongoose"));
 var mongoose_paginate_v2_1 = __importDefault(require("mongoose-paginate-v2"));
 var DealerSchema = new mongoose_1.default.Schema({
     id: { type: String },
+    seller_id: { type: String, required: false },
     ruta99_id: { type: Number, required: false },
     shipday_id: { type: Number, required: false },
     name: { type: String },

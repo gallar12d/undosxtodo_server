@@ -8,9 +8,9 @@ export class DealerController {
 
     public createDealer = async ({ body }: Request, res: Response) => {
         try {
-            const { ruta99_id, shipday_id, name, phone_number, email, identification, role, password, rfc, driver_license, status, platform } = body;
+            const { seller_id, ruta99_id, shipday_id, name, phone_number, email, identification, role, password, rfc, driver_license, status, platform } = body;
             const newDealer = new DealerValue({
-                ruta99_id, shipday_id, name, phone_number, email, identification, role, password, rfc, driver_license, status, platform
+                seller_id, ruta99_id, shipday_id, name, phone_number, email, identification, role, password, rfc, driver_license, status, platform
             });
             res.status(200).json(await this.dealerService.createDealer(newDealer));
         } catch (err) {

@@ -69,7 +69,7 @@ var MongoRepository = /** @class */ (function () {
                     case 0:
                         options = {
                             page: pag,
-                            limit: 6,
+                            limit: 20,
                             sort: { createdAt: -1 }
                         };
                         return [4 /*yield*/, seller_schema_1.SellerModel.paginate({}, options)];

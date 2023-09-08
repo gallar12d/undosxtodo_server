@@ -4,6 +4,7 @@ import paginate from 'mongoose-paginate-v2';
 const DealerSchema = new mongoose.Schema(
     {
         id: { type: String },
+        seller_id: { type: String, required: false },
         ruta99_id: { type: Number, required: false },
         shipday_id: { type: Number, required: false },
         name: { type: String },

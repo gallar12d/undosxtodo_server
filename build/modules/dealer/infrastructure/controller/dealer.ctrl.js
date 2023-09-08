@@ -49,13 +49,14 @@ var DealerController = /** @class */ (function () {
         this.createDealer = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var ruta99_id, shipday_id, name, phone_number, email, identification, role, password, rfc, driver_license, status, platform, newDealer, _b, _c, err_1;
+                var seller_id, ruta99_id, shipday_id, name, phone_number, email, identification, role, password, rfc, driver_license, status, platform, newDealer, _b, _c, err_1;
                 return __generator(this, function (_d) {
                     switch (_d.label) {
                         case 0:
                             _d.trys.push([0, 2, , 3]);
-                            ruta99_id = body.ruta99_id, shipday_id = body.shipday_id, name = body.name, phone_number = body.phone_number, email = body.email, identification = body.identification, role = body.role, password = body.password, rfc = body.rfc, driver_license = body.driver_license, status = body.status, platform = body.platform;
+                            seller_id = body.seller_id, ruta99_id = body.ruta99_id, shipday_id = body.shipday_id, name = body.name, phone_number = body.phone_number, email = body.email, identification = body.identification, role = body.role, password = body.password, rfc = body.rfc, driver_license = body.driver_license, status = body.status, platform = body.platform;
                             newDealer = new dealer_value_1.DealerValue({
+                                seller_id: seller_id,
                                 ruta99_id: ruta99_id,
                                 shipday_id: shipday_id,
                                 name: name,

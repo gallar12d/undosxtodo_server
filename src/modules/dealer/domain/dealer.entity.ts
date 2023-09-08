@@ -1,5 +1,6 @@
 export interface DealerEntity {
     id: string;
+    seller_id?: string;
     ruta99_id?: number;
     shipday_id?: number;
     name: string;

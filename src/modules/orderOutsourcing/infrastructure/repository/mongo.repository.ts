@@ -137,18 +137,12 @@ export class MongoRepository implements OrderRepository {
 
     let recentOrders: any = [];
     recentOrders = await OrderOutsourcingModel.paginate({ sellerId: new mongoose.Types.ObjectId(body.seller_id) }, { options });
-
     return recentOrders;
   }
 
   public async setOrderStatus(event: any): Promise<any | null> {
     // El token brindado a Shipday para el cambio de estado caduca dentro de 10 años y fue creado en el 2023
-    if (event.event === "ORDER_REJECT") {
-
-    }
-
-    await OrderOutsourcingModel.updateOne({ orderId: event.order.id }, { $set: { orderState: event.order_status } });
-    return event;
+    return await OrderOutsourcingModel.updateOne({ orderId: event.order.id }, { $set: { orderState: event.order_status } });
   }
 
   public async allOutOrders(pag: any): Promise<any | null> {

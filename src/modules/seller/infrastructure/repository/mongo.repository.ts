@@ -17,7 +17,7 @@ export class MongoRepository implements SellerRepository {
   public async getAllSellers(pag:number): Promise<any | null> {
     const options = {
       page: pag,
-      limit: 6,
+      limit: 20,
       sort: { createdAt: -1 }
   }
     const sellers = await SellerModel.paginate({},options);

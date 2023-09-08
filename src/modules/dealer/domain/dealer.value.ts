@@ -3,6 +3,7 @@ import { DealerEntity } from "./dealer.entity";
 
 export class DealerValue implements DealerEntity {
     id: string;
+    seller_id?: string;
     ruta99_id?: number;
     shipday_id?: number;
     name: string;
@@ -17,6 +18,7 @@ export class DealerValue implements DealerEntity {
     platform: string;
 
     constructor({
+        seller_id,
         ruta99_id,
         shipday_id,
         name,
@@ -30,8 +32,9 @@ export class DealerValue implements DealerEntity {
         status,
         platform
     }: {
-        ruta99_id: number;
-        shipday_id: number;
+        seller_id?: string;
+        ruta99_id?: number;
+        shipday_id?: number;
         name: string;
         phone_number?: string;
         email: string;
@@ -44,6 +47,7 @@ export class DealerValue implements DealerEntity {
         platform: string;
     }) {
         this.id = uuid();
+        this.seller_id = seller_id;
         this.ruta99_id = ruta99_id;
         this.shipday_id = shipday_id;
         this.name = name;
