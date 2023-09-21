@@ -338,14 +338,14 @@ var OrderController = /** @class */ (function () {
         this.recentOrders = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var rol, seller_id, _b, _c, err_13;
+                var rol, seller_id, date, _b, _c, err_13;
                 return __generator(this, function (_d) {
                     switch (_d.label) {
                         case 0:
                             _d.trys.push([0, 2, , 3]);
-                            rol = body.rol, seller_id = body.seller_id;
+                            rol = body.rol, seller_id = body.seller_id, date = body.date;
                             _c = (_b = res).send;
-                            return [4 /*yield*/, this.orderService.recentOrders(rol, seller_id)];
+                            return [4 /*yield*/, this.orderService.recentOrders(rol, seller_id, date)];
                         case 1:
                             _c.apply(_b, [_d.sent()]);
                             return [3 /*break*/, 3];

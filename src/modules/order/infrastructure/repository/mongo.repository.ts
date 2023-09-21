@@ -29,7 +29,7 @@ export class MongoRepository implements OrderRepository {
   private openingHour = 7;
   private openingMinutes = 0;
 
-  public constructor() {}
+  public constructor() { }
 
   public async findOrder(id: string): Promise<any | null> {
     const user = await OrderModel.find({ id });
@@ -758,7 +758,7 @@ export class MongoRepository implements OrderRepository {
     return ordersDateWithNames;
   }
 
-  public async recentOrders(rol: string, seller_id: string): Promise<any | null> {
+  public async recentOrders(rol: string, seller_id: string, date: string): Promise<any | null> {
     const options = {
       page: 1,
       limit: 10,
@@ -766,11 +766,27 @@ export class MongoRepository implements OrderRepository {
       select: { client_name: 1, client_surname: 1, products: 1, value_to_collect: 1, guide_status: 1 }
     }
 
+    const theDate = date.split('-');
+    const theYear = parseInt(theDate[0]);
+    const theMonth = parseInt(theDate[1]);
+    const theDay = parseInt(theDate[2]);
+
     let recentOrders: any = [];
     if (rol === 'superuser') {
-      recentOrders = await OrderModel.paginate({ guide_status: "6" }, { options });
+      recentOrders = await OrderModel.paginate({
+        $and: [
+          { guide_status: "6" },
+          { createdAt: { $gt: new Date(`${theYear}-${theMonth}-${theDay}`) } }
+        ]
+      }, { options });
     } else {
-      recentOrders = await OrderModel.paginate({ guide_status: "6", seller_id: new mongoose.Types.ObjectId(seller_id) }, { options });
+      recentOrders = await OrderModel.paginate({
+        $and: [
+          { guide_status: "6" },
+          { seller_id: new mongoose.Types.ObjectId(seller_id) },
+          { createdAt: { $gt: new Date(`${theYear}-${theMonth}-${theDay}`) } }
+        ]
+      }, { options });
     }
 
     for await (const order of recentOrders.docs) {

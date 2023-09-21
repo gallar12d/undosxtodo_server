@@ -149,8 +149,8 @@ export class OrderController {
 
   public recentOrders = async ({ body }, res) => {
     try {
-      const { rol, seller_id } = body;
-      res.send(await this.orderService.recentOrders(rol, seller_id));
+      const { rol, seller_id, date } = body;
+      res.send(await this.orderService.recentOrders(rol, seller_id, date));
     } catch (err) {
       res.status(400).send(getErrorMessage(err));
     }

@@ -1301,10 +1301,10 @@ var MongoRepository = /** @class */ (function () {
             });
         });
     };
-    MongoRepository.prototype.recentOrders = function (rol, seller_id) {
+    MongoRepository.prototype.recentOrders = function (rol, seller_id, date) {
         var _a, e_10, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var options, recentOrders, _d, _e, _f, order, _g, e_10_1;
+            var options, theDate, theYear, theMonth, theDay, recentOrders, _d, _e, _f, order, _g, e_10_1;
             return __generator(this, function (_h) {
                 switch (_h.label) {
                     case 0:
@@ -1314,13 +1314,28 @@ var MongoRepository = /** @class */ (function () {
                             // sort: { createdAt: -1 },
                             select: { client_name: 1, client_surname: 1, products: 1, value_to_collect: 1, guide_status: 1 }
                         };
+                        theDate = date.split('-');
+                        theYear = parseInt(theDate[0]);
+                        theMonth = parseInt(theDate[1]);
+                        theDay = parseInt(theDate[2]);
                         recentOrders = [];
                         if (!(rol === 'superuser')) return [3 /*break*/, 2];
-                        return [4 /*yield*/, order_schema_1.OrderModel.paginate({ guide_status: "6" }, { options: options })];
+                        return [4 /*yield*/, order_schema_1.OrderModel.paginate({
+                                $and: [
+                                    { guide_status: "6" },
+                                    { createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-").concat(theDay)) } }
+                                ]
+                            }, { options: options })];
                     case 1:
                         recentOrders = _h.sent();
                         return [3 /*break*/, 4];
-                    case 2: return [4 /*yield*/, order_schema_1.OrderModel.paginate({ guide_status: "6", seller_id: new mongoose_1.default.Types.ObjectId(seller_id) }, { options: options })];
+                    case 2: return [4 /*yield*/, order_schema_1.OrderModel.paginate({
+                            $and: [
+                                { guide_status: "6" },
+                                { seller_id: new mongoose_1.default.Types.ObjectId(seller_id) },
+                                { createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-").concat(theDay)) } }
+                            ]
+                        }, { options: options })];
                     case 3:
                         recentOrders = _h.sent();
                         _h.label = 4;

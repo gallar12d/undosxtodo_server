@@ -264,8 +264,8 @@ export class OrderService {
     return this.orderRepository.orderReports(start, ending, seller_id, rol);
   }
 
-  public async recentOrders(rol: string, seller_id: string) {
-    return this.orderRepository.recentOrders(rol, seller_id);
+  public async recentOrders(rol: string, seller_id: string, date: string) {
+    return this.orderRepository.recentOrders(rol, seller_id, date);
   }
 
   public async orderTraceability(code: string, status: string) {

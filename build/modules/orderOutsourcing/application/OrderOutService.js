@@ -114,11 +114,11 @@ var OrderService = /** @class */ (function () {
             });
         });
     };
-    OrderService.prototype.getOutDrivers = function () {
+    OrderService.prototype.getOutDrivers = function (seller_id) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.orderRepository.getOutDrivers()];
+                    case 0: return [4 /*yield*/, this.orderRepository.getOutDrivers(seller_id)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

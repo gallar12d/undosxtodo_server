@@ -340,10 +340,10 @@ var OrderService = /** @class */ (function () {
             });
         });
     };
-    OrderService.prototype.recentOrders = function (rol, seller_id) {
+    OrderService.prototype.recentOrders = function (rol, seller_id, date) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.orderRepository.recentOrders(rol, seller_id)];
+                return [2 /*return*/, this.orderRepository.recentOrders(rol, seller_id, date)];
             });
         });
     };

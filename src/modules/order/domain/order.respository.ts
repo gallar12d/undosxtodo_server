@@ -18,6 +18,6 @@ export interface OrderRepository {
   allOrders(pag: number): Promise<any | null>;
   ordersDate(rol: string, date: string, seller_id: string): Promise<any | null>;
   orderReports(start: string, ending: string, seller_id: string, rol: string): Promise<any | null>;
-  recentOrders(rol: string, seller_id: string): Promise<any | null>;
+  recentOrders(rol: string, seller_id: string, date: string): Promise<any | null>;
   orderTraceability(code: string, status: string): Promise<any | null>;
 }

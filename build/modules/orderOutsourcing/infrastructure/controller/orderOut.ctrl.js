@@ -42,6 +42,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderController = void 0;
 var handleErrors_1 = __importDefault(require("../../../../infrastructure/utils/handleErrors"));
 var orderOut_value_1 = require("../../domain/orderOut.value");
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var SECRET_KEY = "".concat(process.env.SECRET_KEY || "secret@123");
 var OrderController = /** @class */ (function () {
     function OrderController(orderService) {
         var _this = this;
@@ -135,7 +137,8 @@ var OrderController = /** @class */ (function () {
                             return [3 /*break*/, 3];
                         case 2:
                             err_4 = _d.sent();
-                            err_4.message = err_4.response.data.errors;
+                            console.log(err_4);
+                            // err.message = err.response.data.errors;
                             res.status(400).json((0, handleErrors_1.default)(err_4));
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
@@ -166,29 +169,32 @@ var OrderController = /** @class */ (function () {
                 });
             });
         };
-        this.setOrderStatus = function (_a, res) {
-            var body = _a.body;
-            return __awaiter(_this, void 0, void 0, function () {
-                var _b, _c, err_6;
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            _d.trys.push([0, 2, , 3]);
-                            _c = (_b = res).json;
-                            return [4 /*yield*/, this.orderService.setOrderStatus(body)];
-                        case 1:
-                            _c.apply(_b, [_d.sent()]);
-                            return [3 /*break*/, 3];
-                        case 2:
-                            err_6 = _d.sent();
-                            err_6.message = err_6.response.data.errors;
-                            res.status(400).json((0, handleErrors_1.default)(err_6));
-                            return [3 /*break*/, 3];
-                        case 3: return [2 /*return*/];
-                    }
-                });
+        this.setOrderStatus = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var token, decoded, _a, _b, err_6;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _c.trys.push([0, 2, , 3]);
+                        token = req.headers.token;
+                        if (!token) {
+                            throw new Error("Please authenticate");
+                        }
+                        decoded = jsonwebtoken_1.default.verify(token, SECRET_KEY);
+                        console.log('Token verificado: ' + decoded);
+                        _b = (_a = res).json;
+                        return [4 /*yield*/, this.orderService.setOrderStatus(req.body)];
+                    case 1:
+                        _b.apply(_a, [_c.sent()]);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_6 = _c.sent();
+                        res.status(400).json((0, handleErrors_1.default)(err_6));
+                        console.log('Error al verificar el token');
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
             });
-        };
+        }); };
         this.getOrderOutsourcing = function (_a, res) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
@@ -219,7 +225,7 @@ var OrderController = /** @class */ (function () {
                     case 0:
                         _c.trys.push([0, 2, , 3]);
                         _b = (_a = res).json;
-                        return [4 /*yield*/, this.orderService.getOutDrivers()];
+                        return [4 /*yield*/, this.orderService.getOutDrivers(req.body.seller_id)];
                     case 1:
                         _b.apply(_a, [_c.sent()]);
                         return [3 /*break*/, 3];

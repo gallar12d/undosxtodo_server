@@ -22,6 +22,6 @@ const DealerSchema = new mongoose.Schema(
     //   { timestamps: true }
 );
 DealerSchema.plugin(paginate);
-interface DealerDocument extends mongoose.Document { ruta99_id }
+interface DealerDocument extends mongoose.Document { ruta99_id, shipday_id }
 const DealerModel = mongoose.model<DealerDocument, mongoose.PaginateModel<DealerDocument>>('Dealers', DealerSchema, 'dealers');
 export { DealerModel };

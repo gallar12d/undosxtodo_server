@@ -33,7 +33,7 @@ export class OrderService {
     return await this.orderRepository.getOrderOutsourcing(order);
   }
 
-  public async getOutDrivers() {
-    return await this.orderRepository.getOutDrivers();
+  public async getOutDrivers(seller_id:string) {
+    return await this.orderRepository.getOutDrivers(seller_id);
   }
 }

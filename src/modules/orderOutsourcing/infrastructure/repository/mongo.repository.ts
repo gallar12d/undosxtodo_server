@@ -2,19 +2,18 @@ import mongoose from "mongoose";
 import { OrderOutsourcingEntity } from "../../domain/orderOut.entity";
 import { OrderRepository } from "../../domain/orderOut.respository";
 import { OrderOutsourcingModel } from "../model/orderOut.schema";
-import { SellerModel } from "../../../seller/infrastructure/model/seller.schema";
-import axios from 'axios';
-import jwt from "jsonwebtoken";
-import { VehicleModel } from "../../../vehicle/infrastructure/model/vehicle.schema";
-import { DepotModel } from "../../../depot/infrastructure/model/depot.schema";
-import schedule from "node-schedule";
-import { DateTime } from 'luxon';
+// import { SellerModel } from "../../../seller/infrastructure/model/seller.schema";
+// import axios from 'axios';
+// import jwt from "jsonwebtoken";
+// import { VehicleModel } from "../../../vehicle/infrastructure/model/vehicle.schema";
+// import { DepotModel } from "../../../depot/infrastructure/model/depot.schema";
+// import schedule from "node-schedule";
+// import { DateTime } from 'luxon';
 
 import Shipday from 'shipday/integration';
 import OrderInfoRequest from "shipday/integration/order/request/order.info.request";
-import PaymentMethod from "shipday/integration/order/types/payment.method";
-import CardType from "shipday/integration/order/types/card.type";
 import OrderItem from "shipday/integration/order/request/order.item";
+import { DealerModel } from "../../../dealer/infrastructure/model/dealer.schema";
 
 export class MongoRepository implements OrderRepository {
 
@@ -132,11 +131,31 @@ export class MongoRepository implements OrderRepository {
       page: 1,
       limit: 10,
       sort: { createdAt: -1 },
-      // select: { client_name: 1, client_surname: 1, products: 1, value_to_collect: 1, guide_status: 1 }
     }
 
+    const theDate = body.date.split('-');
+    const theYear = parseInt(theDate[0]);
+    const theMonth = parseInt(theDate[1]);
+    const theDay = parseInt(theDate[2]);
+
     let recentOrders: any = [];
-    recentOrders = await OrderOutsourcingModel.paginate({ sellerId: new mongoose.Types.ObjectId(body.seller_id) }, { options });
+    if (body.rol === 'superuser') {
+      recentOrders = await OrderOutsourcingModel.paginate({
+        $and: [
+          { guide_status: "6" },
+          { createdAt: { $gt: new Date(`${theYear}-${theMonth}-${theDay}`) } }
+        ]
+      }, { options });
+    } else {
+      recentOrders = await OrderOutsourcingModel.paginate({
+        $and: [
+          { guide_status: "6" },
+          { seller_id: new mongoose.Types.ObjectId(body.seller_id) },
+          { createdAt: { $gt: new Date(`${theYear}-${theMonth}-${theDay}`) } }
+        ]
+      }, { options });
+    }
+
     return recentOrders;
   }
 
@@ -168,9 +187,23 @@ export class MongoRepository implements OrderRepository {
     return myOrder;
   }
 
-  public async getOutDrivers(): Promise<any | null> {
+  public async getOutDrivers(seller_id: string): Promise<any | null> {
     const carriers = await this.shipdayClient.carrierService.getCarriers();
-    return carriers;
+    // Conductores con seller_id deseado y con id de shipday (carriers) =>
+    // const myDealers = await DealerModel.find({ $and: [{ seller_id }, { shipday_id: { $in: carriers.map((c: any) => c.id) } }, { status: "active" }] });
+    const myDealers = await DealerModel.find({ $and: [{ seller_id }, { status: "active" }] });
+
+    const filteredDealers = [];
+
+    for (let i = 0; i < myDealers.length; i++) {
+      for (let k = 0; k < carriers.length; k++) {
+        if (myDealers[i].shipday_id === carriers[k].id) {
+          filteredDealers.push(carriers[k]);
+        }
+      }
+    }
+
+    return filteredDealers;
   }
 
 }

@@ -49,9 +49,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoRepository = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
 var orderOut_schema_1 = require("../model/orderOut.schema");
+// import { SellerModel } from "../../../seller/infrastructure/model/seller.schema";
+// import axios from 'axios';
+// import jwt from "jsonwebtoken";
+// import { VehicleModel } from "../../../vehicle/infrastructure/model/vehicle.schema";
+// import { DepotModel } from "../../../depot/infrastructure/model/depot.schema";
+// import schedule from "node-schedule";
+// import { DateTime } from 'luxon';
 var integration_1 = __importDefault(require("shipday/integration"));
 var order_info_request_1 = __importDefault(require("shipday/integration/order/request/order.info.request"));
 var order_item_1 = __importDefault(require("shipday/integration/order/request/order.item"));
+var dealer_schema_1 = require("../../../dealer/infrastructure/model/dealer.schema");
 var MongoRepository = /** @class */ (function () {
     function MongoRepository() {
         this.shipdayClient = new integration_1.default('A9xc9Tk8QH.dcWOv1xxmMnXFwxti9HZ', 10000);
@@ -277,7 +285,7 @@ var MongoRepository = /** @class */ (function () {
     };
     MongoRepository.prototype.recentOutOrders = function (body) {
         return __awaiter(this, void 0, void 0, function () {
-            var options, recentOrders;
+            var options, theDate, theYear, theMonth, theDay, recentOrders;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -285,13 +293,33 @@ var MongoRepository = /** @class */ (function () {
                             page: 1,
                             limit: 10,
                             sort: { createdAt: -1 },
-                            // select: { client_name: 1, client_surname: 1, products: 1, value_to_collect: 1, guide_status: 1 }
                         };
+                        theDate = body.date.split('-');
+                        theYear = parseInt(theDate[0]);
+                        theMonth = parseInt(theDate[1]);
+                        theDay = parseInt(theDate[2]);
                         recentOrders = [];
-                        return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.paginate({ sellerId: new mongoose_1.default.Types.ObjectId(body.seller_id) }, { options: options })];
+                        if (!(body.rol === 'superuser')) return [3 /*break*/, 2];
+                        return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.paginate({
+                                $and: [
+                                    { guide_status: "6" },
+                                    { createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-").concat(theDay)) } }
+                                ]
+                            }, { options: options })];
                     case 1:
                         recentOrders = _a.sent();
-                        return [2 /*return*/, recentOrders];
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.paginate({
+                            $and: [
+                                { guide_status: "6" },
+                                { seller_id: new mongoose_1.default.Types.ObjectId(body.seller_id) },
+                                { createdAt: { $gt: new Date("".concat(theYear, "-").concat(theMonth, "-").concat(theDay)) } }
+                            ]
+                        }, { options: options })];
+                    case 3:
+                        recentOrders = _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, recentOrders];
                 }
             });
         });
@@ -380,15 +408,26 @@ var MongoRepository = /** @class */ (function () {
             });
         });
     };
-    MongoRepository.prototype.getOutDrivers = function () {
+    MongoRepository.prototype.getOutDrivers = function (seller_id) {
         return __awaiter(this, void 0, void 0, function () {
-            var carriers;
+            var carriers, myDealers, filteredDealers, i, k;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.shipdayClient.carrierService.getCarriers()];
                     case 1:
                         carriers = _a.sent();
-                        return [2 /*return*/, carriers];
+                        return [4 /*yield*/, dealer_schema_1.DealerModel.find({ $and: [{ seller_id: seller_id }, { status: "active" }] })];
+                    case 2:
+                        myDealers = _a.sent();
+                        filteredDealers = [];
+                        for (i = 0; i < myDealers.length; i++) {
+                            for (k = 0; k < carriers.length; k++) {
+                                if (myDealers[i].shipday_id === carriers[k].id) {
+                                    filteredDealers.push(carriers[k]);
+                                }
+                            }
+                        }
+                        return [2 /*return*/, filteredDealers];
                 }
             });
         });
