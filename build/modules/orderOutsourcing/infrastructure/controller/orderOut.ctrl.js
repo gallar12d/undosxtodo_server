@@ -42,7 +42,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderController = void 0;
 var handleErrors_1 = __importDefault(require("../../../../infrastructure/utils/handleErrors"));
 var orderOut_value_1 = require("../../domain/orderOut.value");
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var SECRET_KEY = "".concat(process.env.SECRET_KEY || "secret@123");
 var OrderController = /** @class */ (function () {
     function OrderController(orderService) {
@@ -170,20 +169,26 @@ var OrderController = /** @class */ (function () {
             });
         };
         this.setOrderStatus = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var token, decoded, _a, _b, err_6;
+            var _a, _b, err_6;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         _c.trys.push([0, 2, , 3]);
-                        token = req.headers.token;
-                        if (!token) {
-                            throw new Error("Please authenticate");
-                        }
-                        decoded = jsonwebtoken_1.default.verify(token, SECRET_KEY);
-                        console.log('Token verificado: ' + decoded);
+                        // const { token } = req.headers;
+                        // if (!token) {
+                        //   throw new Error("Please authenticate");
+                        // }
+                        // const decoded = jwt.verify(token, SECRET_KEY);
+                        // console.log('Token verificado: ' + decoded);
                         _b = (_a = res).json;
                         return [4 /*yield*/, this.orderService.setOrderStatus(req.body)];
                     case 1:
+                        // const { token } = req.headers;
+                        // if (!token) {
+                        //   throw new Error("Please authenticate");
+                        // }
+                        // const decoded = jwt.verify(token, SECRET_KEY);
+                        // console.log('Token verificado: ' + decoded);
                         _b.apply(_a, [_c.sent()]);
                         return [3 /*break*/, 3];
                     case 2:

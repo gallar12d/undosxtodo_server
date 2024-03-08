@@ -161,6 +161,7 @@ export class MongoRepository implements OrderRepository {
 
   public async setOrderStatus(event: any): Promise<any | null> {
     // El token brindado a Shipday para el cambio de estado caduca dentro de 10 años y fue creado en el 2023
+    console.log('Se va a actualizar la orden: '+event.order.id+' a '+event.order_status);
     return await OrderOutsourcingModel.updateOne({ orderId: event.order.id }, { $set: { orderState: event.order_status } });
   }
 

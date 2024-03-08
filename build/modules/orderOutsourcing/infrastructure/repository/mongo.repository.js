@@ -328,10 +328,11 @@ var MongoRepository = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.updateOne({ orderId: event.order.id }, { $set: { orderState: event.order_status } })];
-                    case 1: 
-                    // El token brindado a Shipday para el cambio de estado caduca dentro de 10 años y fue creado en el 2023
-                    return [2 /*return*/, _a.sent()];
+                    case 0:
+                        // El token brindado a Shipday para el cambio de estado caduca dentro de 10 años y fue creado en el 2023
+                        console.log('Se va a actualizar la orden: ' + event.order.id + ' a ' + event.order_status);
+                        return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.updateOne({ orderId: event.order.id }, { $set: { orderState: event.order_status } })];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });

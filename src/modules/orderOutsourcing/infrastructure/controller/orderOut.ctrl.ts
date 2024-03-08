@@ -61,12 +61,12 @@ export class OrderController {
 
   public setOrderStatus = async (req, res) => {
     try {
-      const { token } = req.headers;
-      if (!token) {
-        throw new Error("Please authenticate");
-      }
-      const decoded = jwt.verify(token, SECRET_KEY);
-      console.log('Token verificado: ' + decoded);
+      // const { token } = req.headers;
+      // if (!token) {
+      //   throw new Error("Please authenticate");
+      // }
+      // const decoded = jwt.verify(token, SECRET_KEY);
+      // console.log('Token verificado: ' + decoded);
       res.json(await this.orderService.setOrderStatus(req.body));
     } catch (err) {
       res.status(400).json(getErrorMessage(err));
