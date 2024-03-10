@@ -24,6 +24,7 @@ export class MongoRepository implements OrderRepository {
   }
 
   public async registerOrder(order: OrderOutsourcingEntity, carrierId: number): Promise<any | null> {
+    console.log('Se creó la orden: ', order);
     try {
 
       let res: any;
@@ -33,26 +34,11 @@ export class MongoRepository implements OrderRepository {
         order.customerAddress,
         order.customerEmail,
         order.customerPhoneNumber,
-        order.sellerName,
-        order.sellerAddress
+        order.depotName,
+        order.depotAddress
       );
-
-
-      orderInfoRequest.setRestaurantPhoneNumber(order.sellerPhoneNumber);
-      // orderInfoRequest.setExpectedDeliveryDate(new Date(order.expectedDeliveryDate));
-      // orderInfoRequest.setExpectedDeliveryTime(order.expectedDeliveryTime);
-      // orderInfoRequest.setExpectedPickupTime(order.expectedPickupTime);
-      // orderInfoRequest.setPickupLatLong(order.pickupLatitude, order.pickupLongitude);
-      // orderInfoRequest.setDeliveryLatLong(order.deliveryLatitude, order.deliveryLongitude);
-      // orderInfoRequest.setTips(order.tips);
-      // orderInfoRequest.setTax(order.tax);
-      // orderInfoRequest.setDiscountAmount(order.discountAmount);
-      // orderInfoRequest.setDeliveryFee(order.deliveryFee);
+      if(!!order.depotPhoneNumber)orderInfoRequest.setRestaurantPhoneNumber(order.depotPhoneNumber);
       orderInfoRequest.setTotalOrderCost(order.totalOrderCost);
-      // orderInfoRequest.setDeliveryInstruction(order.deliveryInstruction);
-      // orderInfoRequest.setOrderSource(order.orderSource);
-      // orderInfoRequest.setAdditionalId(order.additionalId);
-      // orderInfoRequest.setClientRestaurantId(order.clientId);
 
       const itemsArr = [];
       order.orderItem.forEach((item: any) => {
@@ -68,7 +54,6 @@ export class MongoRepository implements OrderRepository {
         res = await OrderOutsourcingModel.create(order);
       }
 
-      // console.log(res2);
       return res;
     } catch (error) {
       console.log(error);

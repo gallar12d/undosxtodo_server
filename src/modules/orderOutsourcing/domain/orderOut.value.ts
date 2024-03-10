@@ -10,10 +10,10 @@ export class OrderValue implements OrderOutsourcingEntity {
   city: string;
   customerEmail: string;
   customerPhoneNumber: string;
-  sellerId: string;
-  sellerName: string;
-  sellerAddress: string;
-  sellerPhoneNumber: string;
+  depotId: string;
+  depotName: string;
+  depotAddress: string;
+  depotPhoneNumber: string;
   expectedDeliveryDate: string;
   expectedPickupTime: string;
   expectedDeliveryTime: string;
@@ -47,10 +47,10 @@ export class OrderValue implements OrderOutsourcingEntity {
     city,
     customerEmail,
     customerPhoneNumber,
-    sellerId,
-    sellerName,
-    sellerAddress,
-    sellerPhoneNumber,
+    depotId,
+    depotName,
+    depotAddress,
+    depotPhoneNumber,
     expectedDeliveryDate,
     expectedPickupTime,
     expectedDeliveryTime,
@@ -83,10 +83,10 @@ export class OrderValue implements OrderOutsourcingEntity {
     city: string;
     customerEmail: string;
     customerPhoneNumber: string;
-    sellerId: string;
-    sellerName: string;
-    sellerAddress: string;
-    sellerPhoneNumber: string;
+    depotId: string;
+    depotName: string;
+    depotAddress: string;
+    depotPhoneNumber: string;
     expectedDeliveryDate: string;
     expectedPickupTime: string;
     expectedDeliveryTime: string;
@@ -120,10 +120,10 @@ export class OrderValue implements OrderOutsourcingEntity {
     this.city = city;
     this.customerEmail = customerEmail;
     this.customerPhoneNumber = customerPhoneNumber;
-    this.sellerId = sellerId;
-    this.sellerName = sellerName;
-    this.sellerAddress = sellerAddress;
-    this.sellerPhoneNumber = sellerPhoneNumber;
+    this.depotId = depotId;
+    this.depotName = depotName;
+    this.depotAddress = depotAddress;
+    this.depotPhoneNumber = depotPhoneNumber;
     this.expectedDeliveryDate = expectedDeliveryDate;
     this.expectedPickupTime = expectedPickupTime;
     this.expectedDeliveryTime = expectedDeliveryTime;

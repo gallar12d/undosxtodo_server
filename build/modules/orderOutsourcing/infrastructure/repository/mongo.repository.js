@@ -70,19 +70,14 @@ var MongoRepository = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        console.log('Se creó la orden: ', order);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 5, , 6]);
                         res = void 0;
-                        orderInfoRequest = new order_info_request_1.default(order.orderNumber, order.customerName, order.customerAddress, order.customerEmail, order.customerPhoneNumber, order.sellerName, order.sellerAddress);
-                        orderInfoRequest.setRestaurantPhoneNumber(order.sellerPhoneNumber);
-                        // orderInfoRequest.setExpectedDeliveryDate(new Date(order.expectedDeliveryDate));
-                        // orderInfoRequest.setExpectedDeliveryTime(order.expectedDeliveryTime);
-                        // orderInfoRequest.setExpectedPickupTime(order.expectedPickupTime);
-                        // orderInfoRequest.setPickupLatLong(order.pickupLatitude, order.pickupLongitude);
-                        // orderInfoRequest.setDeliveryLatLong(order.deliveryLatitude, order.deliveryLongitude);
-                        // orderInfoRequest.setTips(order.tips);
-                        // orderInfoRequest.setTax(order.tax);
-                        // orderInfoRequest.setDiscountAmount(order.discountAmount);
-                        // orderInfoRequest.setDeliveryFee(order.deliveryFee);
+                        orderInfoRequest = new order_info_request_1.default(order.orderNumber, order.customerName, order.customerAddress, order.customerEmail, order.customerPhoneNumber, order.depotName, order.depotAddress);
+                        if (!!order.depotPhoneNumber)
+                            orderInfoRequest.setRestaurantPhoneNumber(order.depotPhoneNumber);
                         orderInfoRequest.setTotalOrderCost(order.totalOrderCost);
                         itemsArr_1 = [];
                         order.orderItem.forEach(function (item) {
@@ -90,23 +85,21 @@ var MongoRepository = /** @class */ (function () {
                         });
                         orderInfoRequest.setOrderItems(itemsArr_1);
                         return [4 /*yield*/, this.shipdayClient.orderService.insertOrder(orderInfoRequest)];
-                    case 1:
+                    case 2:
                         res2 = _a.sent();
-                        if (!(res2.success === true)) return [3 /*break*/, 3];
+                        if (!(res2.success === true)) return [3 /*break*/, 4];
                         this.shipdayClient.orderService.assignOrder(res2.orderId, carrierId);
                         order.orderId = res2.orderId;
                         return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.create(order)];
-                    case 2:
+                    case 3:
                         res = _a.sent();
-                        _a.label = 3;
-                    case 3: 
-                    // console.log(res2);
-                    return [2 /*return*/, res];
-                    case 4:
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, res];
+                    case 5:
                         error_1 = _a.sent();
                         console.log(error_1);
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

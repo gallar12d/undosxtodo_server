@@ -7,9 +7,9 @@ export interface OrderOutsourcingEntity {
   city: string;
   customerEmail: string;
   customerPhoneNumber: string;
-  sellerName: string;
-  sellerAddress: string;
-  sellerPhoneNumber: string;
+  depotName: string;
+  depotAddress: string;
+  depotPhoneNumber: string;
   expectedDeliveryDate: string;
   expectedPickupTime: string;
   expectedDeliveryTime: string;
