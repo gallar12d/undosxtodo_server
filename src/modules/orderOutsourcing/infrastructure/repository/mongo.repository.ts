@@ -34,13 +34,12 @@ export class MongoRepository implements OrderRepository {
         order.customerAddress,
         order.customerEmail,
         order.customerPhoneNumber,
-        order.sellerId,
         order.sellerName,
-        order.depotName,
         order.depotAddress
       );
       if(!!order.depotPhoneNumber)orderInfoRequest.setRestaurantPhoneNumber(order.depotPhoneNumber);
       orderInfoRequest.setTotalOrderCost(order.totalOrderCost);
+      orderInfoRequest.set
 
       const itemsArr = [];
       order.orderItem.forEach((item: any) => {
