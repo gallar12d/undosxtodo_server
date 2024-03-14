@@ -10,6 +10,8 @@ export class OrderValue implements OrderOutsourcingEntity {
   city: string;
   customerEmail: string;
   customerPhoneNumber: string;
+  sellerId: string;
+  sellerName: string;
   depotId: string;
   depotName: string;
   depotAddress: string;
@@ -47,6 +49,8 @@ export class OrderValue implements OrderOutsourcingEntity {
     city,
     customerEmail,
     customerPhoneNumber,
+    sellerId,
+    sellerName,
     depotId,
     depotName,
     depotAddress,
@@ -83,6 +87,8 @@ export class OrderValue implements OrderOutsourcingEntity {
     city: string;
     customerEmail: string;
     customerPhoneNumber: string;
+    sellerId: string;
+    sellerName: string;
     depotId: string;
     depotName: string;
     depotAddress: string;
@@ -120,6 +126,8 @@ export class OrderValue implements OrderOutsourcingEntity {
     this.city = city;
     this.customerEmail = customerEmail;
     this.customerPhoneNumber = customerPhoneNumber;
+    this.sellerId = sellerId;
+    this.sellerName = sellerName;
     this.depotId = depotId;
     this.depotName = depotName;
     this.depotAddress = depotAddress;

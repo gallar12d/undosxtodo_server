@@ -7,6 +7,8 @@ export interface OrderOutsourcingEntity {
   city: string;
   customerEmail: string;
   customerPhoneNumber: string;
+  sellerId: string;
+  sellerName: string;
   depotName: string;
   depotAddress: string;
   depotPhoneNumber: string;

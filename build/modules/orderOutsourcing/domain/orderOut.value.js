@@ -4,7 +4,7 @@ exports.OrderValue = void 0;
 var uuid_1 = require("uuid");
 var OrderValue = /** @class */ (function () {
     function OrderValue(_a) {
-        var orderNumber = _a.orderNumber, orderId = _a.orderId, customerName = _a.customerName, customerAddress = _a.customerAddress, city = _a.city, customerEmail = _a.customerEmail, customerPhoneNumber = _a.customerPhoneNumber, depotId = _a.depotId, depotName = _a.depotName, depotAddress = _a.depotAddress, depotPhoneNumber = _a.depotPhoneNumber, expectedDeliveryDate = _a.expectedDeliveryDate, expectedPickupTime = _a.expectedPickupTime, expectedDeliveryTime = _a.expectedDeliveryTime, pickupLatitude = _a.pickupLatitude, pickupLongitude = _a.pickupLongitude, deliveryLatitude = _a.deliveryLatitude, deliveryLongitude = _a.deliveryLongitude, orderItem = _a.orderItem, tips = _a.tips, tax = _a.tax, discountAmount = _a.discountAmount, deliveryFee = _a.deliveryFee, totalOrderCost = _a.totalOrderCost, pickupInstruction = _a.pickupInstruction, deliveryInstruction = _a.deliveryInstruction, orderSource = _a.orderSource, additionalId = _a.additionalId, clientId = _a.clientId, paymentMethod = _a.paymentMethod, creditCardType = _a.creditCardType, creditCardId = _a.creditCardId, pickup = _a.pickup, dropoff = _a.dropoff, orderState = _a.orderState;
+        var orderNumber = _a.orderNumber, orderId = _a.orderId, customerName = _a.customerName, customerAddress = _a.customerAddress, city = _a.city, customerEmail = _a.customerEmail, customerPhoneNumber = _a.customerPhoneNumber, sellerId = _a.sellerId, sellerName = _a.sellerName, depotId = _a.depotId, depotName = _a.depotName, depotAddress = _a.depotAddress, depotPhoneNumber = _a.depotPhoneNumber, expectedDeliveryDate = _a.expectedDeliveryDate, expectedPickupTime = _a.expectedPickupTime, expectedDeliveryTime = _a.expectedDeliveryTime, pickupLatitude = _a.pickupLatitude, pickupLongitude = _a.pickupLongitude, deliveryLatitude = _a.deliveryLatitude, deliveryLongitude = _a.deliveryLongitude, orderItem = _a.orderItem, tips = _a.tips, tax = _a.tax, discountAmount = _a.discountAmount, deliveryFee = _a.deliveryFee, totalOrderCost = _a.totalOrderCost, pickupInstruction = _a.pickupInstruction, deliveryInstruction = _a.deliveryInstruction, orderSource = _a.orderSource, additionalId = _a.additionalId, clientId = _a.clientId, paymentMethod = _a.paymentMethod, creditCardType = _a.creditCardType, creditCardId = _a.creditCardId, pickup = _a.pickup, dropoff = _a.dropoff, orderState = _a.orderState;
         this.id = (0, uuid_1.v4)();
         this.orderNumber = orderNumber;
         this.orderId = orderId;
@@ -13,6 +13,8 @@ var OrderValue = /** @class */ (function () {
         this.city = city;
         this.customerEmail = customerEmail;
         this.customerPhoneNumber = customerPhoneNumber;
+        this.sellerId = sellerId;
+        this.sellerName = sellerName;
         this.depotId = depotId;
         this.depotName = depotName;
         this.depotAddress = depotAddress;

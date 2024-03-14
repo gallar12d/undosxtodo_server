@@ -75,7 +75,7 @@ var MongoRepository = /** @class */ (function () {
                     case 1:
                         _a.trys.push([1, 5, , 6]);
                         res = void 0;
-                        orderInfoRequest = new order_info_request_1.default(order.orderNumber, order.customerName, order.customerAddress, order.customerEmail, order.customerPhoneNumber, order.depotName, order.depotAddress);
+                        orderInfoRequest = new order_info_request_1.default(order.orderNumber, order.customerName, order.customerAddress, order.customerEmail, order.customerPhoneNumber, order.sellerId, order.sellerName, order.depotName, order.depotAddress);
                         if (!!order.depotPhoneNumber)
                             orderInfoRequest.setRestaurantPhoneNumber(order.depotPhoneNumber);
                         orderInfoRequest.setTotalOrderCost(order.totalOrderCost);

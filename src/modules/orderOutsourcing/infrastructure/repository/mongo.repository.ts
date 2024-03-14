@@ -34,6 +34,8 @@ export class MongoRepository implements OrderRepository {
         order.customerAddress,
         order.customerEmail,
         order.customerPhoneNumber,
+        order.sellerId,
+        order.sellerName,
         order.depotName,
         order.depotAddress
       );
