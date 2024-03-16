@@ -16,6 +16,7 @@ var OrderOutsourcingSchema = new mongoose_1.default.Schema({
     customerEmail: { type: String, required: false },
     customerPhoneNumber: { type: String, required: false },
     sellerId: { type: String, required: false },
+    sellerName: { type: String, required: false },
     depotName: { type: String, required: false },
     depotAddress: { type: String, required: false },
     sellerPhoneNumber: { type: String, required: false },

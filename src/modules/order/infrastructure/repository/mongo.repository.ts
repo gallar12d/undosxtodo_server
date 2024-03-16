@@ -671,7 +671,7 @@ export class MongoRepository implements OrderRepository {
       order.guide_status = (await StatusModel.findOne({ id: order.guide_status })).name;
       order.seller = (await SellerModel.findOne({ _id: order.seller_id })).name
       order.equalDates = order.createdAt === order.updatedAt;
-      order.createdAt = new Date().toISOString().slice(0, 10);
+      order.createdAt = new Date("" + order.createdAt).toISOString().slice(0, 10);
     }
 
     return orders;
@@ -835,8 +835,6 @@ export class MongoRepository implements OrderRepository {
       resScenario.then(async ({ data }) => {
         if (data.data.status === 'approved') await VehicleModel.updateMany({ ruta99_id: { $in: data.data.vehicles.map((v) => v.id) } }, { $set: { availability: "busy" } });
         if (data.data.status === 'completed') await VehicleModel.updateMany({ ruta99_id: { $in: data.data.vehicles.map((v) => v.id) } }, { $set: { availability: "available" } });
-        // console.log(data.data.vehicles);
-        // console.log(data.data.status);
       });
 
     } catch (error) {
@@ -848,6 +846,5 @@ export class MongoRepository implements OrderRepository {
     if (status === "onroute") return await OrderModel.updateOne({ guide: code }, { $set: { guide_status: "5" } });
     if (status === "completed") return await OrderModel.updateOne({ guide: code }, { $set: { guide_status: "6" } });
     if (status === "fail") return await OrderModel.updateOne({ guide: code }, { $set: { guide_status: "7" } });
-    // return { code, status };
   }
 }

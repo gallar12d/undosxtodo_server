@@ -24,7 +24,6 @@ export class MongoRepository implements OrderRepository {
   }
 
   public async registerOrder(order: OrderOutsourcingEntity, carrierId: number): Promise<any | null> {
-    console.log('Se creó la orden: ', order);
     try {
 
       let res: any;
@@ -39,7 +38,6 @@ export class MongoRepository implements OrderRepository {
       );
       if(!!order.depotPhoneNumber)orderInfoRequest.setRestaurantPhoneNumber(order.depotPhoneNumber);
       orderInfoRequest.setTotalOrderCost(order.totalOrderCost);
-      orderInfoRequest.set
 
       const itemsArr = [];
       order.orderItem.forEach((item: any) => {
@@ -52,6 +50,7 @@ export class MongoRepository implements OrderRepository {
       if (res2.success === true) {
         this.shipdayClient.orderService.assignOrder(res2.orderId, carrierId);
         order.orderId = res2.orderId;
+        console.log('Se creó la orden: ', order);
         res = await OrderOutsourcingModel.create(order);
       }
 

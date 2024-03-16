@@ -1053,7 +1053,7 @@ var MongoRepository = /** @class */ (function () {
                     case 7:
                         _h.seller = (_j.sent()).name;
                         order.equalDates = order.createdAt === order.updatedAt;
-                        order.createdAt = new Date().toISOString().slice(0, 10);
+                        order.createdAt = new Date("" + order.createdAt).toISOString().slice(0, 10);
                         return [3 /*break*/, 9];
                     case 8:
                         _d = true;

@@ -70,37 +70,34 @@ var MongoRepository = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('Se creó la orden: ', order);
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 5, , 6]);
+                        _a.trys.push([0, 4, , 5]);
                         res = void 0;
                         orderInfoRequest = new order_info_request_1.default(order.orderNumber, order.customerName, order.customerAddress, order.customerEmail, order.customerPhoneNumber, order.sellerName, order.depotAddress);
                         if (!!order.depotPhoneNumber)
                             orderInfoRequest.setRestaurantPhoneNumber(order.depotPhoneNumber);
                         orderInfoRequest.setTotalOrderCost(order.totalOrderCost);
-                        orderInfoRequest.set;
                         itemsArr_1 = [];
                         order.orderItem.forEach(function (item) {
                             itemsArr_1.push(new order_item_1.default(item.name, parseInt(item.subtotal), parseInt(item.quantity)));
                         });
                         orderInfoRequest.setOrderItems(itemsArr_1);
                         return [4 /*yield*/, this.shipdayClient.orderService.insertOrder(orderInfoRequest)];
-                    case 2:
+                    case 1:
                         res2 = _a.sent();
-                        if (!(res2.success === true)) return [3 /*break*/, 4];
+                        if (!(res2.success === true)) return [3 /*break*/, 3];
                         this.shipdayClient.orderService.assignOrder(res2.orderId, carrierId);
                         order.orderId = res2.orderId;
+                        console.log('Se creó la orden: ', order);
                         return [4 /*yield*/, orderOut_schema_1.OrderOutsourcingModel.create(order)];
-                    case 3:
+                    case 2:
                         res = _a.sent();
-                        _a.label = 4;
-                    case 4: return [2 /*return*/, res];
-                    case 5:
+                        _a.label = 3;
+                    case 3: return [2 /*return*/, res];
+                    case 4:
                         error_1 = _a.sent();
                         console.log(error_1);
-                        return [3 /*break*/, 6];
-                    case 6: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
