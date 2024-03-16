@@ -33,7 +33,7 @@ export class MongoRepository implements OrderRepository {
         order.customerAddress,
         order.customerEmail,
         order.customerPhoneNumber,
-        order.sellerName,
+        order.depotName,
         order.depotAddress
       );
       if(!!order.depotPhoneNumber)orderInfoRequest.setRestaurantPhoneNumber(order.depotPhoneNumber);
